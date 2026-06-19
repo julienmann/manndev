@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+<title>Your Project — Mann Dev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div class="portal-bar">
+    <a href="https://dev.julienmann.ca/" class="portal-wordmark">MANN DEV</a>
+    <div class="portal-account">
+      <span class="portal-account-email" id="account-email"></span>
+      <button class="portal-logout" id="logout-btn" type="button">Log out</button>
+    </div>
+  </div>
+
+  <main class="portal-main" id="main">
+    <div class="dash-state" id="loading-state">Loading your project…</div>
+  </main>
+
+  <script type="module" src="/src/dashboard.ts"></script>
+</body>
+</html>

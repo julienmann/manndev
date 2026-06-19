@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-19T00:00:00Z",
+  "title": "Design System: Mann Dev",
+  "extensions": {
+    "colorMeta": {
+      "amber": { "role": "primary", "displayName": "Amber", "canonical": "oklch(64% 0.13 65)", "tonalRamp": ["#1a1308", "#2e2210", "#4a3818", "#6b5220", "#8e6c25", "#c4922a", "#dcb568", "#f0dba0"] },
+      "ink-black": { "role": "neutral", "displayName": "Ink Black", "canonical": "oklch(8% 0.005 65)", "tonalRamp": ["#0d0b09", "#131110", "#1a1714", "#2a2520", "#454039", "#6b6459", "#9a9080", "#c9c2b3"] },
+      "ink-panel": { "role": "neutral", "displayName": "Ink Panel", "canonical": "oklch(10% 0.005 65)" },
+      "ink-deep": { "role": "neutral", "displayName": "Ink Deep", "canonical": "oklch(6% 0.004 65)" },
+      "ink-code": { "role": "neutral", "displayName": "Ink Code", "canonical": "oklch(4% 0.003 65)" },
+      "paper-cream": { "role": "neutral", "displayName": "Paper Cream", "canonical": "oklch(92% 0.01 80)", "tonalRamp": ["#1a1814", "#3a352c", "#5c554a", "#7d7568", "#9e9586", "#bfb6a4", "#ede8d5", "#f7f4ea"] },
+      "warm-grey": { "role": "neutral", "displayName": "Warm Grey", "canonical": "oklch(63% 0.015 80)" },
+      "rule": { "role": "neutral", "displayName": "Hairline Rule", "canonical": "rgba(237,232,213,0.1)" },
+      "rule-accent": { "role": "primary", "displayName": "Amber-Tinted Rule", "canonical": "rgba(196,146,42,0.3)" },
+      "signal-green": { "role": "tertiary", "displayName": "Signal Green", "canonical": "oklch(74% 0.17 150)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero wordmark only, one use per page." },
+      "headline": { "displayName": "Headline", "purpose": "Section-opening statements (About, Contact)." },
+      "title": { "displayName": "Title", "purpose": "Tab titles, process-step titles, section labels." },
+      "body": { "displayName": "Body", "purpose": "All running copy." },
+      "label": { "displayName": "Label", "purpose": "Nav links, kickers, stat labels, form labels — always uppercase, wide-tracked." },
+      "accent-script": { "displayName": "Accent Script", "purpose": "The one Playfair Display italic moment per section." }
+    },
+    "shadows": [
+      { "name": "ambient-focus-glow", "value": "0 0 60px rgba(196,146,42,0.08), 0 0 0 1px rgba(196,146,42,0.06) inset", "purpose": "Marks the single most important panel in a view (hero window, sticky process visual)." }
+    ],
+    "motion": [
+      { "name": "ease-out-power3", "value": "cubic-bezier(0.215, 0.61, 0.355, 1)", "purpose": "Default GSAP ease for reveals, tab indicator, masked text." },
+      { "name": "ease-magnetic-return", "value": "elastic.out(1, 0.4)", "purpose": "CTA return-to-rest after magnetic cursor tracking — the one permitted bounce, reserved for this single interaction." }
+    ],
+    "breakpoints": [
+      { "name": "tablet", "value": "1024px" },
+      { "name": "mobile", "value": "900px" },
+      { "name": "small", "value": "480px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid amber CTA, used once per form (Send Enquiry).",
+      "html": "<button class=\"ds-btn-primary\">Send Enquiry</button>",
+      "css": ".ds-btn-primary { background: #c4922a; color: #0d0b09; padding: 0.8rem 2.5rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 400; border: 1px solid #c4922a; border-radius: 0; transition: background 0.25s, color 0.25s, border-color 0.25s; } .ds-btn-primary:hover, .ds-btn-primary:focus-visible { background: transparent; color: #c4922a; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Nav/tab CTA with a thin border that fills solid amber on hover.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#contact\">Get a Quote</a>",
+      "css": ".ds-btn-ghost { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: #9a9080; border: 1px solid rgba(196,146,42,0.3); padding: 0.45rem 1.2rem; text-decoration: none; transition: background 0.25s, color 0.25s, border-color 0.25s; } .ds-btn-ghost:hover, .ds-btn-ghost:focus-visible { background: #c4922a; color: #0d0b09; border-color: #c4922a; }"
+    },
+    {
+      "name": "Floating-Label Input",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Underline-only text field whose label floats up on focus/fill.",
+      "html": "<div class=\"ds-field\"><input class=\"ds-input\" type=\"text\" id=\"ds-name\" placeholder=\"x\" /><label class=\"ds-label\" for=\"ds-name\">First Name</label></div>",
+      "css": ".ds-field { position: relative; margin-bottom: 2rem; } .ds-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(237,232,213,0.1); padding: 0.8rem 0 0.6rem; color: #ede8d5; font-family: 'IBM Plex Mono', monospace; font-size: 0.88rem; font-weight: 300; outline: none; transition: border-color 0.3s; } .ds-input::placeholder { opacity: 0; } .ds-input:focus { border-bottom-color: #c4922a; } .ds-label { position: absolute; top: 0.8rem; left: 0; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: #9a9080; pointer-events: none; transition: all 0.25s ease; } .ds-input:focus ~ .ds-label, .ds-input:not(:placeholder-shown) ~ .ds-label { top: -1rem; font-size: 0.58rem; color: #ede8d5; }"
+    },
+    {
+      "name": "Stat Cell",
+      "kind": "card",
+      "refersTo": "stat-box",
+      "description": "Borderless grid cell for a number + label, no card background, amber wash on hover.",
+      "html": "<div class=\"ds-stat\"><span class=\"ds-stat-num\">15</span><span class=\"ds-stat-label\">Sites Launched</span></div>",
+      "css": ".ds-stat { padding: 2.5rem 2rem; border-right: 1px solid rgba(237,232,213,0.1); border-bottom: 1px solid rgba(237,232,213,0.1); position: relative; overflow: hidden; } .ds-stat::before { content: ''; position: absolute; inset: 0; background: #c4922a; opacity: 0; transition: opacity 0.4s; } .ds-stat:hover::before { opacity: 0.04; } .ds-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 5vw, 5rem); line-height: 1; display: block; position: relative; color: #ede8d5; } .ds-stat-label { font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: #9a9080; margin-top: 0.5rem; display: block; position: relative; }"
+    },
+    {
+      "name": "Section Header",
+      "kind": "nav",
+      "refersTo": "section-label",
+      "description": "Recurring section title with underline and a numbered pagination tag (e.g. 01/04).",
+      "html": "<div class=\"ds-section-header\"><span class=\"ds-section-label\">About</span><span class=\"ds-section-num\">01 / 04</span></div>",
+      "css": ".ds-section-header { display: flex; justify-content: space-between; align-items: baseline; padding: 1.2rem 3rem 1rem; } .ds-section-label { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.12em; text-transform: uppercase; color: #ede8d5; border-bottom: 2px solid #c4922a; padding-bottom: 0.15rem; display: inline-block; } .ds-section-num { font-family: 'IBM Plex Mono', monospace; font-size: 1rem; letter-spacing: 0.1em; color: #9a9080; }"
+    },
+    {
+      "name": "Browser-Window Panel",
+      "kind": "custom",
+      "refersTo": "hero-window",
+      "description": "Signature 'code renders to preview' chrome — traffic-light dots, fake URL bar, code block, then a miniature rendered preview.",
+      "html": "<div class=\"ds-window\"><div class=\"ds-window-bar\"><span class=\"ds-dot\" style=\"background:#ff5f56\"></span><span class=\"ds-dot\" style=\"background:#ffbd2e\"></span><span class=\"ds-dot\" style=\"background:#27c93f\"></span><div class=\"ds-window-url\">manndev.ca</div></div><div class=\"ds-window-body\"><div class=\"ds-window-code\">const site = build({ design: 'custom' })</div></div></div>",
+      "css": ".ds-window { width: 100%; max-width: 380px; border: 1px solid rgba(196,146,42,0.3); background: #0a0907; box-shadow: 0 0 60px rgba(196,146,42,0.08), 0 0 0 1px rgba(196,146,42,0.06) inset; position: relative; overflow: hidden; } .ds-window-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.9rem; background: #111009; border-bottom: 1px solid rgba(237,232,213,0.1); } .ds-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; } .ds-window-url { flex: 1; margin-left: 0.5rem; background: rgba(237,232,213,0.05); border: 1px solid rgba(237,232,213,0.08); border-radius: 3px; padding: 0.25rem 0.6rem; font-size: 0.58rem; letter-spacing: 0.1em; color: #9a9080; font-family: 'IBM Plex Mono', monospace; } .ds-window-body { padding: 1.2rem; } .ds-window-code { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: #c4922a; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Editor's Desk",
+    "overview": "A desk-lamp glow on dark wood at night: a single craftsman's workspace, not an open-plan agency floor. The system is near-black and warm, lit by one scarce amber accent, set in a typewriter mono body with Bebas Neue doing the shouting and Playfair Display doing the one quiet, italic aside. Everything is flat, ruled, and grid-aligned — the visual equivalent of clean, unbloated code. It explicitly rejects bright SaaS gradients, hero-metric blocks, stock illustration, and anything that signals \"built from a template,\" because the entire site's argument is that it wasn't.\n\nDensity is editorial: long rule lines, generous negative space between sections, content organized like a printed brief (numbered sections, \"01/04\" pagination) rather than stacked cards. Motion is purposeful and restrained — masked text reveals, a sliding tab indicator, a magnetic CTA — never decorative bounce.",
+    "keyCharacteristics": [
+      "Near-black warm ink background, never true #000",
+      "One scarce amber accent — restraint is the point, not warmth-everywhere",
+      "Bebas Neue for scale and shout, IBM Plex Mono for everything functional, Playfair Display italic for the one editorial aside per section",
+      "Flat surfaces, hairline rules, zero border-radius",
+      "Soft amber glow (not drop shadow) signals the one important panel per view"
+    ],
+    "rules": [
+      { "name": "The Scarcity Rule", "body": "Amber appears on rules, underlines, hover states, and exactly one CTA per section — never as a fill color across more than a thin strip of any view.", "section": "colors" },
+      { "name": "The Warm-Neutral Rule", "body": "No neutral in this system is pure black or pure white. Every ink and paper tone carries the same warm, slightly brown-gold undertone as the amber accent.", "section": "colors" },
+      { "name": "The One Serif Rule", "body": "Playfair Display italic appears once per major section, never as body copy and never in more than one weight.", "section": "typography" },
+      { "name": "The Wide Label Rule", "body": "Anything in Label role is uppercase with ≥0.18em letter-spacing.", "section": "typography" },
+      { "name": "The One Glow Rule", "body": "Only one element on screen may carry the ambient amber glow at a time. It is a spotlight, not ambient lighting.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep amber to hairlines, underlines, one CTA, and one glow per view (The Scarcity Rule).",
+      "Do tint every neutral warm — Ink Black (#0d0b09) and Paper Cream (#ede8d5), never #000/#fff.",
+      "Do use Bebas Neue only for scale/shout and IBM Plex Mono for everything functional; reserve Playfair italic for one aside per section.",
+      "Do keep every corner square (0px radius) — sharp edges are part of the \"no templates\" argument.",
+      "Do show the build, don't just claim it — when documenting process or capability, prefer the code-block → rendered-preview pattern over a bullet list of claims.",
+      "Do use wide-tracked (≥0.18em) uppercase mono for all labels, kickers, and nav links."
+    ],
+    "donts": [
+      "Don't use bright SaaS gradients, hero-metric blocks, or stock illustration.",
+      "Don't add team photos or agency-style process diagrams.",
+      "Don't let amber cover more than a thin strip, a button, or a single glow.",
+      "Don't add drop shadows or card-lift hovers.",
+      "Don't round any corner.",
+      "Don't stack more than one Playfair Display moment in the same viewport.",
+      "Don't apply the amber glow to more than one panel on screen at once."
+    ]
+  }
+}
