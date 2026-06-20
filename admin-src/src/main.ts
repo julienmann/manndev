@@ -47,11 +47,9 @@ function rowHtml(c: Client): string {
   return `
     <tr data-user-id="${c.user_id}">
       <td data-label="Client">
+        <input class="admin-input admin-name" data-field="business_name" value="${c.business_name ?? ''}" placeholder="Add a name…">
         <span class="admin-email">${c.email}</span>
         <span class="admin-email-sub">${c.user_id}</span>
-      </td>
-      <td data-label="Business Name">
-        <input class="admin-input" data-field="business_name" value="${c.business_name ?? ''}" placeholder="—">
       </td>
       <td data-label="Stage">
         <select class="admin-select" data-field="stage">${stageOptions(c.stage)}</select>
@@ -74,7 +72,16 @@ function rowHtml(c: Client): string {
         <button type="button" class="admin-touch" data-touch="last_security_check_at">Touch now</button>
       </td>
       <td data-label="Preview">
-        <span class="admin-badge ${c.has_preview ? 'is-yes' : ''}">${c.has_preview ? 'Available' : 'None'}</span>
+        <div class="admin-preview">
+          <span class="admin-badge ${c.has_preview ? 'is-yes' : ''}">${c.has_preview ? 'Available' : 'None'}</span>
+          <div class="admin-preview-actions">
+            <label class="admin-upload-label" data-upload-label>
+              Upload .zip
+              <input type="file" accept=".zip" data-upload-input>
+            </label>
+            <button type="button" class="admin-preview-remove" data-action="remove-preview" ${c.has_preview ? '' : 'disabled'}>Remove</button>
+          </div>
+        </div>
       </td>
       <td data-label="Actions">
         <div class="admin-row-actions">
@@ -94,7 +101,7 @@ function render() {
     <table class="admin-table">
       <thead>
         <tr>
-          <th>Client</th><th>Business Name</th><th>Stage</th><th>Launched</th>
+          <th>Client</th><th>Stage</th><th>Launched</th>
           <th>Live URL</th><th>Last Updated</th><th>Security Check</th><th>Preview</th><th>Actions</th>
         </tr>
       </thead>
@@ -124,7 +131,44 @@ function wireRowEvents() {
 
     row.querySelector('[data-action="save"]')!.addEventListener('click', () => saveRow(row, userId));
     row.querySelector('[data-action="delete"]')!.addEventListener('click', () => deleteRow(userId));
+    row.querySelector('[data-action="remove-preview"]')!.addEventListener('click', () => removePreview(userId));
+
+    const uploadInput = row.querySelector<HTMLInputElement>('[data-upload-input]')!;
+    uploadInput.addEventListener('change', () => {
+      const file = uploadInput.files?.[0];
+      if (file) uploadPreview(userId, file);
+    });
   });
+}
+
+async function uploadPreview(userId: string, file: File) {
+  const label = tableWrap.querySelector<HTMLLabelElement>(`tr[data-user-id="${userId}"] [data-upload-label]`);
+  label?.classList.add('is-busy');
+  setStatus('Uploading preview…');
+  try {
+    const body = new FormData();
+    body.append('zip', file);
+    const res = await fetch(`${API}/clients/${userId}/preview`, { method: 'POST', body });
+    if (!res.ok) throw new Error((await res.json()).error || 'Upload failed');
+    setStatus('Preview uploaded.', 'success');
+    await loadClients();
+  } catch (err) {
+    setStatus(err instanceof Error ? err.message : 'Upload failed', 'error');
+    label?.classList.remove('is-busy');
+  }
+}
+
+async function removePreview(userId: string) {
+  if (!confirm('Remove this client\'s live preview files?')) return;
+  setStatus('Removing preview…');
+  try {
+    const res = await fetch(`${API}/clients/${userId}/preview`, { method: 'DELETE' });
+    if (!res.ok) throw new Error((await res.json()).error || 'Remove failed');
+    setStatus('Preview removed.', 'success');
+    await loadClients();
+  } catch (err) {
+    setStatus(err instanceof Error ? err.message : 'Remove failed', 'error');
+  }
 }
 
 function markDirty(row: HTMLTableRowElement) {

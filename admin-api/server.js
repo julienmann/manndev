@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 import ws from 'ws';
+import multer from 'multer';
+import AdmZip from 'adm-zip';
 
 const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, PORT } = process.env;
 
@@ -16,7 +18,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   realtime: { transport: ws },
 });
 
-const PREVIEWS_DIR = '/srv/www/manndev/client-previews';
+const PREVIEWS_DIR = process.env.PREVIEWS_DIR || '/srv/www/manndev/client-previews';
 
 function hasPreview(userId) {
   const dir = path.join(PREVIEWS_DIR, userId);
@@ -26,6 +28,50 @@ function hasPreview(userId) {
 // Only ever reached via nginx's auth_basic-gated /admin/api/ proxy — never expose this port publicly.
 const app = express();
 app.use(express.json());
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 100 * 1024 * 1024 } });
+
+app.post('/clients/:userId/preview', upload.single('zip'), (req, res) => {
+  const { userId } = req.params;
+  if (!req.file) return res.status(400).json({ error: 'No zip file uploaded' });
+
+  try {
+    const zip = new AdmZip(req.file.buffer);
+    const entries = zip.getEntries();
+
+    for (const entry of entries) {
+      const normalized = path.normalize(entry.entryName);
+      if (normalized.startsWith('..') || path.isAbsolute(normalized)) {
+        throw new Error(`Unsafe path in zip: ${entry.entryName}`);
+      }
+    }
+
+    const dir = path.join(PREVIEWS_DIR, userId);
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.mkdirSync(dir, { recursive: true });
+    zip.extractAllTo(dir, true);
+
+    if (!fs.existsSync(path.join(dir, 'index.html'))) {
+      throw new Error('Zip does not contain an index.html at its root');
+    }
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/clients/:userId/preview', (req, res) => {
+  const { userId } = req.params;
+  try {
+    fs.rmSync(path.join(PREVIEWS_DIR, userId), { recursive: true, force: true });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 app.get('/clients', async (req, res) => {
   try {

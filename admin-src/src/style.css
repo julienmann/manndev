@@ -45,8 +45,15 @@ button{font-family:inherit;}
 }
 .admin-table tr:hover td{background:rgba(196,146,42,.04);}
 
-.admin-email{color:var(--fg);}
-.admin-email-sub{display:block;font-size:.66rem;color:var(--mid);margin-top:.1rem;}
+.admin-name{
+  display:block;width:auto;min-width:140px;margin-bottom:.3rem;
+  background:none;border:none;border-bottom:1px solid var(--rule);padding:0 0 .2rem;
+  font-size:.82rem;color:var(--fg);
+}
+.admin-name:focus{border-color:var(--accent);}
+.admin-name::placeholder{color:var(--mid);}
+.admin-email{color:var(--mid);font-size:.7rem;}
+.admin-email-sub{display:block;font-size:.62rem;color:var(--mid);margin-top:.1rem;opacity:.7;}
 
 .admin-input,.admin-select{
   background:var(--panel);border:1px solid var(--rule);color:var(--fg);
@@ -72,6 +79,23 @@ button{font-family:inherit;}
   padding:.2rem .55rem;border:1px solid var(--rule);color:var(--mid);
 }
 .admin-badge.is-yes{color:var(--green);border-color:rgba(74,222,128,.3);}
+
+.admin-preview{display:flex;flex-direction:column;align-items:flex-start;gap:.4rem;}
+.admin-preview-actions{display:flex;gap:.5rem;align-items:center;}
+.admin-upload-label{
+  font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);
+  border:1px solid var(--rule);padding:.25rem .5rem;cursor:pointer;
+  transition:color .2s,border-color .2s;white-space:nowrap;
+}
+.admin-upload-label:hover{color:var(--fg);border-color:var(--accent);}
+.admin-upload-label input{display:none;}
+.admin-upload-label.is-busy{opacity:.5;pointer-events:none;}
+.admin-preview-remove{
+  font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);
+  background:none;border:1px solid var(--rule);padding:.25rem .5rem;cursor:pointer;
+  transition:color .2s,border-color .2s;white-space:nowrap;
+}
+.admin-preview-remove:hover{color:var(--red);border-color:var(--red);}
 
 .admin-row-actions{display:flex;gap:.5rem;white-space:nowrap;}
 .admin-btn{
