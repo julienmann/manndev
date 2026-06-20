@@ -60,6 +60,7 @@ function renderTracker(project: ClientProject, previewUrl: string | null) {
         <div class="preview-bar">
           <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
           <span class="preview-label">Live Preview</span>
+          <a class="preview-open" href="${previewUrl}" target="_blank" rel="noopener noreferrer">Open full view ↗</a>
         </div>
         <iframe class="preview-frame" src="${previewUrl}" title="Live site preview" loading="lazy"></iframe>
       </div>

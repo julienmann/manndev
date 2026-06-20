@@ -1,4 +1,4 @@
-import{t as e}from"./supabase-Dhn-RSV_.js";var t=[{name:`Brief & Discovery`,note:`We're gathering your goals, audience, and what the site needs to do.`},{name:`Design`,note:`Establishing the visual language — typography, palette, layout.`},{name:`Build`,note:`Writing the site. You can ask for a preview link at any point.`},{name:`Review & Refine`,note:`Testing across devices, optimising performance, working through feedback.`},{name:`Launch`,note:`Deploying to your domain and wiring up analytics.`}],n=document.querySelector(`#main`),r=document.querySelector(`#account-email`),i=document.querySelector(`#logout-btn`);function a(e){return e?new Date(e).toLocaleDateString(`en-US`,{month:`short`,day:`numeric`,year:`numeric`}):`—`}function o(){n.innerHTML=`
+import{t as e}from"./supabase-DUhPO-ds.js";var t=[{name:`Brief & Discovery`,note:`We're gathering your goals, audience, and what the site needs to do.`},{name:`Design`,note:`Establishing the visual language — typography, palette, layout.`},{name:`Build`,note:`Writing the site. You can ask for a preview link at any point.`},{name:`Review & Refine`,note:`Testing across devices, optimising performance, working through feedback.`},{name:`Launch`,note:`Deploying to your domain and wiring up analytics.`}],n=document.querySelector(`#main`),r=document.querySelector(`#account-email`),i=document.querySelector(`#logout-btn`);function a(e){return e?new Date(e).toLocaleDateString(`en-US`,{month:`short`,day:`numeric`,year:`numeric`}):`—`}function o(){n.innerHTML=`
     <div class="dash-state">
       Your project hasn't been set up in the portal yet.<br>
       We'll email you as soon as it's ready to track here.
@@ -16,6 +16,7 @@ import{t as e}from"./supabase-Dhn-RSV_.js";var t=[{name:`Brief & Discovery`,note
         <div class="preview-bar">
           <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
           <span class="preview-label">Live Preview</span>
+          <a class="preview-open" href="${r}" target="_blank" rel="noopener noreferrer">Open full view ↗</a>
         </div>
         <iframe class="preview-frame" src="${r}" title="Live site preview" loading="lazy"></iframe>
       </div>
