@@ -37,7 +37,10 @@ app.post('/clients/:userId/preview', upload.single('zip'), (req, res) => {
 
   try {
     const zip = new AdmZip(req.file.buffer);
-    const entries = zip.getEntries();
+    const entries = zip.getEntries().filter(entry => {
+      const normalized = entry.entryName.replace(/\\/g, '/');
+      return !normalized.startsWith('__MACOSX/') && !normalized.split('/').pop().startsWith('.');
+    });
 
     for (const entry of entries) {
       const normalized = path.normalize(entry.entryName);
@@ -46,13 +49,34 @@ app.post('/clients/:userId/preview', upload.single('zip'), (req, res) => {
       }
     }
 
+    // macOS zip tools often wrap contents in a single top-level folder — unwrap it
+    // so index.html ends up at the preview root regardless of how the zip was made.
+    const topLevelDirs = new Set(
+      entries.map(e => e.entryName.replace(/\\/g, '/').split('/')[0]).filter(Boolean)
+    );
+    let stripPrefix = '';
+    if (!entries.some(e => e.entryName.replace(/\\/g, '/') === 'index.html') && topLevelDirs.size === 1) {
+      const onlyDir = [...topLevelDirs][0];
+      if (entries.every(e => e.entryName.replace(/\\/g, '/').startsWith(onlyDir + '/'))) {
+        stripPrefix = onlyDir + '/';
+      }
+    }
+
     const dir = path.join(PREVIEWS_DIR, userId);
     fs.rmSync(dir, { recursive: true, force: true });
     fs.mkdirSync(dir, { recursive: true });
-    zip.extractAllTo(dir, true);
+
+    for (const entry of entries) {
+      if (entry.isDirectory) continue;
+      const relPath = entry.entryName.replace(/\\/g, '/').slice(stripPrefix.length);
+      if (!relPath) continue;
+      const destPath = path.join(dir, relPath);
+      fs.mkdirSync(path.dirname(destPath), { recursive: true });
+      fs.writeFileSync(destPath, entry.getData());
+    }
 
     if (!fs.existsSync(path.join(dir, 'index.html'))) {
-      throw new Error('Zip does not contain an index.html at its root');
+      throw new Error('Zip does not contain an index.html at its root (or in a single wrapping folder)');
     }
 
     res.json({ ok: true });
