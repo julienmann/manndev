@@ -1,0 +1,5 @@
+# Per-client live preview drops — uploaded directly to the server,
+# not tracked in git (can be large, arbitrary, and change often).
+client-previews/
+
+.DS_Store

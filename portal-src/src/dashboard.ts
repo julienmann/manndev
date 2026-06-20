@@ -39,7 +39,7 @@ function renderError() {
   main.innerHTML = `<div class="dash-state">Something went wrong loading your project. Try refreshing, or get in touch.</div>`;
 }
 
-function renderTracker(project: ClientProject) {
+function renderTracker(project: ClientProject, previewUrl: string | null) {
   const currentStage = project.stage ?? 0;
   const stageRows = STAGES.map((stage, i) => {
     const state = i < currentStage ? 'done' : i === currentStage ? 'current' : 'upcoming';
@@ -54,11 +54,24 @@ function renderTracker(project: ClientProject) {
     `;
   }).join('');
 
+  const previewBlock = previewUrl
+    ? `
+      <div class="preview-panel">
+        <div class="preview-bar">
+          <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
+          <span class="preview-label">Live Preview</span>
+        </div>
+        <iframe class="preview-frame" src="${previewUrl}" title="Live site preview" loading="lazy"></iframe>
+      </div>
+    `
+    : '';
+
   main.innerHTML = `
     <div class="dash-greeting">
       <p class="dash-greeting-kicker">${project.business_name ?? 'Your project'}</p>
       <h1 class="dash-greeting-title">In progress</h1>
     </div>
+    ${previewBlock}
     <div class="tracker">${stageRows}</div>
   `;
 }
@@ -124,7 +137,9 @@ async function init() {
   if (project.launched_at) {
     renderMaintenance(project);
   } else {
-    renderTracker(project);
+    const previewPath = `/client-previews/${session.user.id}/`;
+    const hasPreview = await fetch(previewPath, { method: 'HEAD' }).then(r => r.ok).catch(() => false);
+    renderTracker(project, hasPreview ? previewPath : null);
   }
 }
 

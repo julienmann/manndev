@@ -61,3 +61,15 @@ git push
 ```
 
 Then on the server: `git pull`. Since the app is built with `base: '/portal/'` in `vite.config.ts`, its asset and redirect paths already assume it's served from `/portal` on the same domain as the marketing site — no separate subdomain or DNS entry needed.
+
+## 6. Client live previews
+
+While a client's site is pre-launch, the dashboard can embed a live preview of whatever you're building, served straight from a folder on the server — no extra setup per project beyond dropping files in.
+
+1. Find the client's user ID (Authentication → Users in Supabase — same ID used in `client_projects.user_id`).
+2. Build the client's site as static files (`index.html` + assets — any static build output works: plain HTML, a Vite/Next.js export, etc.).
+3. Upload those files into `/srv/www/manndev/client-previews/<user_id>/` on the server (e.g. `rsync -av dist/ lmann@lionelmann.com:/srv/www/manndev/client-previews/<user_id>/`).
+
+That's it — the dashboard checks for that folder automatically (`HEAD /client-previews/<user_id>/`) and shows the embedded preview if it finds one, or just shows the plain tracker if it doesn't. No database field to update, no redeploy needed. This folder is gitignored (`client-previews/` at the repo root) since these are arbitrary, per-client build drops, not source-controlled.
+
+Drop in a new build anytime to update what the client sees — just overwrite the folder's contents.
