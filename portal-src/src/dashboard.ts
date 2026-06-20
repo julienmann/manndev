@@ -28,27 +28,35 @@ function formatDate(iso: string | null): string {
 
 function renderEmpty() {
   main.innerHTML = `
-    <div class="dash-state">
-      Your project hasn't been set up in the portal yet.<br>
-      We'll email you as soon as it's ready to track here.
+    <div class="dash-greeting">
+      <p class="dash-greeting-kicker">Not set up yet</p>
+      <h1 class="dash-greeting-title">Hang tight</h1>
     </div>
+    <p class="dash-note">We'll email you as soon as your project is ready to track here.</p>
   `;
 }
 
 function renderError() {
-  main.innerHTML = `<div class="dash-state">Something went wrong loading your project. Try refreshing, or get in touch.</div>`;
+  main.innerHTML = `
+    <div class="dash-state">Something went wrong loading your project.</div>
+    <button type="button" class="btn-retry" id="retry-btn">Try again</button>
+  `;
+  document.querySelector<HTMLButtonElement>('#retry-btn')!.addEventListener('click', init);
 }
 
 function renderTracker(project: ClientProject, previewUrl: string | null) {
   const currentStage = project.stage ?? 0;
   const stageRows = STAGES.map((stage, i) => {
     const state = i < currentStage ? 'done' : i === currentStage ? 'current' : 'upcoming';
+    const since = state === 'current' && project.last_updated_at
+      ? `<div class="tracker-since">Since ${formatDate(project.last_updated_at)}</div>`
+      : '';
     return `
       <div class="tracker-step" data-state="${state}">
         <div class="tracker-num">${String(i + 1).padStart(2, '0')}</div>
         <div class="tracker-body">
           <div class="tracker-name">${stage.name}</div>
-          ${state === 'current' ? `<div class="tracker-note">${stage.note}</div>` : ''}
+          ${state === 'current' ? `<div class="tracker-note">${stage.note}</div>${since}` : ''}
         </div>
       </div>
     `;
@@ -73,6 +81,7 @@ function renderTracker(project: ClientProject, previewUrl: string | null) {
       <h1 class="dash-greeting-title">In progress</h1>
     </div>
     ${previewBlock}
+    <p class="tracker-kicker">Step ${currentStage + 1} of ${STAGES.length}</p>
     <div class="tracker">${stageRows}</div>
   `;
 }

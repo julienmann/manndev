@@ -70,11 +70,18 @@ button{font-family:inherit;}
 .login-foot a{color:var(--fg);border-bottom:1px solid var(--rule-accent);}
 
 /* ── dashboard ── */
-.dash-state{padding:3.5rem 0;text-align:center;color:var(--mid);font-size:.85rem;}
+.dash-state{padding:3.5rem 0 1.2rem;text-align:center;color:var(--mid);font-size:.85rem;}
+.btn-retry{
+  display:block;margin:0 auto 3.5rem;background:none;border:1px solid var(--rule-accent);
+  color:var(--accent);font-family:var(--mono);font-size:.7rem;letter-spacing:.15em;
+  text-transform:uppercase;padding:.6rem 1.4rem;cursor:pointer;transition:background .2s,color .2s;
+}
+.btn-retry:hover{background:var(--accent);color:var(--bg);}
 
 .dash-greeting{padding:2.2rem 0 .4rem;}
 .dash-greeting-kicker{font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mid);margin-bottom:.7rem;}
 .dash-greeting-title{font-family:var(--bebas);font-size:clamp(1.8rem,6vw,2.4rem);letter-spacing:.02em;}
+.dash-note{font-size:.85rem;color:var(--mid);line-height:1.8;max-width:48ch;}
 
 /* live preview (pre-launch) */
 .preview-panel{
@@ -100,12 +107,16 @@ button{font-family:inherit;}
 }
 
 /* tracker (pre-launch) */
-.tracker{margin-top:2.2rem;border-top:1px solid var(--rule);}
+.tracker-kicker{margin-top:1.6rem;font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);}
+.tracker{margin-top:.8rem;border-top:1px solid var(--rule);}
 .tracker-step{
-  display:flex;gap:1.1rem;padding:1.3rem 0;border-bottom:1px solid var(--rule);
-  opacity:.4;transition:opacity .3s;
+  display:flex;gap:1.1rem;padding:1.3rem .9rem;margin:0 -.9rem;border-bottom:1px solid var(--rule);
+  opacity:.4;transition:opacity .3s,background-color .3s;
 }
 .tracker-step[data-state="done"],.tracker-step[data-state="current"]{opacity:1;}
+.tracker-step[data-state="current"]{
+  background:var(--accent-dim);box-shadow:0 0 40px rgba(196,146,42,.06);
+}
 .tracker-num{
   font-family:var(--bebas);font-size:1.3rem;line-height:1;color:var(--mid);
   width:1.8rem;flex-shrink:0;
@@ -123,6 +134,7 @@ button{font-family:inherit;}
   text-transform:uppercase;margin-left:.6rem;
 }
 .tracker-note{font-size:.82rem;color:var(--mid);line-height:1.7;max-width:48ch;}
+.tracker-since{font-size:.68rem;color:var(--mid);opacity:.7;margin-top:.4rem;}
 
 /* maintenance rows (post-launch) */
 .maint{margin-top:2rem;border-top:1px solid var(--rule);}
