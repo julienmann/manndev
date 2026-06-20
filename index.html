@@ -562,10 +562,12 @@ footer{border-top:1px solid var(--rule);padding:2rem 3rem;display:flex;justify-c
   .process-visual-col{display:none;}
 }
 @media(max-width:900px){
-  .nav-inner{padding:.9rem 1.5rem;}
+  .nav-inner{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;padding:.9rem 1.5rem;}
+  .nav-logo{justify-self:start;}
   .nav-links{display:none;}
-  .nav-right{gap:.9rem;}
-  .nav-portal-link{font-size:.6rem;letter-spacing:.12em;}
+  .nav-right{display:contents;}
+  .nav-portal-link{font-size:.6rem;letter-spacing:.12em;justify-self:center;text-align:center;}
+  .nav-cta{justify-self:end;}
   #hero{padding-left:1.5rem;padding-right:1.5rem;}
   .hero-bottom{grid-template-columns:1fr;gap:1.5rem;}
   .hero-meta{text-align:left;}
