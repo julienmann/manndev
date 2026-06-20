@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+<title>Admin — Mann Dev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div class="admin-bar">
+    <span class="admin-wordmark">MANN DEV — ADMIN</span>
+    <button class="admin-refresh" id="refresh-btn" type="button">Refresh</button>
+  </div>
+
+  <main class="admin-main">
+    <div id="status" class="admin-status"></div>
+    <div id="table-wrap"></div>
+  </main>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
