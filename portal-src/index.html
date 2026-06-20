@@ -7,15 +7,19 @@
 <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
 <title>Client Portal — Mann Dev</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;1,300&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
-  <div class="login-shell">
-    <div class="login-card">
-      <p class="login-kicker">Mann Dev — Client Portal</p>
+  <div class="portal-bar">
+    <a href="https://dev.julienmann.ca/" class="portal-wordmark">MANN DEV</a>
+    <span class="login-dateline">Client Access</span>
+  </div>
+
+  <main class="login-main">
+    <div class="login-content">
       <h1 class="login-title">Sign in</h1>
-      <p class="login-sub">Enter the email address we used for your project. We'll send you a secure link, no password needed.</p>
+      <p class="login-aside">no password, just the email already on file for your project</p>
 
       <form id="login-form" novalidate>
         <div class="field">
@@ -28,11 +32,10 @@
         <p class="login-status" id="status" role="status" aria-live="polite"></p>
       </form>
 
-      <div class="login-foot">
-        Not a client yet? <a href="https://dev.julienmann.ca/#contact">Get in touch</a> about your project.
-      </div>
+      <p class="login-foot">Not a client yet? <a href="https://dev.julienmann.ca/#contact">Get in touch</a> about your project, I read these myself.</p>
     </div>
-  </div>
+  </main>
+
   <script type="module" src="/src/login.ts"></script>
 </body>
 </html>
