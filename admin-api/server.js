@@ -3,6 +3,7 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { createClient } from '@supabase/supabase-js';
+import ws from 'ws';
 
 const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, PORT } = process.env;
 
@@ -12,6 +13,7 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
+  realtime: { transport: ws },
 });
 
 const PREVIEWS_DIR = '/srv/www/manndev/client-previews';
