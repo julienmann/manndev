@@ -41,7 +41,7 @@ Stages map to: `0` Brief & Discovery, `1` Design, `2` Build, `3` Review & Refine
 ## 4. Local development
 
 ```bash
-cd portal
+cd portal-src
 npm install
 cp .env.example .env   # then fill in your Supabase values
 npm run dev
@@ -49,4 +49,15 @@ npm run dev
 
 ## 5. Deployment
 
-Deploy `portal/`'s build output (`portal/dist`) to the `/portal` path of the main site (e.g. copy it into `/portal` on the same host that serves the marketing site, so it's reachable at `https://dev.julienmann.ca/portal/`). The app is built with `base: '/portal/'` in `vite.config.ts`, so its asset and redirect paths are already subpath-aware — no separate subdomain or DNS entry needed. Add the env vars from `.env.example` wherever the build step runs.
+The production server only runs `git pull` — it has no Node/build step. So the build output is committed straight into the repo at the top-level `portal/` directory (separate from `portal-src/`, which is the app's source).
+
+Whenever you change anything under `portal-src/`, rebuild and re-commit the artifacts:
+
+```bash
+./scripts/build-portal.sh   # rebuilds portal-src and refreshes the top-level portal/ folder
+git add portal-src portal
+git commit -m "Update client portal"
+git push
+```
+
+Then on the server: `git pull`. Since the app is built with `base: '/portal/'` in `vite.config.ts`, its asset and redirect paths already assume it's served from `/portal` on the same domain as the marketing site — no separate subdomain or DNS entry needed.
