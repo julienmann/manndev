@@ -275,6 +275,14 @@ nav ul li a.nav-portal:hover{opacity:1;border-bottom-color:var(--accent);}
   flex-direction:column;
   gap:1rem;
   border:1px solid rgba(240,242,244,.06);
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  will-change:transform;
+}
+.process-card:hover{
+  transform:scale(1.025);
+  box-shadow:0 12px 40px rgba(0,0,0,.28);
+  border-color:rgba(242,201,76,.14);
+  z-index:1;
 }
 .process-card:last-child{
   grid-column:span 2;
@@ -282,6 +290,10 @@ nav ul li a.nav-portal:hover{opacity:1;border-bottom-color:var(--accent);}
 .pc-num{
   font:700 3.5rem/1 var(--display);
   color:rgba(242,201,76,.18);
+  transition:color .25s ease;
+}
+.process-card:hover .pc-num{
+  color:rgba(242,201,76,.85);
 }
 .pc-title{
   font:600 1.25rem/1.2 var(--display);
@@ -888,22 +900,21 @@ footer{
 <section id="principles">
   <div class="container">
     <p class="about-h6 fade-up">What Every Project Includes</p>
-    <h2 class="principles-h2 fade-up">Three standards every build ships to, plus one way to keep it that way.</h2>
+    <h2 class="principles-h2 fade-up">Three standards every build ships to,<br>plus one way to keep it that way.</h2>
     <div class="principles-grid fade-up">
 
-      <!-- Tall card: Built to Be Owned -->
+      <!-- Tall card: Your Visitors Aren't the Product -->
       <div class="principle-card principle-tall">
         <div style="color:var(--accent);margin-bottom:2rem;opacity:.8;">
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="8" y="24" width="36" height="22" rx="3"/>
-            <path d="M16 24v-8a10 10 0 0 1 20 0v8"/>
-            <circle cx="26" cy="35" r="3"/>
-            <path d="M26 38v4"/>
+            <path d="M8 26C8 26 15 14 26 14C37 14 44 26 44 26C44 26 37 38 26 38C15 38 8 26 8 26Z"/>
+            <circle cx="26" cy="26" r="6"/>
+            <line x1="10" y1="10" x2="42" y2="42"/>
           </svg>
         </div>
-        <h3 class="principle-h3">Built to Be Owned</h3>
-        <p class="principle-p">No templates, no page builders, no monthly platform rent. You walk away with the code, the hosting, and every account in your own name. Yours to keep, with or without me.</p>
-        <span class="principle-tag">Full ownership</span>
+        <h3 class="principle-h3">Your Visitors Aren't the Product</h3>
+        <p class="principle-p">Most off-the-shelf platforms ship with third-party ad trackers, surveillance pixels, and data brokers baked in — your audience's behaviour sold to networks you never agreed to. Sites built here carry only what you actually asked for. No hidden passengers.</p>
+        <span class="principle-tag">Privacy first</span>
       </div>
 
       <!-- Right top: Fast by Default -->
