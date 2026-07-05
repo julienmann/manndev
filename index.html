@@ -510,6 +510,8 @@ nav ul li a.nav-portal:hover{opacity:1;border-bottom-color:var(--accent);}
 .service-desc-col{
   padding:2rem 2.5rem;
   border-right:1px solid var(--rule);
+  display:flex;
+  flex-direction:column;
 }
 .service-desc{
   font-size:.95rem;
@@ -517,6 +519,77 @@ nav ul li a.nav-portal:hover{opacity:1;border-bottom-color:var(--accent);}
   line-height:1.9;
 }
 .service-desc+.service-desc{margin-top:1rem;font-size:.85rem;}
+.service-visual{
+  flex:1;
+  margin-top:2rem;
+  min-height:180px;
+  display:flex;
+  flex-direction:column;
+  border:1px solid var(--rule);
+  border-radius:10px;
+  overflow:hidden;
+  background:rgba(255,255,255,.02);
+}
+.sv-dots{
+  display:flex;
+  gap:.4rem;
+  padding:.6rem .8rem;
+  border-bottom:1px solid var(--rule);
+  flex-shrink:0;
+}
+.sv-dots span{width:7px;height:7px;border-radius:50%;background:var(--rule);}
+.sv-hero{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.6rem;
+  padding:2rem 1.5rem;
+}
+.sv-line{height:8px;border-radius:4px;background:var(--rule);}
+.sv-line-lg{width:65%;height:12px;background:rgba(240,242,244,.16);}
+.sv-line-sm{width:42%;}
+.sv-btn{margin-top:.6rem;width:110px;height:26px;border-radius:6px;background:var(--accent);opacity:.85;}
+.sv-site{flex:1;display:flex;}
+.sv-nav{
+  width:30%;
+  border-right:1px solid var(--rule);
+  padding:1.2rem .9rem;
+  display:flex;
+  flex-direction:column;
+  gap:.7rem;
+}
+.sv-nav-item{height:7px;border-radius:4px;background:var(--rule);width:80%;}
+.sv-nav-item-active{background:var(--accent);opacity:.85;width:60%;}
+.sv-content{
+  flex:1;
+  padding:1.4rem 1.5rem;
+  display:flex;
+  flex-direction:column;
+  gap:.6rem;
+  justify-content:center;
+}
+.sv-content .sv-line-lg{width:80%;}
+.sv-content .sv-line-sm{width:55%;}
+.sv-grid{display:flex;gap:.5rem;margin-top:.6rem;}
+.sv-grid span{flex:1;height:34px;border-radius:5px;background:var(--rule);}
+.sv-flow{
+  flex:1;
+  display:flex;
+  align-items:center;
+  padding:1.4rem 1.8rem;
+}
+.sv-node{
+  flex-shrink:0;
+  width:34px;
+  height:34px;
+  border-radius:8px;
+  border:1px solid var(--rule);
+  background:rgba(255,255,255,.03);
+}
+.sv-node-active{border-color:var(--accent);background:rgba(242,201,76,.15);}
+.sv-flow-line{flex:1;height:1px;background:var(--rule);}
 .service-inc-col{
   padding:2rem 2.5rem;
 }
@@ -748,6 +821,7 @@ footer{
   .principle-inner-row{grid-template-columns:1fr;}
   .service-body{grid-template-columns:1fr;}
   .service-desc-col{border-right:none;border-bottom:1px solid var(--rule);}
+  .service-visual{min-height:140px;flex:none;}
   .contact-grid{grid-template-columns:1fr;}
   .form-row{grid-template-columns:1fr;}
   .footer-inner{flex-direction:column;align-items:flex-start;}
@@ -887,7 +961,7 @@ footer{
         <div class="pc-num">05</div>
         <div class="pc-title">Launch</div>
         <div class="pc-body">Deployment to your domain, analytics wired up, and a walkthrough of how to manage it. You get full ownership of everything: code, hosting, accounts. No lock-in, no monthly platform fees unless you want them. I stay available for 30 days post-launch at no extra charge.</div>
-        <span class="pc-tag">Deployed &middot; Yours to keep</span>
+        <span class="pc-tag">Deployed</span>
       </div>
 
     </div>
@@ -1016,6 +1090,14 @@ footer{
         <div class="service-body">
           <div class="service-desc-col">
             <p class="service-desc">A single, focused page built to convert. Ideal for product launches, campaigns, or businesses that need a strong web presence fast. I handle the design and development. You just need to tell me what you want it to do.</p>
+            <div class="service-visual" aria-hidden="true">
+              <div class="sv-dots"><span></span><span></span><span></span></div>
+              <div class="sv-hero">
+                <div class="sv-line sv-line-lg"></div>
+                <div class="sv-line sv-line-sm"></div>
+                <div class="sv-btn"></div>
+              </div>
+            </div>
           </div>
           <div class="service-inc-col">
             <span class="service-inc-label">What's included</span>
@@ -1027,13 +1109,6 @@ footer{
             <div class="inc-item">Deployed &amp; live within a few days</div>
             <div class="inc-item">First month of Care &amp; Hosting included</div>
           </div>
-        </div>
-        <div class="service-footer">
-          <span class="stack-tag">HTML</span>
-          <span class="stack-tag">CSS</span>
-          <span class="stack-tag">JavaScript</span>
-          <span class="stack-tag">or Next.js</span>
-          <span class="stack-tag">Vercel</span>
         </div>
       </div>
     </div>
@@ -1052,6 +1127,24 @@ footer{
         <div class="service-body">
           <div class="service-desc-col">
             <p class="service-desc">A multi-page site with everything your business needs: about, services, portfolio, blog, contact. Built clean and fast from scratch. I work through design and development together so nothing gets lost between the two.</p>
+            <div class="service-visual" aria-hidden="true">
+              <div class="sv-dots"><span></span><span></span><span></span></div>
+              <div class="sv-site">
+                <div class="sv-nav">
+                  <div class="sv-nav-item sv-nav-item-active"></div>
+                  <div class="sv-nav-item"></div>
+                  <div class="sv-nav-item"></div>
+                  <div class="sv-nav-item"></div>
+                </div>
+                <div class="sv-content">
+                  <div class="sv-line sv-line-lg"></div>
+                  <div class="sv-line sv-line-sm"></div>
+                  <div class="sv-grid">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="service-inc-col">
             <span class="service-inc-label">What's included</span>
@@ -1064,13 +1157,6 @@ footer{
             <div class="inc-item">30 days post-launch support</div>
             <div class="inc-item">First month of Care &amp; Hosting included</div>
           </div>
-        </div>
-        <div class="service-footer">
-          <span class="stack-tag">Next.js</span>
-          <span class="stack-tag">React</span>
-          <span class="stack-tag">Tailwind CSS</span>
-          <span class="stack-tag">Sanity / Contentful</span>
-          <span class="stack-tag">Vercel</span>
         </div>
       </div>
     </div>
@@ -1105,12 +1191,6 @@ footer{
             <div class="inc-item">New features on request</div>
           </div>
         </div>
-        <div class="service-footer">
-          <span class="stack-tag">Any Stack</span>
-          <span class="stack-tag">Global CDN</span>
-          <span class="stack-tag">Flat Monthly Rate</span>
-          <span class="stack-tag">Cancel Anytime</span>
-        </div>
       </div>
     </div>
 
@@ -1128,6 +1208,18 @@ footer{
         <div class="service-body">
           <div class="service-desc-col">
             <p class="service-desc">AI-powered workflows and automations built into your existing tools or as standalone systems. Chatbots, document processing, lead qualification, internal assistants. Custom-built to your process, not a plugin, not a template.</p>
+            <div class="service-visual" aria-hidden="true">
+              <div class="sv-dots"><span></span><span></span><span></span></div>
+              <div class="sv-flow">
+                <div class="sv-node"></div>
+                <div class="sv-flow-line"></div>
+                <div class="sv-node"></div>
+                <div class="sv-flow-line"></div>
+                <div class="sv-node sv-node-active"></div>
+                <div class="sv-flow-line"></div>
+                <div class="sv-node"></div>
+              </div>
+            </div>
           </div>
           <div class="service-inc-col">
             <span class="service-inc-label">What's included</span>
@@ -1138,13 +1230,6 @@ footer{
             <div class="inc-item">Testing &amp; iterative refinement</div>
             <div class="inc-item">Handoff with documentation</div>
           </div>
-        </div>
-        <div class="service-footer">
-          <span class="stack-tag">OpenAI / Anthropic</span>
-          <span class="stack-tag">LangChain</span>
-          <span class="stack-tag">Python</span>
-          <span class="stack-tag">n8n / Make</span>
-          <span class="stack-tag">Supabase</span>
         </div>
       </div>
     </div>
@@ -1253,9 +1338,10 @@ footer{
   </div>
   <div class="footer-bottom">
     <p class="footer-copy">&copy; 2026 Mann Dev. Montréal, QC.</p>
-    <p class="footer-fine">Designed &amp; built from scratch. Lighthouse 100. Yours to keep.</p>
+    <div id="wcb" class="carbonbadge"></div>
   </div>
 </footer>
+<script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
