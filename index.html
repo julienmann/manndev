@@ -1070,15 +1070,15 @@ footer{
     <p class="services-sub fade-up">Project work is scoped per brief. Care &amp; Hosting runs on a flat monthly rate — ask for details.</p>
 
     <div class="tabs-bar" role="tablist" aria-label="Services" style="position:relative;">
-      <button class="tab-btn active" data-tab="landing" role="tab" aria-selected="true" aria-controls="tab-landing">Landing Page</button>
-      <button class="tab-btn" data-tab="website" role="tab" aria-selected="false" aria-controls="tab-website">Full Website</button>
-      <button class="tab-btn" data-tab="maintenance" role="tab" aria-selected="false" aria-controls="tab-maintenance">Care &amp; Hosting <span class="tab-mrr-badge" aria-label="Monthly plan">Monthly</span></button>
-      <button class="tab-btn" data-tab="webapp" role="tab" aria-selected="false" aria-controls="tab-webapp">AI Automation</button>
+      <button class="tab-btn active" id="tabbtn-landing" data-tab="landing" role="tab" aria-selected="true" aria-controls="tab-landing">Landing Page</button>
+      <button class="tab-btn" id="tabbtn-website" data-tab="website" role="tab" aria-selected="false" aria-controls="tab-website">Full Website</button>
+      <button class="tab-btn" id="tabbtn-maintenance" data-tab="maintenance" role="tab" aria-selected="false" aria-controls="tab-maintenance">Care &amp; Hosting <span class="tab-mrr-badge" aria-label="Monthly plan">Monthly</span></button>
+      <button class="tab-btn" id="tabbtn-webapp" data-tab="webapp" role="tab" aria-selected="false" aria-controls="tab-webapp">AI Automation</button>
       <div class="tab-indicator" aria-hidden="true"></div>
     </div>
 
     <!-- Landing Page -->
-    <div class="tab-panel active" id="tab-landing" role="tabpanel">
+    <div class="tab-panel active" id="tab-landing" role="tabpanel" aria-labelledby="tabbtn-landing" tabindex="0">
       <div class="service-card">
         <div class="service-card-top">
           <h3 class="service-h3">Landing Page</h3>
@@ -1115,7 +1115,7 @@ footer{
     </div>
 
     <!-- Full Website -->
-    <div class="tab-panel" id="tab-website" role="tabpanel">
+    <div class="tab-panel" id="tab-website" role="tabpanel" aria-labelledby="tabbtn-website" tabindex="0">
       <div class="service-card">
         <div class="service-card-top">
           <h3 class="service-h3">Full Website</h3>
@@ -1163,7 +1163,7 @@ footer{
     </div>
 
     <!-- Care & Hosting -->
-    <div class="tab-panel" id="tab-maintenance" role="tabpanel">
+    <div class="tab-panel" id="tab-maintenance" role="tabpanel" aria-labelledby="tabbtn-maintenance" tabindex="0">
       <div class="service-card">
         <div class="service-card-top">
           <div class="service-title-wrap">
@@ -1196,7 +1196,7 @@ footer{
     </div>
 
     <!-- AI Automation -->
-    <div class="tab-panel" id="tab-webapp" role="tabpanel">
+    <div class="tab-panel" id="tab-webapp" role="tabpanel" aria-labelledby="tabbtn-webapp" tabindex="0">
       <div class="service-card">
         <div class="service-card-top">
           <h3 class="service-h3">AI Automation</h3>
@@ -1344,10 +1344,10 @@ footer{
 </footer>
 <script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/SplitText.min.js" defer></script>
-<script defer>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/SplitText.min.js"></script>
+<script>
 gsap.registerPlugin(ScrollTrigger);
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
