@@ -48,6 +48,13 @@ button{font-family:inherit;}
 
 .portal-main{max-width:900px;margin:0 auto;padding:0 clamp(1.5rem,5vw,3rem);}
 
+/* ── password gate (admin) ── */
+.gate-overlay{
+  position:fixed;inset:0;z-index:1000;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;padding:1.5rem;
+}
+.gate-overlay .login-content{width:100%;}
+
 /* ── login ── */
 .login-main{max-width:900px;margin:0 auto;padding:clamp(3rem,8vw,5rem) clamp(1.5rem,5vw,3rem) 2rem;}
 .login-content{max-width:440px;}
@@ -92,6 +99,8 @@ button{font-family:inherit;}
 
 .login-foot{margin-top:3rem;padding-top:1.6rem;border-top:1px solid var(--rule);font-size:.85rem;color:var(--mid);line-height:1.7;}
 .login-foot a{color:var(--fg);border-bottom:1px solid var(--rule-accent);}
+.login-admin-link{margin-top:.9rem;padding-top:0;border-top:none;font-size:.72rem;opacity:.5;}
+.login-admin-link a{border-bottom:1px solid var(--rule);}
 
 /* ── dashboard ── */
 .dash-state{padding:3.5rem 0 1.2rem;text-align:center;color:var(--mid);font-size:.95rem;}

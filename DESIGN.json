@@ -1,124 +1,142 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-06-19T00:00:00Z",
+  "generatedAt": "2026-07-12T00:00:00Z",
   "title": "Design System: Mann Dev",
   "extensions": {
     "colorMeta": {
-      "amber": { "role": "primary", "displayName": "Amber", "canonical": "oklch(64% 0.13 65)", "tonalRamp": ["#1a1308", "#2e2210", "#4a3818", "#6b5220", "#8e6c25", "#c4922a", "#dcb568", "#f0dba0"] },
-      "ink-black": { "role": "neutral", "displayName": "Ink Black", "canonical": "oklch(8% 0.005 65)", "tonalRamp": ["#0d0b09", "#131110", "#1a1714", "#2a2520", "#454039", "#6b6459", "#9a9080", "#c9c2b3"] },
-      "ink-panel": { "role": "neutral", "displayName": "Ink Panel", "canonical": "oklch(10% 0.005 65)" },
-      "ink-deep": { "role": "neutral", "displayName": "Ink Deep", "canonical": "oklch(6% 0.004 65)" },
-      "ink-code": { "role": "neutral", "displayName": "Ink Code", "canonical": "oklch(4% 0.003 65)" },
-      "paper-cream": { "role": "neutral", "displayName": "Paper Cream", "canonical": "oklch(92% 0.01 80)", "tonalRamp": ["#1a1814", "#3a352c", "#5c554a", "#7d7568", "#9e9586", "#bfb6a4", "#ede8d5", "#f7f4ea"] },
-      "warm-grey": { "role": "neutral", "displayName": "Warm Grey", "canonical": "oklch(63% 0.015 80)" },
-      "rule": { "role": "neutral", "displayName": "Hairline Rule", "canonical": "rgba(237,232,213,0.1)" },
-      "rule-accent": { "role": "primary", "displayName": "Amber-Tinted Rule", "canonical": "rgba(196,146,42,0.3)" },
-      "signal-green": { "role": "tertiary", "displayName": "Signal Green", "canonical": "oklch(74% 0.17 150)" }
+      "accent": { "role": "primary", "displayName": "Accent Gold", "canonical": "#f2c94c" },
+      "bg": { "role": "neutral", "displayName": "Background Navy", "canonical": "#1e2530" },
+      "surface": { "role": "neutral", "displayName": "Surface Navy", "canonical": "#252b34" },
+      "fg": { "role": "neutral", "displayName": "Foreground", "canonical": "#f0f2f4" },
+      "mid": { "role": "neutral", "displayName": "Mid Grey", "canonical": "#969ba6" },
+      "dim": { "role": "neutral", "displayName": "Dim Grey", "canonical": "#636872" },
+      "rule": { "role": "neutral", "displayName": "Hairline Rule", "canonical": "rgba(240,242,244,.09)" },
+      "rule-accent": { "role": "primary", "displayName": "Gold-Tinted Rule", "canonical": "rgba(242,201,76,.22)" }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Hero wordmark only, one use per page." },
-      "headline": { "displayName": "Headline", "purpose": "Section-opening statements (About, Contact)." },
-      "title": { "displayName": "Title", "purpose": "Tab titles, process-step titles, section labels." },
-      "body": { "displayName": "Body", "purpose": "All running copy." },
-      "label": { "displayName": "Label", "purpose": "Nav links, kickers, stat labels, form labels — always uppercase, wide-tracked." },
-      "accent-script": { "displayName": "Accent Script", "purpose": "The one Playfair Display italic moment per section." }
+      "display-hero": { "displayName": "Display Hero", "purpose": "The h1 hero line only." },
+      "display-headline": { "displayName": "Display Headline", "purpose": "Section-opening statements (About, Process, Principles, Contact)." },
+      "display-title": { "displayName": "Display Title", "purpose": "Service tab-panel card titles." },
+      "display-card-title": { "displayName": "Display Card Title", "purpose": "Process-card and principle-card titles." },
+      "display-numeral": { "displayName": "Display Numeral", "purpose": "Ghost step numbers (01-05) on process cards." },
+      "body": { "displayName": "Body", "purpose": "Base running copy." },
+      "body-copy": { "displayName": "Body Copy", "purpose": "Card/panel description copy, set smaller than base body." },
+      "label": { "displayName": "Label", "purpose": "Nav links, kickers, tags, badges, form labels, status pill text — uppercase, wide-tracked." }
     },
     "shadows": [
-      { "name": "ambient-focus-glow", "value": "0 0 60px rgba(196,146,42,0.08), 0 0 0 1px rgba(196,146,42,0.06) inset", "purpose": "Marks the single most important panel in a view (hero window, sticky process visual)." }
+      { "name": "process-card-hover", "value": "0 12px 40px rgba(0,0,0,.28)", "purpose": "Applied only on hover/focus of a process card, paired with scale(1.025) and a border-color shift to rgba(242,201,76,.14)." }
     ],
     "motion": [
-      { "name": "ease-out-power3", "value": "cubic-bezier(0.215, 0.61, 0.355, 1)", "purpose": "Default GSAP ease for reveals, tab indicator, masked text." },
-      { "name": "ease-magnetic-return", "value": "elastic.out(1, 0.4)", "purpose": "CTA return-to-rest after magnetic cursor tracking — the one permitted bounce, reserved for this single interaction." }
+      { "name": "ease-power3-out", "value": "power3.out", "purpose": "Default GSAP ease for fade-up section reveals." },
+      { "name": "ease-power4-out", "value": "power4.out", "purpose": "Used for staggered masked text reveals (hero/about headline clip lines)." },
+      { "name": "ease-power2-out", "value": "power2.out", "purpose": "Used for smaller staggered reveals (list items, tags)." },
+      { "name": "ease-tab-indicator", "value": "power3.out, duration 0.35s", "purpose": "Tab underline indicator sliding to the active tab." },
+      { "name": "pulse-status-dot", "value": "2s ease-in-out infinite, scale 1 to .7 / opacity 1 to .4", "purpose": "The 'Available for new projects' status dot." }
     ],
     "breakpoints": [
-      { "name": "tablet", "value": "1024px" },
-      { "name": "mobile", "value": "900px" },
-      { "name": "small", "value": "480px" }
+      { "name": "tablet", "value": "900px" },
+      { "name": "mobile", "value": "600px" }
     ]
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Link CTA",
       "kind": "button",
-      "refersTo": "button-primary",
-      "description": "Solid amber CTA, used once per form (Send Enquiry).",
-      "html": "<button class=\"ds-btn-primary\">Send Enquiry</button>",
-      "css": ".ds-btn-primary { background: #c4922a; color: #0d0b09; padding: 0.8rem 2.5rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 400; border: 1px solid #c4922a; border-radius: 0; transition: background 0.25s, color 0.25s, border-color 0.25s; } .ds-btn-primary:hover, .ds-btn-primary:focus-visible { background: transparent; color: #c4922a; }"
+      "refersTo": "link-cta",
+      "description": "The only CTA style in the system — text link with animated underline and arrow, no button fill ever.",
+      "html": "<a href=\"#contact\" class=\"link-cta\">Start a project<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg><div class=\"cta-underline-wrap\"><div class=\"cta-underline\"></div></div></a>",
+      "css": ".link-cta{display:inline-flex;align-items:center;gap:.5rem;font-family:'Figtree',sans-serif;font-size:1rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:#f2c94c;position:relative;} .link-cta .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;} .link-cta .cta-underline{height:100%;width:0;background:#f2c94c;transition:width .3s ease;} .link-cta:hover .cta-underline{width:100%;} .link-cta svg{transition:transform .3s ease;} .link-cta:hover svg{transform:translateX(3px);}"
     },
     {
-      "name": "Ghost Button",
-      "kind": "button",
-      "refersTo": "button-ghost",
-      "description": "Nav/tab CTA with a thin border that fills solid amber on hover.",
-      "html": "<a class=\"ds-btn-ghost\" href=\"#contact\">Get a Quote</a>",
-      "css": ".ds-btn-ghost { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: #9a9080; border: 1px solid rgba(196,146,42,0.3); padding: 0.45rem 1.2rem; text-decoration: none; transition: background 0.25s, color 0.25s, border-color 0.25s; } .ds-btn-ghost:hover, .ds-btn-ghost:focus-visible { background: #c4922a; color: #0d0b09; border-color: #c4922a; }"
+      "name": "Surface Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Base rounded card used for process, principle, and service panels.",
+      "html": "<div class=\"card\">...</div>",
+      "css": ".card{background:#252b34;border-radius:28px;padding:2.5rem;}"
+    },
+    {
+      "name": "Process Card",
+      "kind": "card",
+      "refersTo": "process-card",
+      "description": "Numbered step card with a ghost display numeral that brightens and a hover lift (scale + shadow + border tint) — the one card in the system permitted to lift.",
+      "html": "<div class=\"process-card\"><div class=\"pc-num\">01</div><div class=\"pc-title\">Brief &amp; Discovery</div><div class=\"pc-body\">...</div><span class=\"pc-tag\">30 to 60 min call</span></div>",
+      "css": ".process-card{background:#252b34;border-radius:28px;padding:2.5rem;display:flex;flex-direction:column;gap:1rem;border:1px solid rgba(240,242,244,.06);transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;} .process-card:hover{transform:scale(1.025);box-shadow:0 12px 40px rgba(0,0,0,.28);border-color:rgba(242,201,76,.14);} .pc-num{font:700 3.5rem/1 'Lora',serif;color:rgba(242,201,76,.18);transition:color .25s ease;} .process-card:hover .pc-num{color:rgba(242,201,76,.85);} .pc-title{font:600 1.25rem/1.2 'Lora',serif;color:#f0f2f4;} .pc-body{font-size:.92rem;color:#969ba6;line-height:1.85;}"
+    },
+    {
+      "name": "Outline Tag",
+      "kind": "card",
+      "refersTo": "tag",
+      "description": "Small uppercase chip with transparent fill and a gold-tinted border, used for process/principle/service tags.",
+      "html": "<span class=\"pc-tag\">Lighthouse &middot; Cross-browser &middot; A11y</span>",
+      "css": ".pc-tag{display:inline-block;font-family:'Figtree',sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;border:1px solid rgba(242,201,76,.22);padding:.3rem .8rem;color:#f2c94c;width:fit-content;}"
+    },
+    {
+      "name": "Filled Badge",
+      "kind": "card",
+      "refersTo": "filled-badge",
+      "description": "The one place gold is used as a solid fill — MRR/care upsell chips (tab badge, care badge).",
+      "html": "<span class=\"tab-mrr-badge\">Monthly</span>",
+      "css": ".tab-mrr-badge{display:inline-block;font-size:.55rem;letter-spacing:.12em;font-weight:700;background:#f2c94c;color:#1e2530;padding:.15rem .45rem;}"
     },
     {
       "name": "Floating-Label Input",
       "kind": "input",
       "refersTo": "input-text",
       "description": "Underline-only text field whose label floats up on focus/fill.",
-      "html": "<div class=\"ds-field\"><input class=\"ds-input\" type=\"text\" id=\"ds-name\" placeholder=\"x\" /><label class=\"ds-label\" for=\"ds-name\">First Name</label></div>",
-      "css": ".ds-field { position: relative; margin-bottom: 2rem; } .ds-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(237,232,213,0.1); padding: 0.8rem 0 0.6rem; color: #ede8d5; font-family: 'IBM Plex Mono', monospace; font-size: 0.88rem; font-weight: 300; outline: none; transition: border-color 0.3s; } .ds-input::placeholder { opacity: 0; } .ds-input:focus { border-bottom-color: #c4922a; } .ds-label { position: absolute; top: 0.8rem; left: 0; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: #9a9080; pointer-events: none; transition: all 0.25s ease; } .ds-input:focus ~ .ds-label, .ds-input:not(:placeholder-shown) ~ .ds-label { top: -1rem; font-size: 0.58rem; color: #ede8d5; }"
+      "html": "<div class=\"form-field\"><input class=\"form-input\" type=\"text\" placeholder=\"x\" /><label class=\"form-label\">Name</label></div>",
+      "css": ".form-input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(240,242,244,.09);padding:.8rem 0 .6rem;color:#f0f2f4;font-family:'Figtree',sans-serif;font-size:.95rem;outline:none;transition:border-color .3s;} .form-input:focus{border-bottom-color:#f2c94c;} .form-label{position:absolute;top:.8rem;left:0;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:#969ba6;pointer-events:none;transition:all .25s ease;} .form-input:focus~.form-label,.form-input:not(:placeholder-shown)~.form-label{top:-1rem;font-size:.58rem;color:#f0f2f4;}"
     },
     {
-      "name": "Stat Cell",
-      "kind": "card",
-      "refersTo": "stat-box",
-      "description": "Borderless grid cell for a number + label, no card background, amber wash on hover.",
-      "html": "<div class=\"ds-stat\"><span class=\"ds-stat-num\">15</span><span class=\"ds-stat-label\">Sites Launched</span></div>",
-      "css": ".ds-stat { padding: 2.5rem 2rem; border-right: 1px solid rgba(237,232,213,0.1); border-bottom: 1px solid rgba(237,232,213,0.1); position: relative; overflow: hidden; } .ds-stat::before { content: ''; position: absolute; inset: 0; background: #c4922a; opacity: 0; transition: opacity 0.4s; } .ds-stat:hover::before { opacity: 0.04; } .ds-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 5vw, 5rem); line-height: 1; display: block; position: relative; color: #ede8d5; } .ds-stat-label { font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: #9a9080; margin-top: 0.5rem; display: block; position: relative; }"
-    },
-    {
-      "name": "Section Header",
-      "kind": "nav",
-      "refersTo": "section-label",
-      "description": "Recurring section title with underline and a numbered pagination tag (e.g. 01/04).",
-      "html": "<div class=\"ds-section-header\"><span class=\"ds-section-label\">About</span><span class=\"ds-section-num\">01 / 04</span></div>",
-      "css": ".ds-section-header { display: flex; justify-content: space-between; align-items: baseline; padding: 1.2rem 3rem 1rem; } .ds-section-label { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.12em; text-transform: uppercase; color: #ede8d5; border-bottom: 2px solid #c4922a; padding-bottom: 0.15rem; display: inline-block; } .ds-section-num { font-family: 'IBM Plex Mono', monospace; font-size: 1rem; letter-spacing: 0.1em; color: #9a9080; }"
-    },
-    {
-      "name": "Browser-Window Panel",
+      "name": "Service Visual",
       "kind": "custom",
-      "refersTo": "hero-window",
-      "description": "Signature 'code renders to preview' chrome — traffic-light dots, fake URL bar, code block, then a miniature rendered preview.",
-      "html": "<div class=\"ds-window\"><div class=\"ds-window-bar\"><span class=\"ds-dot\" style=\"background:#ff5f56\"></span><span class=\"ds-dot\" style=\"background:#ffbd2e\"></span><span class=\"ds-dot\" style=\"background:#27c93f\"></span><div class=\"ds-window-url\">manndev.ca</div></div><div class=\"ds-window-body\"><div class=\"ds-window-code\">const site = build({ design: 'custom' })</div></div></div>",
-      "css": ".ds-window { width: 100%; max-width: 380px; border: 1px solid rgba(196,146,42,0.3); background: #0a0907; box-shadow: 0 0 60px rgba(196,146,42,0.08), 0 0 0 1px rgba(196,146,42,0.06) inset; position: relative; overflow: hidden; } .ds-window-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.9rem; background: #111009; border-bottom: 1px solid rgba(237,232,213,0.1); } .ds-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; } .ds-window-url { flex: 1; margin-left: 0.5rem; background: rgba(237,232,213,0.05); border: 1px solid rgba(237,232,213,0.08); border-radius: 3px; padding: 0.25rem 0.6rem; font-size: 0.58rem; letter-spacing: 0.1em; color: #9a9080; font-family: 'IBM Plex Mono', monospace; } .ds-window-body { padding: 1.2rem; } .ds-window-code { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: #c4922a; }"
+      "refersTo": "service-visual",
+      "description": "Signature 'abstract site preview' panel — traffic-light dots plus a wireframe mockup (nav rail, content lines, or node/flow diagram depending on the service tab) standing in for a rendered site. Replaces the retired literal code-block device.",
+      "html": "<div class=\"service-visual\" aria-hidden=\"true\"><div class=\"sv-dots\"><span></span><span></span><span></span></div><div class=\"sv-hero\"><div class=\"sv-line sv-line-lg\"></div><div class=\"sv-line sv-line-sm\"></div><div class=\"sv-btn\"></div></div></div>",
+      "css": ".service-visual{flex:1;margin-top:2rem;min-height:180px;display:flex;flex-direction:column;border:1px solid rgba(240,242,244,.09);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.02);} .sv-dots{display:flex;gap:.4rem;padding:.6rem .8rem;border-bottom:1px solid rgba(240,242,244,.09);} .sv-dots span{width:7px;height:7px;border-radius:50%;background:rgba(240,242,244,.09);} .sv-line{height:8px;border-radius:4px;background:rgba(240,242,244,.09);} .sv-line-lg{width:65%;height:12px;background:rgba(240,242,244,.16);} .sv-btn{margin-top:.6rem;width:110px;height:26px;border-radius:6px;background:#f2c94c;opacity:.85;}"
+    },
+    {
+      "name": "Status Pill",
+      "kind": "nav",
+      "refersTo": "status-pill",
+      "description": "Availability indicator with a pulsing gold dot.",
+      "html": "<span class=\"status-pill\"><span class=\"status-dot\"></span>Available for new projects</span>",
+      "css": ".status-pill{display:inline-flex;align-items:center;gap:.5rem;font-family:'Figtree',sans-serif;font-size:.8rem;color:#f0f2f4;} .status-dot{width:7px;height:7px;border-radius:50%;background:#f2c94c;animation:pulse 2s ease-in-out infinite;} @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}"
     }
   ],
   "narrative": {
-    "northStar": "The Editor's Desk",
-    "overview": "A desk-lamp glow on dark wood at night: a single craftsman's workspace, not an open-plan agency floor. The system is near-black and warm, lit by one scarce amber accent, set in a typewriter mono body with Bebas Neue doing the shouting and Playfair Display doing the one quiet, italic aside. Everything is flat, ruled, and grid-aligned — the visual equivalent of clean, unbloated code. It explicitly rejects bright SaaS gradients, hero-metric blocks, stock illustration, and anything that signals \"built from a template,\" because the entire site's argument is that it wasn't.\n\nDensity is editorial: long rule lines, generous negative space between sections, content organized like a printed brief (numbered sections, \"01/04\" pagination) rather than stacked cards. Motion is purposeful and restrained — masked text reveals, a sliding tab indicator, a magnetic CTA — never decorative bounce.",
+    "northStar": "Coastal Navy Editorial",
+    "overview": "Deliberately modelled on lionelmann.com's visual language, carried over to Mann Dev's own content. A deep, warm navy field (never black) holds soft-cornered surface cards, set in a serif/sans pairing — Lora for anything that needs to speak with authority, Figtree for everything functional. There are no filled buttons anywhere in the system: every call to action is a text link with an animated underline and a nudging arrow. Corners are generously rounded (28px on cards, small radii on internal UI), which is the opposite instinct of the site's previous sharp-edged, zero-radius era — softness now reads as considered rather than templated.\n\nDensity is still editorial — long rule dividers, numbered process cards, generous section gaps — but the components are friendlier and less severe than the old ink-and-amber system: rounded surface cards instead of borderless grid cells, a single warm gold accent instead of amber, and abstract wireframe 'site preview' panels instead of literal code blocks.",
     "keyCharacteristics": [
-      "Near-black warm ink background, never true #000",
-      "One scarce amber accent — restraint is the point, not warmth-everywhere",
-      "Bebas Neue for scale and shout, IBM Plex Mono for everything functional, Playfair Display italic for the one editorial aside per section",
-      "Flat surfaces, hairline rules, zero border-radius",
-      "Soft amber glow (not drop shadow) signals the one important panel per view"
+      "Deep navy background (#1e2530), never true black; lifted navy-grey surface (#252b34) for every card",
+      "One warm gold accent (#f2c94c) — reserved for links, underlines, tags, active states, the pulsing availability dot",
+      "Lora serif for headlines and card titles, Figtree sans for everything else",
+      "Generously rounded corners (28px cards) — a deliberate softness, not a holdover from a sharp-edged era",
+      "No filled buttons: every CTA is a text link with an animated underline + arrow",
+      "Signature 'service visual' panels: abstract wireframe mockups standing in for a rendered site, not literal code"
     ],
     "rules": [
-      { "name": "The Scarcity Rule", "body": "Amber appears on rules, underlines, hover states, and exactly one CTA per section — never as a fill color across more than a thin strip of any view.", "section": "colors" },
-      { "name": "The Warm-Neutral Rule", "body": "No neutral in this system is pure black or pure white. Every ink and paper tone carries the same warm, slightly brown-gold undertone as the amber accent.", "section": "colors" },
-      { "name": "The One Serif Rule", "body": "Playfair Display italic appears once per major section, never as body copy and never in more than one weight.", "section": "typography" },
-      { "name": "The Wide Label Rule", "body": "Anything in Label role is uppercase with ≥0.18em letter-spacing.", "section": "typography" },
-      { "name": "The One Glow Rule", "body": "Only one element on screen may carry the ambient amber glow at a time. It is a spotlight, not ambient lighting.", "section": "elevation" }
+      { "name": "The No-Fill Rule", "body": "Gold never covers more than a hairline, a tag border, a badge chip, or text itself. There is no gold button fill anywhere in the system — CTAs are always text links.", "section": "colors" },
+      { "name": "The Warm-Navy Rule", "body": "Background and surface are both warm-tinted navy, not cool slate or pure black.", "section": "colors" },
+      { "name": "The Serif-For-Weight Rule", "body": "Lora appears only where a line needs authority: h1/h2 headlines and card titles. It never appears in running body copy, labels, or UI chrome.", "section": "typography" },
+      { "name": "The Wide Label Rule", "body": "Anything in Label role is uppercase with meaningful letter-spacing (0.05em minimum, up to 0.2em for the smallest kickers).", "section": "typography" },
+      { "name": "The Hover-Lift Rule", "body": "Process cards lift on hover (scale + shadow + border tint); every other card stays flat at all times.", "section": "elevation" }
     ],
     "dos": [
-      "Do keep amber to hairlines, underlines, one CTA, and one glow per view (The Scarcity Rule).",
-      "Do tint every neutral warm — Ink Black (#0d0b09) and Paper Cream (#ede8d5), never #000/#fff.",
-      "Do use Bebas Neue only for scale/shout and IBM Plex Mono for everything functional; reserve Playfair italic for one aside per section.",
-      "Do keep every corner square (0px radius) — sharp edges are part of the \"no templates\" argument.",
-      "Do show the build, don't just claim it — when documenting process or capability, prefer the code-block → rendered-preview pattern over a bullet list of claims.",
-      "Do use wide-tracked (≥0.18em) uppercase mono for all labels, kickers, and nav links."
+      "Do keep every CTA a text link with an underline + arrow — never introduce a filled button (The No-Fill Rule).",
+      "Do keep background and surface warm navy tones, never cool slate or pure black (The Warm-Navy Rule).",
+      "Do use Lora only for headlines/card titles and Figtree for everything else (The Serif-For-Weight Rule).",
+      "Do round every card to 28px — consistent softness is the current identity.",
+      "Do reserve the hover-lift (scale + shadow) for process cards only (The Hover-Lift Rule).",
+      "Do use the wireframe 'service visual' idiom rather than literal code blocks when showing 'what gets built.'"
     ],
     "donts": [
-      "Don't use bright SaaS gradients, hero-metric blocks, or stock illustration.",
-      "Don't add team photos or agency-style process diagrams.",
-      "Don't let amber cover more than a thin strip, a button, or a single glow.",
-      "Don't add drop shadows or card-lift hovers.",
-      "Don't round any corner.",
-      "Don't stack more than one Playfair Display moment in the same viewport.",
-      "Don't apply the amber glow to more than one panel on screen at once."
+      "Don't reintroduce sharp/zero-radius corners — that was the previous era's signature, not this one's.",
+      "Don't add a solid-fill button anywhere except the two explicitly-filled badge chips (tab-mrr-badge, care-badge).",
+      "Don't use monospace or script fonts (Bebas Neue, IBM Plex Mono, Playfair Display are retired from this system).",
+      "Don't apply the process-card hover lift to service cards or principle cards.",
+      "Don't fabricate client testimonials or social proof.",
+      "Don't use bright SaaS gradients, hero-metric blocks, or stock illustration."
     ]
   }
 }

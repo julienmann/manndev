@@ -14,7 +14,7 @@ A single-page portfolio and lead-generation site for Julien Mann, a solo freelan
 
 ## Brand Personality
 
-Confident, editorial, precise. Voice is plain and direct — short sentences, no jargon, no hype language ("seriously," "actually works," "no obligation"). Personality of a craftsman who works alone and stands behind the work, not an agency selling a process. Quietly premium: dark, warm, typewriter-and-serif aesthetic rather than bright SaaS gradients.
+Confident, editorial, precise. Voice is plain and direct — short sentences, no jargon, no hype language ("seriously," "actually works," "no obligation"). Personality of a craftsman who works alone and stands behind the work, not an agency selling a process. Quietly premium: warm navy, serif-headline aesthetic rather than bright SaaS gradients.
 
 ## Anti-references
 
@@ -22,7 +22,7 @@ Generic SaaS landing pages (bright gradients, hero-metric blocks, stock illustra
 
 ## Design Principles
 
-- Show, don't tell — claims about craft (clean code, custom design, performance) should be demonstrated in the page's own construction (typeset code blocks, real Lighthouse numbers, deliberate motion), not just asserted in copy.
+- Show, don't tell — claims about craft (clean code, custom design, performance) should be demonstrated in the page's own construction (the process section's numbered build steps, real Lighthouse numbers, deliberate motion), not just asserted in copy.
 - One person, one voice — every section should read like it came from the same hand that writes the code; no committee-speak, no department handoffs implied.
 - Editorial restraint over decoration — confidence is expressed through typography, rule lines, and negative space, not gradients or stock imagery.
 - Earn the scroll — interactions (process timeline, tabs, scramble text) reward attention, but never become a barrier to finding the contact form.
