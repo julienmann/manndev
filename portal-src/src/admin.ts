@@ -1,0 +1,174 @@
+const DB_NAME = 'portal-admin';
+const STORE_NAME = 'handles';
+const DIR_HANDLE_KEY = 'client-files-dir';
+
+function openDb(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(STORE_NAME);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbGet<T>(key: string): Promise<T | undefined> {
+  const db = await openDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const req = tx.objectStore(STORE_NAME).get(key);
+    req.onsuccess = () => resolve(req.result as T | undefined);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbSet(key: string, value: unknown): Promise<void> {
+  const db = await openDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).put(value, key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+type ClientInfo = { name: string | null; file: string; uploadedAt: string | null };
+
+const pickFolderBtn = document.querySelector<HTMLButtonElement>('#pick-folder-btn')!;
+const folderNameEl = document.querySelector<HTMLSpanElement>('#folder-name')!;
+const clientListEl = document.querySelector<HTMLDivElement>('#client-list')!;
+const addForm = document.querySelector<HTMLFormElement>('#add-form')!;
+const addPinInput = document.querySelector<HTMLInputElement>('#add-pin')!;
+const addNameInput = document.querySelector<HTMLInputElement>('#add-name')!;
+const addFileInput = document.querySelector<HTMLInputElement>('#add-file')!;
+const addSubmitBtn = document.querySelector<HTMLButtonElement>('#add-submit-btn')!;
+const addSubmitLabel = document.querySelector<HTMLSpanElement>('#add-submit-label')!;
+const addStatus = document.querySelector<HTMLParagraphElement>('#add-status')!;
+
+let dirHandle: FileSystemDirectoryHandle | null = null;
+
+function setAddStatus(message: string, tone?: 'error' | 'success') {
+  addStatus.textContent = message;
+  if (tone) addStatus.dataset.tone = tone;
+  else delete addStatus.dataset.tone;
+}
+
+async function readInfo(pinDir: FileSystemDirectoryHandle): Promise<ClientInfo | null> {
+  try {
+    const fileHandle = await pinDir.getFileHandle('info.json');
+    const file = await fileHandle.getFile();
+    return JSON.parse(await file.text());
+  } catch {
+    return null;
+  }
+}
+
+async function refreshClientList() {
+  if (!dirHandle) return;
+
+  const rows: string[] = [];
+  for await (const entry of dirHandle.values()) {
+    if (entry.kind !== 'directory') continue;
+    const info = await readInfo(entry as FileSystemDirectoryHandle);
+    if (!info) continue;
+    rows.push(`
+      <div class="admin-client-row">
+        <span class="admin-client-pin">${entry.name}</span>
+        <span class="admin-client-name">${info.name ?? '—'}</span>
+        <span class="admin-client-file">${info.file}</span>
+      </div>
+    `);
+  }
+
+  clientListEl.innerHTML = rows.length
+    ? rows.join('')
+    : '<p class="admin-note">No clients yet.</p>';
+}
+
+async function setDirHandle(handle: FileSystemDirectoryHandle) {
+  dirHandle = handle;
+  folderNameEl.textContent = handle.name;
+  addSubmitBtn.disabled = false;
+  addSubmitLabel.textContent = 'Save client';
+  await refreshClientList();
+}
+
+pickFolderBtn.addEventListener('click', async () => {
+  try {
+    const handle = await window.showDirectoryPicker({ id: 'client-files', mode: 'readwrite' });
+    await idbSet(DIR_HANDLE_KEY, handle);
+    await setDirHandle(handle);
+  } catch {
+    // user cancelled the picker
+  }
+});
+
+addPinInput.addEventListener('input', () => {
+  addPinInput.value = addPinInput.value.replace(/\D/g, '').slice(0, 4);
+});
+
+addForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!dirHandle) return;
+
+  const pin = addPinInput.value.trim();
+  const name = addNameInput.value.trim();
+  const file = addFileInput.files?.[0];
+
+  if (pin.length !== 4) {
+    setAddStatus('Access code must be 4 digits.', 'error');
+    return;
+  }
+  if (!file) {
+    setAddStatus('Choose a zip file.', 'error');
+    return;
+  }
+
+  const existing = await (async () => {
+    try {
+      const existingDir = await dirHandle!.getDirectoryHandle(pin);
+      return readInfo(existingDir);
+    } catch {
+      return null;
+    }
+  })();
+
+  if (existing && !confirm(`Code ${pin} already has "${existing.file}" for ${existing.name ?? 'a client'}. Overwrite?`)) {
+    return;
+  }
+
+  addSubmitBtn.disabled = true;
+  addSubmitLabel.textContent = 'Saving…';
+  setAddStatus('');
+
+  try {
+    const pinDir = await dirHandle.getDirectoryHandle(pin, { create: true });
+
+    const zipHandle = await pinDir.getFileHandle(file.name, { create: true });
+    const zipWritable = await zipHandle.createWritable();
+    await zipWritable.write(file);
+    await zipWritable.close();
+
+    const info: ClientInfo = { name: name || null, file: file.name, uploadedAt: new Date().toISOString() };
+    const infoHandle = await pinDir.getFileHandle('info.json', { create: true });
+    const infoWritable = await infoHandle.createWritable();
+    await infoWritable.write(JSON.stringify(info, null, 2));
+    await infoWritable.close();
+
+    setAddStatus(`Saved. Code ${pin} now unlocks ${file.name}.`, 'success');
+    addForm.reset();
+    await refreshClientList();
+  } catch (err) {
+    setAddStatus(err instanceof Error ? err.message : 'Something went wrong writing that file.', 'error');
+  } finally {
+    addSubmitBtn.disabled = false;
+    addSubmitLabel.textContent = 'Save client';
+  }
+});
+
+(async () => {
+  const savedHandle = await idbGet<FileSystemDirectoryHandle>(DIR_HANDLE_KEY);
+  if (!savedHandle) return;
+
+  const permission = await savedHandle.requestPermission({ mode: 'readwrite' });
+  if (permission === 'granted') await setDirHandle(savedHandle);
+})();

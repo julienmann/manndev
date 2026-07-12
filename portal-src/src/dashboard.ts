@@ -1,24 +1,16 @@
-import { supabase } from './supabase';
+import { PIN_STORAGE_KEY } from './session';
 
-const STAGES = [
-  { name: 'Brief & Discovery', note: "We're gathering your goals, audience, and what the site needs to do." },
-  { name: 'Design', note: 'Establishing the visual language — typography, palette, layout.' },
-  { name: 'Build', note: 'Writing the site. You can ask for a preview link at any point.' },
-  { name: 'Review & Refine', note: 'Testing across devices, optimising performance, working through feedback.' },
-  { name: 'Launch', note: 'Deploying to your domain and wiring up analytics.' },
-] as const;
+const CTA_ARROW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+const CTA_UNDERLINE = '<div class="cta-underline-wrap"><div class="cta-underline"></div></div>';
 
-type ClientProject = {
-  business_name: string | null;
-  stage: number | null;
-  launched_at: string | null;
-  live_url: string | null;
-  last_updated_at: string | null;
-  last_security_check_at: string | null;
+type ClientInfo = {
+  name: string | null;
+  file: string;
+  uploadedAt: string | null;
 };
 
 const main = document.querySelector<HTMLElement>('#main')!;
-const accountEmail = document.querySelector<HTMLSpanElement>('#account-email')!;
+const accountName = document.querySelector<HTMLSpanElement>('#account-name')!;
 const logoutBtn = document.querySelector<HTMLButtonElement>('#logout-btn')!;
 
 function formatDate(iso: string | null): string {
@@ -26,140 +18,68 @@ function formatDate(iso: string | null): string {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-function renderEmpty() {
-  main.innerHTML = `
-    <div class="dash-greeting">
-      <p class="dash-greeting-kicker">Not set up yet</p>
-      <h1 class="dash-greeting-title">Hang tight</h1>
-    </div>
-    <p class="dash-note">We'll email you as soon as your project is ready to track here.</p>
-  `;
-}
-
 function renderError() {
   main.innerHTML = `
-    <div class="dash-state">Something went wrong loading your project.</div>
-    <button type="button" class="btn-retry" id="retry-btn">Try again</button>
+    <div class="dash-state">Something went wrong loading your files.</div>
+    <button type="button" class="link-cta" id="retry-btn">
+      Try again
+      ${CTA_ARROW}
+      ${CTA_UNDERLINE}
+    </button>
   `;
   document.querySelector<HTMLButtonElement>('#retry-btn')!.addEventListener('click', init);
 }
 
-function renderTracker(project: ClientProject, previewUrl: string | null) {
-  const currentStage = project.stage ?? 0;
-  const stageRows = STAGES.map((stage, i) => {
-    const state = i < currentStage ? 'done' : i === currentStage ? 'current' : 'upcoming';
-    const since = state === 'current' && project.last_updated_at
-      ? `<div class="tracker-since">Since ${formatDate(project.last_updated_at)}</div>`
-      : '';
-    return `
-      <div class="tracker-step" data-state="${state}">
-        <div class="tracker-num">${String(i + 1).padStart(2, '0')}</div>
-        <div class="tracker-body">
-          <div class="tracker-name">${stage.name}</div>
-          ${state === 'current' ? `<div class="tracker-note">${stage.note}</div>${since}` : ''}
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  const previewBlock = previewUrl
-    ? `
-      <div class="preview-panel">
-        <div class="preview-bar">
-          <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
-          <span class="preview-label">Live Preview</span>
-          <a class="preview-open" href="${previewUrl}" target="_blank" rel="noopener noreferrer">Open full view ↗</a>
-        </div>
-        <iframe class="preview-frame" src="${previewUrl}" title="Live site preview" loading="lazy"></iframe>
-      </div>
-    `
-    : '';
-
+function renderFiles(pin: string, info: ClientInfo) {
+  const downloadUrl = `/client-files/${pin}/${encodeURIComponent(info.file)}`;
   main.innerHTML = `
     <div class="dash-greeting">
-      <p class="dash-greeting-kicker">${project.business_name ?? 'Your project'}</p>
-      <h1 class="dash-greeting-title">In progress</h1>
+      <p class="dash-greeting-kicker">${info.name ?? 'Your project'}</p>
+      <h1 class="dash-greeting-title">Your files</h1>
     </div>
-    ${previewBlock}
-    <p class="tracker-kicker">Step ${currentStage + 1} of ${STAGES.length}</p>
-    <div class="tracker">${stageRows}</div>
-  `;
-}
-
-function renderMaintenance(project: ClientProject) {
-  main.innerHTML = `
-    <div class="dash-greeting">
-      <p class="dash-greeting-kicker">${project.business_name ?? 'Your site'}</p>
-      <h1 class="dash-greeting-title">Live &amp; maintained</h1>
-    </div>
-    <div class="maint">
-      <div class="maint-row">
-        <span class="maint-label">Site status</span>
-        <span class="maint-value is-live"><span class="live-dot" aria-hidden="true"></span>Live</span>
+    <div class="delivery">
+      <div class="delivery-row">
+        <span class="delivery-name">${info.file}</span>
+        <span class="delivery-date">Added ${formatDate(info.uploadedAt)}</span>
       </div>
-      <div class="maint-row">
-        <span class="maint-label">Last updated</span>
-        <span class="maint-value">${formatDate(project.last_updated_at)}</span>
-      </div>
-      <div class="maint-row">
-        <span class="maint-label">Last security check</span>
-        <span class="maint-value">${formatDate(project.last_security_check_at)}</span>
-      </div>
-      <div class="maint-row">
-        <span class="maint-label">Live site</span>
-        <span class="maint-value">${
-          project.live_url
-            ? `<a href="${project.live_url}" target="_blank" rel="noopener">${project.live_url.replace(/^https?:\/\//, '')} ↗</a>`
-            : '—'
-        }</span>
-      </div>
+      <a class="link-cta" href="${downloadUrl}" download>
+        Download
+        ${CTA_ARROW}
+        ${CTA_UNDERLINE}
+      </a>
     </div>
   `;
 }
 
 async function init() {
-  const { data: sessionData } = await supabase.auth.getSession();
-  const session = sessionData.session;
+  const pin = localStorage.getItem(PIN_STORAGE_KEY);
 
-  if (!session) {
+  if (!pin) {
     window.location.replace('./index.html?expired=1');
     return;
   }
 
-  accountEmail.textContent = session.user.email ?? '';
+  const res = await fetch(`/client-files/${pin}/info.json`, { cache: 'no-store' });
 
-  const { data: project, error } = await supabase
-    .from('client_projects')
-    .select('business_name, stage, launched_at, live_url, last_updated_at, last_security_check_at')
-    .eq('user_id', session.user.id)
-    .maybeSingle<ClientProject>();
+  if (res.status === 404) {
+    localStorage.removeItem(PIN_STORAGE_KEY);
+    window.location.replace('./index.html?expired=1');
+    return;
+  }
 
-  if (error) {
+  if (!res.ok) {
     renderError();
     return;
   }
 
-  if (!project) {
-    renderEmpty();
-    return;
-  }
-
-  if (project.launched_at) {
-    renderMaintenance(project);
-  } else {
-    const previewPath = `/client-previews/${session.user.id}/`;
-    const hasPreview = await fetch(previewPath, { method: 'HEAD' }).then(r => r.ok).catch(() => false);
-    renderTracker(project, hasPreview ? previewPath : null);
-  }
+  const info: ClientInfo = await res.json();
+  accountName.textContent = info.name ?? '';
+  renderFiles(pin, info);
 }
 
-logoutBtn.addEventListener('click', async () => {
-  await supabase.auth.signOut();
+logoutBtn.addEventListener('click', () => {
+  localStorage.removeItem(PIN_STORAGE_KEY);
   window.location.replace('./index.html');
-});
-
-supabase.auth.onAuthStateChange((event) => {
-  if (event === 'SIGNED_OUT') window.location.replace('./index.html');
 });
 
 init();

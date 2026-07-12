@@ -1,5 +1,7 @@
-# Per-client live preview drops — uploaded directly to the server,
-# not tracked in git (can be large, arbitrary, and change often).
-client-previews/
+# Per-client deliverable zips + access-code manifests — uploaded directly
+# to the server, not tracked in git:
+# managed locally via portal-src/admin.html and rsynced to the server,
+# never committed (this repo is public).
+client-files/
 
 .DS_Store

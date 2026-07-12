@@ -1,57 +1,37 @@
 # Client Portal — Setup
 
-## 1. Create the Supabase project
+No Supabase, no database, no backend. Access is a 4-digit code per client. Each code maps to a folder containing one zip file, served as a plain static file.
 
-Create a project at supabase.com. In Project Settings → API, copy the Project URL and anon public key into `portal/.env` (copy from `.env.example`).
+(This replaces the old Supabase-backed portal and its companion `admin-src`/`admin-api`/`admin` apps, which managed a `client_projects` table and live-preview zip uploads — both retired since nothing here reads that data anymore.)
 
-In Authentication → Providers, leave Email enabled and turn **off** "Confirm email" if you want the magic link to sign people in immediately on click (default Supabase behavior already does this for OTP/magic-link sign-in).
+## How it works
 
-In Authentication → URL Configuration, add your portal's deployed URL (e.g. `https://dev.julienmann.ca/portal/dashboard.html`) to the Redirect URLs allow list, so `emailRedirectTo` is accepted.
+- `client-files/<pin>/info.json` — `{ "name": "...", "file": "<zip filename>", "uploadedAt": "..." }`
+- `client-files/<pin>/<zip filename>` — the deliverable itself
 
-## 2. Create the `client_projects` table
+The portal's login page does `fetch('/client-files/<pin>/info.json')`. A 200 means the code is valid; the dashboard reads that same file to show the client's name and a download link. There's no way to list all codes — the folder isn't a directory listing, so it just returns 404 for anything wrong. This is a static-hosting "secret path" pattern, not real authentication: a 4-digit code is only 10,000 combinations and there's no rate limiting, so it's fine as a casual gate but not for anything where an unauthorized download would actually matter.
 
-Run this in the Supabase SQL editor:
+`client-files/` is gitignored at the repo root — this repo (`julienmann/manndev`) is public on GitHub, so client deliverables and their codes never touch git. It's managed locally and pushed to the server directly.
 
-```sql
-create table client_projects (
-  user_id uuid primary key references auth.users (id) on delete cascade,
-  business_name text,
-  stage smallint check (stage between 0 and 4),
-  launched_at timestamptz,
-  live_url text,
-  last_updated_at timestamptz,
-  last_security_check_at timestamptz
-);
+## 1. Manage clients with the local admin page
 
-alter table client_projects enable row level security;
-
-create policy "Clients can read their own project"
-  on client_projects for select
-  using (auth.uid() = user_id);
-```
-
-Stages map to: `0` Brief & Discovery, `1` Design, `2` Build, `3` Review & Refine, `4` Launch. Once a project is live, set `launched_at` to switch that client's view from the status tracker to the maintenance dashboard.
-
-## 3. Onboard a client
-
-1. Have them visit the portal and request a magic link once — this creates their `auth.users` row.
-2. In the Supabase Table Editor, insert a row into `client_projects` using that user's `id` (find it in Authentication → Users) as `user_id`, with their `business_name` and starting `stage`.
-3. Update `stage`, `last_updated_at`, and `last_security_check_at` manually as the project progresses. There's no admin UI yet — this is a deliberate first-pass scope decision; revisit if managing more than a handful of clients by hand becomes painful.
-
-## 4. Local development
+`admin.html` (in `portal-src/`) is a small local-only tool — it's excluded from the production build on purpose, so it only exists when you run the dev server on your own machine. It uses the File System Access API (Chrome/Edge only) to write directly into a folder you pick, no server involved.
 
 ```bash
 cd portal-src
 npm install
-cp .env.example .env   # then fill in your Supabase values
 npm run dev
 ```
 
-## 5. Deployment
+Then open `http://localhost:5173/admin.html`:
 
-The production server only runs `git pull` — it has no Node/build step. So the build output is committed straight into the repo at the top-level `portal/` directory (separate from `portal-src/`, which is the app's source).
+1. **Choose folder** → pick (or create) a `client-files/` folder in your local checkout of this repo. It's remembered for next time.
+2. Fill in a 4-digit code, the client's name, and their zip file → **Save client**. This writes the `info.json` + zip into `client-files/<pin>/`.
+3. The "Existing clients" list shows everything currently in the folder, so you can see codes already in use before picking a new one.
 
-Whenever you change anything under `portal-src/`, rebuild and re-commit the artifacts:
+## 2. Deploy
+
+The production server only runs `git pull` for the portal app itself — the portal's compiled JS/CSS still goes through the normal flow:
 
 ```bash
 ./scripts/build-portal.sh   # rebuilds portal-src and refreshes the top-level portal/ folder
@@ -60,16 +40,16 @@ git commit -m "Update client portal"
 git push
 ```
 
-Then on the server: `git pull`. Since the app is built with `base: '/portal/'` in `vite.config.ts`, its asset and redirect paths already assume it's served from `/portal` on the same domain as the marketing site — no separate subdomain or DNS entry needed.
+Then on the server: `git pull`.
 
-## 6. Client live previews
+`client-files/` is separate — it never goes through git. Push it straight to the server with rsync whenever you add or update a client:
 
-While a client's site is pre-launch, the dashboard can embed a live preview of whatever you're building, served straight from a folder on the server — no extra setup per project beyond dropping files in.
+```bash
+rsync -av client-files/ user@host:/srv/www/manndev/client-files/
+```
 
-1. Find the client's user ID (Authentication → Users in Supabase — same ID used in `client_projects.user_id`).
-2. Build the client's site as static files (`index.html` + assets — any static build output works: plain HTML, a Vite/Next.js export, etc.).
-3. Upload those files into `/srv/www/manndev/client-previews/<user_id>/` on the server (e.g. `rsync -av dist/ lmann@lionelmann.com:/srv/www/manndev/client-previews/<user_id>/`).
+Since the app is built with `base: '/portal/'` in `vite.config.ts`, it assumes `/portal/` and `/client-files/` are sibling paths served from the same domain — no separate subdomain or DNS entry needed, just make sure the web server serves the repo root's static folders as-is.
 
-That's it — the dashboard checks for that folder automatically (`HEAD /client-previews/<user_id>/`) and shows the embedded preview if it finds one, or just shows the plain tracker if it doesn't. No database field to update, no redeploy needed. This folder is gitignored (`client-previews/` at the repo root) since these are arbitrary, per-client build drops, not source-controlled.
+## 3. Give the client their code
 
-Drop in a new build anytime to update what the client sees — just overwrite the folder's contents.
+Send the 4-digit code however you'd send a door code (text, in person, etc.). They go to the portal, enter it, and get a download link. Updating their file later is just re-running the admin flow with the same code — it overwrites (with a confirmation prompt).

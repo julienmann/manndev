@@ -1,0 +1,28 @@
+.admin-main{max-width:640px;padding-top:2.4rem;padding-bottom:4rem;}
+.admin-section{margin-bottom:2.8rem;padding-bottom:2.8rem;border-bottom:1px solid var(--rule);}
+.admin-section:last-child{border-bottom:none;}
+.admin-heading{font:600 1.4rem/1.2 var(--display);margin-bottom:.8rem;color:var(--fg);}
+.admin-note{font-size:.88rem;color:var(--mid);line-height:1.8;margin-bottom:1.2rem;}
+.admin-note code{color:var(--fg);}
+.admin-row{display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap;}
+.admin-folder-name{font-size:.85rem;color:var(--mid);}
+
+.admin-list{display:flex;flex-direction:column;gap:.4rem;}
+.admin-client-row{
+  display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+  padding:.9rem 0;border-bottom:1px solid var(--rule);font-size:.9rem;
+}
+.admin-client-pin{font-weight:600;color:var(--accent);letter-spacing:.08em;}
+.admin-client-name{flex:1;padding:0 1rem;color:var(--fg);}
+.admin-client-file{color:var(--mid);font-size:.78rem;text-align:right;}
+
+.admin-code{
+  background:var(--surface);border:1px solid rgba(240,242,244,.06);border-radius:12px;
+  padding:1.1rem 1.4rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.82rem;color:var(--fg);overflow-x:auto;
+}
+
+input[type="file"]{
+  width:100%;color:var(--mid);font-family:var(--body);font-size:.85rem;
+  padding:.7rem 0;
+}
