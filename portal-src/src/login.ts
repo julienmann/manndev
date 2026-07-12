@@ -1,4 +1,4 @@
-import { PIN_STORAGE_KEY } from './session';
+import { PIN_STORAGE_KEY, fetchClientInfo } from './session';
 
 const form = document.querySelector<HTMLFormElement>('#login-form')!;
 const pinInput = document.querySelector<HTMLInputElement>('#pin')!;
@@ -13,8 +13,8 @@ function setStatus(message: string, tone?: 'error' | 'success') {
 }
 
 async function tryPin(pin: string): Promise<boolean> {
-  const res = await fetch(`/client-files/${pin}/info.json`, { cache: 'no-store' });
-  if (!res.ok) return false;
+  const result = await fetchClientInfo(pin);
+  if (!result.ok) return false;
   localStorage.setItem(PIN_STORAGE_KEY, pin);
   window.location.replace('./dashboard.html');
   return true;

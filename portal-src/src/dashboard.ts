@@ -1,13 +1,7 @@
-import { PIN_STORAGE_KEY } from './session';
+import { PIN_STORAGE_KEY, fetchClientInfo, type ClientInfo } from './session';
 
 const CTA_ARROW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
 const CTA_UNDERLINE = '<div class="cta-underline-wrap"><div class="cta-underline"></div></div>';
-
-type ClientInfo = {
-  name: string | null;
-  file: string;
-  uploadedAt: string | null;
-};
 
 const main = document.querySelector<HTMLElement>('#main')!;
 const accountName = document.querySelector<HTMLSpanElement>('#account-name')!;
@@ -59,22 +53,20 @@ async function init() {
     return;
   }
 
-  const res = await fetch(`/client-files/${pin}/info.json`, { cache: 'no-store' });
+  const result = await fetchClientInfo(pin);
 
-  if (res.status === 404) {
-    localStorage.removeItem(PIN_STORAGE_KEY);
-    window.location.replace('./index.html?expired=1');
+  if (!result.ok) {
+    if (result.reason === 'network') {
+      renderError();
+    } else {
+      localStorage.removeItem(PIN_STORAGE_KEY);
+      window.location.replace('./index.html?expired=1');
+    }
     return;
   }
 
-  if (!res.ok) {
-    renderError();
-    return;
-  }
-
-  const info: ClientInfo = await res.json();
-  accountName.textContent = info.name ?? '';
-  renderFiles(pin, info);
+  accountName.textContent = result.info.name ?? '';
+  renderFiles(pin, result.info);
 }
 
 logoutBtn.addEventListener('click', () => {
