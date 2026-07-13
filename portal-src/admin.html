@@ -81,8 +81,8 @@
 
     <section class="admin-section">
       <h2 class="admin-heading">Deploy</h2>
-      <p class="admin-note">After adding clients, push the folder to the server (never committed to git):</p>
-      <pre class="admin-code">rsync -av client-files/ user@host:/srv/www/manndev/client-files/</pre>
+      <p class="admin-note">After adding clients, push the folder to the server (never committed to git). The <code>--chmod</code> flag matters — without it, files can end up unreadable by the web server and codes silently stop working:</p>
+      <pre class="admin-code">rsync -av --chmod=D755,F644 client-files/ lmann@lionelmann.com:/srv/www/manndev/client-files/</pre>
     </section>
   </main>
 
