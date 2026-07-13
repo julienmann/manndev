@@ -34,9 +34,8 @@ async function hasLivePreview(pin: string): Promise<boolean> {
 }
 
 function renderFiles(pin: string, info: ClientInfo, previewAvailable: boolean) {
-  const downloadUrl = `/client-files/${pin}/${encodeURIComponent(info.file)}`;
   const previewUrl = `/client-files/${pin}/preview/`;
-  const previewLink = previewAvailable
+  const previewAction = previewAvailable
     ? `
       <a class="link-cta" href="${previewUrl}" target="_blank" rel="noopener noreferrer">
         View live preview
@@ -44,7 +43,7 @@ function renderFiles(pin: string, info: ClientInfo, previewAvailable: boolean) {
         ${CTA_UNDERLINE}
       </a>
     `
-    : '';
+    : `<span class="delivery-note">No live preview available yet.</span>`;
 
   main.innerHTML = `
     <div class="dash-greeting">
@@ -57,12 +56,7 @@ function renderFiles(pin: string, info: ClientInfo, previewAvailable: boolean) {
         <span class="delivery-date">Added ${formatDate(info.uploadedAt)}</span>
       </div>
       <div class="delivery-actions">
-        ${previewLink}
-        <a class="link-cta" href="${downloadUrl}" download>
-          Download
-          ${CTA_ARROW}
-          ${CTA_UNDERLINE}
-        </a>
+        ${previewAction}
       </div>
     </div>
   `;
