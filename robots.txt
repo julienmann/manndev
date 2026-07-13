@@ -3,3 +3,5 @@ Allow: /
 Disallow: /admin/
 Disallow: /admin-api/
 Disallow: /portal/
+
+Sitemap: https://manndev.com/sitemap.xml

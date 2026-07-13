@@ -6,16 +6,17 @@ Mann Dev is a solo web design and development practice run by Julien Mann, based
 
 ## Services
 
-- [Landing Page](https://dev.julienmann.ca/#services): A single, focused page built to convert. Custom design, fully responsive, deployed within a few days.
-- [Full Website](https://dev.julienmann.ca/#services): Multi-page site covering about, services, portfolio, and contact. Custom design system, CMS integration if needed.
-- [Care & Hosting](https://dev.julienmann.ca/#services): Flat monthly rate for managed hosting, uptime monitoring, security patches, and ongoing support.
-- [AI Automation](https://dev.julienmann.ca/#services): Custom AI-powered workflows, chatbots, and automations built into existing tools or as standalone systems.
+- [Landing Page](https://manndev.com/#services): A single, focused page built to convert. Custom design, fully responsive, deployed within a few days.
+- [Full Website](https://manndev.com/#services): Multi-page site covering about, services, portfolio, and contact. Custom design system, CMS integration if needed.
+- [Care & Hosting](https://manndev.com/#services): Flat monthly rate for managed hosting, uptime monitoring, security patches, and ongoing support.
+- [AI Automation](https://manndev.com/#services): Custom AI-powered workflows, chatbots, and automations built into existing tools or as standalone systems.
 
 ## Contact
 
-- [Start a project](https://dev.julienmann.ca/#contact): Contact form for new enquiries, answered personally within 24 hours.
+- [Start a project](https://manndev.com/#contact): Contact form for new enquiries, answered personally within 24 hours.
+- Email: julien@manndev.com
 - [LinkedIn](https://www.linkedin.com/in/julien-mann-b153aa404/): Professional profile.
 
 ## Optional
 
-- [Client Portal](https://dev.julienmann.ca/portal/): Login for existing clients.
+- [Client Portal](https://manndev.com/portal/): Login for existing clients.
