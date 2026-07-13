@@ -135,6 +135,7 @@ async function refreshClientList() {
         <span class="admin-client-pin">${entry.name}</span>
         <span class="admin-client-name">${info.name ?? '—'}</span>
         <span class="admin-client-file">${info.file}${hasPreview ? ' · preview' : ''}</span>
+        <button type="button" class="admin-remove-btn" data-remove-pin="${entry.name}">Remove</button>
       </div>
     `);
   }
@@ -142,6 +143,30 @@ async function refreshClientList() {
   clientListEl.innerHTML = rows.length
     ? rows.join('')
     : '<p class="admin-note">No clients yet.</p>';
+
+  clientListEl.querySelectorAll<HTMLButtonElement>('[data-remove-pin]').forEach(btn => {
+    btn.addEventListener('click', () => removeClient(btn.dataset.removePin!));
+  });
+}
+
+async function removeClient(pin: string) {
+  if (!dirHandle) return;
+
+  const pinDir = await dirHandle.getDirectoryHandle(pin).catch(() => null);
+  const info = pinDir ? await readInfo(pinDir) : null;
+  const label = info?.name ? `${info.name} (code ${pin})` : `code ${pin}`;
+
+  if (!confirm(`Remove ${label}? This deletes their zip, info, and preview from this folder. You'll still need to push the change to the server.`)) {
+    return;
+  }
+
+  try {
+    await dirHandle.removeEntry(pin, { recursive: true });
+    setAddStatus(`Removed ${label}.`, 'success');
+    await refreshClientList();
+  } catch (err) {
+    setAddStatus(err instanceof Error ? err.message : 'Could not remove that client.', 'error');
+  }
 }
 
 async function setDirHandle(handle: FileSystemDirectoryHandle) {
