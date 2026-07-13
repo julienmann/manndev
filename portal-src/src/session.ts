@@ -1,5 +1,17 @@
 export const PIN_STORAGE_KEY = 'portal_pin';
 
+// Escape values before dropping them into innerHTML. The name/filename come from
+// admin-authored info.json, so this is defense-in-depth rather than a live hole,
+// but interpolating raw strings into markup is never worth the risk.
+export function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export type ClientInfo = {
   name: string | null;
   file: string;

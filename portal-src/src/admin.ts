@@ -1,4 +1,5 @@
 import { unzipSync } from 'fflate';
+import { escapeHtml } from './session';
 
 const DB_NAME = 'portal-admin';
 const STORE_NAME = 'handles';
@@ -132,10 +133,10 @@ async function refreshClientList() {
     const hasPreview = await pinDir.getDirectoryHandle('preview').then(() => true).catch(() => false);
     rows.push(`
       <div class="admin-client-row">
-        <span class="admin-client-pin">${entry.name}</span>
-        <span class="admin-client-name">${info.name ?? '—'}</span>
-        <span class="admin-client-file">${info.file}${hasPreview ? ' · preview' : ''}</span>
-        <button type="button" class="admin-remove-btn" data-remove-pin="${entry.name}">Remove</button>
+        <span class="admin-client-pin">${escapeHtml(entry.name)}</span>
+        <span class="admin-client-name">${escapeHtml(info.name ?? '—')}</span>
+        <span class="admin-client-file">${escapeHtml(info.file)}${hasPreview ? ' · preview' : ''}</span>
+        <button type="button" class="admin-remove-btn" data-remove-pin="${escapeHtml(entry.name)}">Remove</button>
       </div>
     `);
   }

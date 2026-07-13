@@ -1384,6 +1384,15 @@ if (!reduced) {
     { autoAlpha: 1, duration: 0.5, ease: 'power2.out' },
     '-=0.3'
   );
+
+  /* Failsafe: the intro is driven by requestAnimationFrame, which the browser
+     throttles to a near-stop in a background or prerendered tab. Without this,
+     someone who opens the site in a background tab returns to a blank hero
+     (the "from" state applied, the tween never ticked). If the page isn't
+     actually visible when the intro is due, skip the animation and show the
+     finished hero immediately; below-the-fold scroll reveals still play
+     normally once the tab is focused and scrolled. */
+  if (document.visibilityState !== 'visible') heroTl.progress(1);
 }
 
 /* ──────────────────────────────────────────

@@ -1,1 +1,0 @@
-var e=`portal_pin`;async function t(e){let t;try{t=await fetch(`/client-files/${e}/info.json`,{cache:`no-store`})}catch{return{ok:!1,reason:`network`}}if(!t.ok)return{ok:!1,reason:`invalid`};try{let e=await t.json();return!e||typeof e.file!=`string`?{ok:!1,reason:`invalid`}:{ok:!0,info:e}}catch{return{ok:!1,reason:`invalid`}}}export{t as n,e as t};

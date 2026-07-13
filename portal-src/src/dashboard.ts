@@ -1,4 +1,4 @@
-import { PIN_STORAGE_KEY, fetchClientInfo, type ClientInfo } from './session';
+import { PIN_STORAGE_KEY, fetchClientInfo, escapeHtml, type ClientInfo } from './session';
 
 const CTA_ARROW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
 const CTA_UNDERLINE = '<div class="cta-underline-wrap"><div class="cta-underline"></div></div>';
@@ -47,12 +47,12 @@ function renderFiles(pin: string, info: ClientInfo, previewAvailable: boolean) {
 
   main.innerHTML = `
     <div class="dash-greeting">
-      <p class="dash-greeting-kicker">${info.name ?? 'Your project'}</p>
+      <p class="dash-greeting-kicker">${escapeHtml(info.name ?? 'Your project')}</p>
       <h1 class="dash-greeting-title">Your files</h1>
     </div>
     <div class="delivery">
       <div class="delivery-row">
-        <span class="delivery-name">${info.file}</span>
+        <span class="delivery-name">${escapeHtml(info.file)}</span>
         <span class="delivery-date">Added ${formatDate(info.uploadedAt)}</span>
       </div>
       <div class="delivery-actions">

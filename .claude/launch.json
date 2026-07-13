@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "--prefix", "portal-src"],
       "port": 5173
+    },
+    {
+      "name": "static-root",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4321"],
+      "port": 4321
     }
   ]
 }
