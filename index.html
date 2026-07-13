@@ -39,7 +39,7 @@
   --card-radius: 28px;
 }
 
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
 body{
   background:var(--bg);
   color:var(--fg);
@@ -811,8 +811,9 @@ footer{
   .hero-footer{gap:1.5rem;}
 }
 @media(max-width:600px){
-  header{margin-bottom:48px;}
-  nav ul{gap:.9rem;flex-wrap:wrap;row-gap:.6rem;justify-content:flex-end;}
+  header{flex-direction:column;align-items:flex-start;gap:1.25rem;margin-bottom:48px;}
+  nav{width:100%;}
+  nav ul{gap:.6rem 1.1rem;flex-wrap:wrap;justify-content:flex-start;}
   nav ul li a{font-size:.68rem;}
   .nav-hide-mobile{display:none;}
   .hero-h1{font-size:clamp(34px,9vw,52px);}
