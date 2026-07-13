@@ -45,8 +45,10 @@ Then on the server: `git pull`.
 `client-files/` is separate — it never goes through git. Push it straight to the server with rsync whenever you add or update a client:
 
 ```bash
-rsync -av client-files/ user@host:/srv/www/manndev/client-files/
+rsync -av --chmod=D755,F644 client-files/ user@host:/srv/www/manndev/client-files/
 ```
+
+The `--chmod` flag matters: the File System Access API (used by `admin.html`) can create files/folders with permissions too restrictive for nginx's worker user to read (e.g. `700`/`600`), which makes even a correct code silently fail the same way an invalid one does. `--chmod=D755,F644` forces sane permissions on every sync regardless of what was created locally.
 
 Since the app is built with `base: '/portal/'` in `vite.config.ts`, it assumes `/portal/` and `/client-files/` are sibling paths served from the same domain — no separate subdomain or DNS entry needed, just make sure the web server serves the repo root's static folders as-is.
 
