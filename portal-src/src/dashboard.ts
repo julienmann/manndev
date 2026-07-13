@@ -24,8 +24,28 @@ function renderError() {
   document.querySelector<HTMLButtonElement>('#retry-btn')!.addEventListener('click', init);
 }
 
-function renderFiles(pin: string, info: ClientInfo) {
+async function hasLivePreview(pin: string): Promise<boolean> {
+  try {
+    const res = await fetch(`/client-files/${pin}/preview/`, { method: 'HEAD', cache: 'no-store' });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+function renderFiles(pin: string, info: ClientInfo, previewAvailable: boolean) {
   const downloadUrl = `/client-files/${pin}/${encodeURIComponent(info.file)}`;
+  const previewUrl = `/client-files/${pin}/preview/`;
+  const previewLink = previewAvailable
+    ? `
+      <a class="link-cta" href="${previewUrl}" target="_blank" rel="noopener noreferrer">
+        View live preview
+        ${CTA_ARROW}
+        ${CTA_UNDERLINE}
+      </a>
+    `
+    : '';
+
   main.innerHTML = `
     <div class="dash-greeting">
       <p class="dash-greeting-kicker">${info.name ?? 'Your project'}</p>
@@ -36,11 +56,14 @@ function renderFiles(pin: string, info: ClientInfo) {
         <span class="delivery-name">${info.file}</span>
         <span class="delivery-date">Added ${formatDate(info.uploadedAt)}</span>
       </div>
-      <a class="link-cta" href="${downloadUrl}" download>
-        Download
-        ${CTA_ARROW}
-        ${CTA_UNDERLINE}
-      </a>
+      <div class="delivery-actions">
+        ${previewLink}
+        <a class="link-cta" href="${downloadUrl}" download>
+          Download
+          ${CTA_ARROW}
+          ${CTA_UNDERLINE}
+        </a>
+      </div>
     </div>
   `;
 }
@@ -66,7 +89,8 @@ async function init() {
   }
 
   accountName.textContent = result.info.name ?? '';
-  renderFiles(pin, result.info);
+  const previewAvailable = await hasLivePreview(pin);
+  renderFiles(pin, result.info, previewAvailable);
 }
 
 logoutBtn.addEventListener('click', () => {

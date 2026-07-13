@@ -121,11 +121,13 @@ button{font-family:inherit;}
 .delivery-row{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.8rem;flex-wrap:wrap;}
 .delivery-name{font-size:1rem;color:var(--fg);}
 .delivery-date{font-size:.75rem;color:var(--mid);white-space:nowrap;}
+.delivery-actions{display:flex;align-items:center;gap:2.2rem;flex-wrap:wrap;}
 
 @media(max-width:480px){
   .portal-bar{padding:1.4rem 1.2rem;}
   .delivery{padding:1.8rem;}
   .delivery-row{flex-direction:column;align-items:flex-start;gap:.4rem;}
+  .delivery-actions{gap:1.4rem;}
 }
 
 @media(prefers-reduced-motion:reduce){

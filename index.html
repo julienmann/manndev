@@ -12,6 +12,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mann Dev — Web Design &amp; Development</title>
 <meta name="description" content="Custom websites and web apps built from scratch in Montréal. No templates, no page builders — just clean, fast code you own outright.">
+<link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Figtree:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
@@ -106,13 +109,15 @@ header{
   margin:0 auto 120px;
 }
 .h-logo{
-  font-family:var(--body);
-  font-size:1.15rem;
-  font-weight:600;
-  text-transform:uppercase;
-  line-height:1.1;
-  letter-spacing:.14em;
-  color:var(--fg);
+  display:inline-flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:.3rem;
+}
+.h-logo img{
+  display:block;
+  height:24px;
+  width:auto;
 }
 .h-logo span{
   display:block;
@@ -758,12 +763,15 @@ footer{
   margin-bottom:3rem;
 }
 .footer-logo{
-  font-family:var(--body);
-  font-size:1.15rem;
-  font-weight:600;
-  text-transform:uppercase;
-  letter-spacing:.14em;
-  line-height:1.1;
+  display:inline-flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:.3rem;
+}
+.footer-logo img{
+  display:block;
+  height:24px;
+  width:auto;
 }
 .footer-logo span{
   display:block;
@@ -849,7 +857,7 @@ footer{
 <!-- HEADER -->
 <header>
   <a href="/" class="h-logo" aria-label="Mann Dev Home">
-    Mann Dev
+    <img src="/img/logo.png" alt="" width="345" height="106">
     <span>Montréal</span>
   </a>
   <nav aria-label="Main navigation">
@@ -1328,7 +1336,7 @@ footer{
   <div class="divider-inner" style="margin-bottom:3rem;"></div>
   <div class="footer-inner">
     <a href="/" class="footer-logo" aria-label="Mann Dev Home">
-      Mann Dev
+      <img src="/img/logo.png" alt="" width="345" height="106">
       <span>Montréal</span>
     </a>
     <nav class="footer-nav" aria-label="Footer navigation">

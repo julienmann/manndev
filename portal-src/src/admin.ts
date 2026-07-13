@@ -1,3 +1,5 @@
+import { unzipSync } from 'fflate';
+
 const DB_NAME = 'portal-admin';
 const STORE_NAME = 'handles';
 const DIR_HANDLE_KEY = 'client-files-dir';
@@ -52,6 +54,62 @@ function setAddStatus(message: string, tone?: 'error' | 'success') {
   else delete addStatus.dataset.tone;
 }
 
+// Best-effort: unzip the client's build into <pin>/preview/ so the dashboard
+// can offer a live view. Silently skips (returns false) if the zip doesn't
+// look like a static site — the raw zip download still works either way.
+async function extractPreview(pinDir: FileSystemDirectoryHandle, zipFile: File): Promise<boolean> {
+  let entries: Record<string, Uint8Array>;
+  try {
+    entries = unzipSync(new Uint8Array(await zipFile.arrayBuffer()));
+  } catch {
+    return false;
+  }
+
+  const paths = Object.keys(entries).filter(path => {
+    const normalized = path.replace(/\\/g, '/');
+    if (normalized.endsWith('/')) return false;
+    const segments = normalized.split('/');
+    if (segments.includes('__MACOSX')) return false;
+    if (segments[segments.length - 1].startsWith('.')) return false;
+    return true;
+  });
+
+  // macOS zip tools often wrap contents in a single top-level folder — unwrap
+  // it so index.html ends up at the preview root regardless of how it was zipped.
+  let stripPrefix = '';
+  if (!paths.includes('index.html')) {
+    const topLevelDirs = new Set(paths.map(path => path.split('/')[0]));
+    if (topLevelDirs.size === 1) {
+      const onlyDir = [...topLevelDirs][0] + '/';
+      if (paths.every(path => path.startsWith(onlyDir))) stripPrefix = onlyDir;
+    }
+  }
+
+  if (!paths.some(path => path.slice(stripPrefix.length) === 'index.html')) return false;
+
+  await pinDir.removeEntry('preview', { recursive: true }).catch(() => {});
+  const previewDir = await pinDir.getDirectoryHandle('preview', { create: true });
+
+  for (const path of paths) {
+    const relPath = path.slice(stripPrefix.length);
+    if (!relPath) continue;
+
+    const parts = relPath.split('/');
+    const fileName = parts.pop()!;
+    let dir = previewDir;
+    for (const part of parts) {
+      dir = await dir.getDirectoryHandle(part, { create: true });
+    }
+
+    const fileHandle = await dir.getFileHandle(fileName, { create: true });
+    const writable = await fileHandle.createWritable();
+    await writable.write(entries[path]);
+    await writable.close();
+  }
+
+  return true;
+}
+
 async function readInfo(pinDir: FileSystemDirectoryHandle): Promise<ClientInfo | null> {
   try {
     const fileHandle = await pinDir.getFileHandle('info.json');
@@ -68,13 +126,15 @@ async function refreshClientList() {
   const rows: string[] = [];
   for await (const entry of dirHandle.values()) {
     if (entry.kind !== 'directory') continue;
-    const info = await readInfo(entry as FileSystemDirectoryHandle);
+    const pinDir = entry as FileSystemDirectoryHandle;
+    const info = await readInfo(pinDir);
     if (!info) continue;
+    const hasPreview = await pinDir.getDirectoryHandle('preview').then(() => true).catch(() => false);
     rows.push(`
       <div class="admin-client-row">
         <span class="admin-client-pin">${entry.name}</span>
         <span class="admin-client-name">${info.name ?? '—'}</span>
-        <span class="admin-client-file">${info.file}</span>
+        <span class="admin-client-file">${info.file}${hasPreview ? ' · preview' : ''}</span>
       </div>
     `);
   }
@@ -148,13 +208,18 @@ addForm.addEventListener('submit', async (e) => {
     await zipWritable.write(file);
     await zipWritable.close();
 
+    const hasPreview = await extractPreview(pinDir, file);
+
     const info: ClientInfo = { name: name || null, file: file.name, uploadedAt: new Date().toISOString() };
     const infoHandle = await pinDir.getFileHandle('info.json', { create: true });
     const infoWritable = await infoHandle.createWritable();
     await infoWritable.write(JSON.stringify(info, null, 2));
     await infoWritable.close();
 
-    setAddStatus(`Saved. Code ${pin} now unlocks ${file.name}.`, 'success');
+    setAddStatus(
+      `Saved. Code ${pin} now unlocks ${file.name}.${hasPreview ? ' Live preview generated.' : ' (No index.html found at the zip root, so no live preview — the download still works.)'}`,
+      'success'
+    );
     addForm.reset();
     await refreshClientList();
   } catch (err) {

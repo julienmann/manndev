@@ -8,26 +8,23 @@ No Supabase, no database, no backend. Access is a 4-digit code per client. Each 
 
 - `client-files/<pin>/info.json` — `{ "name": "...", "file": "<zip filename>", "uploadedAt": "..." }`
 - `client-files/<pin>/<zip filename>` — the deliverable itself
+- `client-files/<pin>/preview/` — optional: the zip's contents unzipped, if it looked like a static site (has an `index.html`). The dashboard shows a "View live preview" link when this folder exists, in addition to the download.
 
 The portal's login page does `fetch('/client-files/<pin>/info.json')`. A 200 means the code is valid; the dashboard reads that same file to show the client's name and a download link. There's no way to list all codes — the folder isn't a directory listing, so it just returns 404 for anything wrong. This is a static-hosting "secret path" pattern, not real authentication: a 4-digit code is only 10,000 combinations and there's no rate limiting, so it's fine as a casual gate but not for anything where an unauthorized download would actually matter.
 
+The nginx location block for `/client-files/` needs `try_files $uri $uri/ =404;` (not just `try_files $uri =404;`) — the `$uri/` clause is what lets a `preview/` directory request resolve to its `index.html` instead of 404ing.
+
 `client-files/` is gitignored at the repo root — this repo (`julienmann/manndev`) is public on GitHub, so client deliverables and their codes never touch git. It's managed locally and pushed to the server directly.
 
-## 1. Manage clients with the local admin page
+## 1. Manage clients with the admin page
 
-`admin.html` (in `portal-src/`) is a small local-only tool — it's excluded from the production build on purpose, so it only exists when you run the dev server on your own machine. It uses the File System Access API (Chrome/Edge only) to write directly into a folder you pick, no server involved.
+`admin.html` is deployed alongside the portal (`/portal/admin.html`), gated by a client-side password prompt (see `admin-gate.ts` — hashed, but not real security; anyone reading the JS bundle could brute-force it, it just keeps casual visitors out). It uses the File System Access API (Chrome/Edge only) to write directly into a folder you pick on your own machine — the tool never talks to the server directly, so picking a folder there doesn't give a stranger access to your real `client-files/`.
 
-```bash
-cd portal-src
-npm install
-npm run dev
-```
-
-Then open `http://localhost:5173/admin.html`:
+For local iteration: `cd portal-src && npm install && npm run dev`, then open `http://localhost:5173/admin.html`.
 
 1. **Choose folder** → pick (or create) a `client-files/` folder in your local checkout of this repo. It's remembered for next time.
-2. Fill in a 4-digit code, the client's name, and their zip file → **Save client**. This writes the `info.json` + zip into `client-files/<pin>/`.
-3. The "Existing clients" list shows everything currently in the folder, so you can see codes already in use before picking a new one.
+2. Fill in a 4-digit code, the client's name, and their zip file → **Save client**. This writes `info.json` + the zip into `client-files/<pin>/`, and — if the zip has an `index.html` at its root (or in a single wrapping folder) — also unzips it into `client-files/<pin>/preview/` for the live-preview link. `__MACOSX/` cruft and dotfiles are stripped automatically. If no `index.html` is found, the file is still saved, just without a preview.
+3. The "Existing clients" list shows everything currently in the folder (and whether each has a preview), so you can see codes already in use before picking a new one.
 
 ## 2. Deploy
 
