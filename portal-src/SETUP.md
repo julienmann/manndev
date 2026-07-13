@@ -42,10 +42,10 @@ Then on the server: `git pull`.
 `client-files/` is separate — it never goes through git. Push it straight to the server with rsync whenever you add or update a client:
 
 ```bash
-rsync -av --chmod=D755,F644 client-files/ user@host:/srv/www/manndev/client-files/
+rsync -av client-files/ lmann@lionelmann.com:/srv/www/manndev/client-files/
 ```
 
-The `--chmod` flag matters: the File System Access API (used by `admin.html`) can create files/folders with permissions too restrictive for nginx's worker user to read (e.g. `700`/`600`), which makes even a correct code silently fail the same way an invalid one does. `--chmod=D755,F644` forces sane permissions on every sync regardless of what was created locally.
+**Permissions note:** the File System Access API (used by `admin.html`) can create files/folders too restrictive for nginx's worker user to read (e.g. `700`/`600`), which makes even a correct code silently fail the same way an invalid one does. The obvious fix — `rsync --chmod=D755,F644` — doesn't work on macOS's stock rsync (it's `openrsync`, a BSD reimplementation that accepts the flag but silently no-ops it; the GNU-style `D755,F644` syntax is rejected outright as "invalid argument"). Instead, a cron job on the server (`crontab -l` as `lmann`) re-chmods `client-files/` to `755`/`644` every 5 minutes, scoped only to that one directory. So a sync with wrong permissions self-heals within a few minutes rather than needing a special rsync invocation. If you need it fixed immediately rather than waiting: `ssh lmann@lionelmann.com "find /srv/www/manndev/client-files -mindepth 1 -type d -exec chmod 755 {} \; ; find /srv/www/manndev/client-files -mindepth 1 -type f -exec chmod 644 {} \;"`.
 
 Since the app is built with `base: '/portal/'` in `vite.config.ts`, it assumes `/portal/` and `/client-files/` are sibling paths served from the same domain — no separate subdomain or DNS entry needed, just make sure the web server serves the repo root's static folders as-is.
 
