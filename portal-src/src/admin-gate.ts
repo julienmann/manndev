@@ -1,4 +1,4 @@
-const PASSWORD_HASH = 'a42be2126e6034db703fb2431c2f1f4ed12f091e71a865f4295aec707d4635cf';
+const PASSWORD_HASH = '61105e817f96d54deac74e37b490f2ade34516e836950cc921959ccd1579174f';
 const SESSION_KEY = 'admin_unlocked';
 
 async function sha256Hex(text: string): Promise<string> {
