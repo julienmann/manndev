@@ -1325,7 +1325,7 @@ footer{
         </div>
       </div>
 
-      <form id="contact-form" onsubmit="handleSubmit(event)">
+      <form id="contact-form">
         <input type="hidden" name="access_key" value="3da1f7ac-99e9-49bd-8aa1-c3b621510613">
         <input type="hidden" name="subject" value="New Web Dev Enquiry — Mann Dev">
         <input type="checkbox" name="botcheck" style="display:none;">
@@ -1392,12 +1392,45 @@ footer{
     <div id="wcb" class="carbonbadge"></div>
   </div>
 </footer>
-<script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
-
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/SplitText.min.js"></script>
+<!-- Carbon badge: third-party, footer-only. Loaded off the critical path —
+     injected when the badge nears the viewport, or at window load, whichever
+     comes first. Never blocks parse, render or any first-party resource. -->
 <script>
+(function () {
+  var el = document.getElementById('wcb');
+  if (!el) return;
+  var done = false;
+  function loadBadge() {
+    if (done) return;
+    done = true;
+    var s = document.createElement('script');
+    s.src = 'https://unpkg.com/website-carbon-badges@1.1.3/b.min.js';
+    s.async = true;
+    document.body.appendChild(s);
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      if (entries.some(function (e) { return e.isIntersecting; })) {
+        io.disconnect();
+        loadBadge();
+      }
+    }, { rootMargin: '400px' });
+    io.observe(el);
+  }
+  /* Fallback / backstop: if the footer is never scrolled to, load once the
+     page is fully done so the badge still renders for anyone who looks. */
+  if (document.readyState === 'complete') loadBadge();
+  else window.addEventListener('load', loadBadge, { once: true });
+})();
+</script>
+
+<!-- GSAP self-hosted: same origin as the document, so no extra DNS/TLS
+     handshake on a cold mobile connection. Deferred, so neither file blocks
+     the parser — they execute in order, before DOMContentLoaded. -->
+<script defer src="/js/gsap.min.js"></script>
+<script defer src="/js/ScrollTrigger.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 gsap.registerPlugin(ScrollTrigger);
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1706,6 +1739,9 @@ if (msgArea) {
 /* ──────────────────────────────────────────
    FORM SUBMIT
 ────────────────────────────────────────── */
+const contactForm = document.getElementById('contact-form');
+if (contactForm) contactForm.addEventListener('submit', handleSubmit);
+
 function handleSubmit(e) {
   e.preventDefault();
   const status = document.getElementById('submit-status');
@@ -1767,6 +1803,7 @@ function adjustProcessGrid() {
 }
 adjustProcessGrid();
 window.addEventListener('resize', adjustProcessGrid, { passive: true });
+});
 </script>
 </body>
 </html>
