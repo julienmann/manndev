@@ -759,6 +759,82 @@ option{background:var(--bg);}
 .form-submit:hover .cta-underline{width:100%;}
 .submit-note{font-size:.85rem;color:var(--mid);}
 
+/* ── BUILD FINDER (questionnaire) ── */
+.quiz-promo{
+  margin-top:2.5rem;padding:1.75rem;
+  background:var(--surface);border:1px solid var(--rule-accent);border-radius:20px;
+}
+.quiz-promo-h{font:500 1.35rem/1.25 var(--display);color:var(--fg);margin:.4rem 0 .5rem;}
+.quiz-promo p{font-size:.92rem;color:var(--mid);margin-bottom:1.25rem;line-height:1.55;}
+.quiz-open{background:none;border:none;padding:0;cursor:pointer;font-size:.85rem;}
+
+.quiz{
+  width:min(640px,calc(100vw - 2rem));max-height:calc(100dvh - 2rem);
+  margin:auto;padding:0;border:1px solid var(--rule);border-radius:var(--card-radius);
+  background:var(--surface);color:var(--fg);font-family:var(--body);overflow:auto;
+}
+.quiz::backdrop{background:rgba(14,18,24,.72);backdrop-filter:blur(4px);}
+.quiz[open]{animation:quizIn .35s cubic-bezier(.2,.8,.2,1);}
+@keyframes quizIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.quiz-inner{padding:clamp(1.5rem,4vw,2.5rem);}
+.quiz-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.25rem;}
+.quiz-step{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--accent);}
+.quiz-close{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--rule);background:none;
+  color:var(--mid);cursor:pointer;display:grid;place-items:center;transition:color .2s,border-color .2s;
+}
+.quiz-close:hover{color:var(--fg);border-color:var(--mid);}
+.quiz-bar{height:2px;background:var(--rule);margin-bottom:2rem;border-radius:2px;overflow:hidden;}
+.quiz-bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .35s ease;}
+.quiz-q{font:500 clamp(22px,3vw,30px)/1.2 var(--display);margin-bottom:.4rem;}
+.quiz-hint{font-size:.88rem;color:var(--mid);margin-bottom:1.5rem;}
+.quiz-opts{display:grid;gap:.6rem;border:none;padding:0;margin:0;min-width:0;}
+.quiz-opt{
+  position:relative;display:flex;gap:.9rem;align-items:flex-start;
+  padding:1rem 1.1rem;border:1px solid var(--rule);border-radius:14px;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.quiz-opt:hover{border-color:rgba(240,242,244,.22);}
+.quiz-opt input{position:absolute;opacity:0;pointer-events:none;}
+.quiz-opt:has(input:checked){border-color:var(--accent);background:rgba(242,201,76,.06);}
+.quiz-opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
+.quiz-mark{
+  flex-shrink:0;width:18px;height:18px;margin-top:.15rem;border:1.5px solid var(--dim);
+  border-radius:50%;display:grid;place-items:center;transition:border-color .2s;
+}
+.quiz-opt input[type=checkbox]~.quiz-mark{border-radius:5px;}
+.quiz-opt:has(input:checked) .quiz-mark{border-color:var(--accent);}
+.quiz-opt:has(input:checked) .quiz-mark::after{
+  content:'';width:8px;height:8px;border-radius:inherit;background:var(--accent);
+}
+.quiz-opt-t{display:block;font-size:.98rem;color:var(--fg);font-weight:500;}
+.quiz-opt-d{display:block;font-size:.84rem;color:var(--mid);margin-top:.15rem;line-height:1.45;}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;gap:1rem;}
+.quiz-back{
+  background:none;border:none;padding:0;cursor:pointer;color:var(--mid);
+  font:500 .78rem/1 var(--body);letter-spacing:.1em;text-transform:uppercase;
+}
+.quiz-back:hover{color:var(--fg);}
+.quiz-back[hidden]{display:block;visibility:hidden;}
+.form-submit:disabled{opacity:.35;cursor:not-allowed;}
+.form-submit:disabled .cta-underline{width:0!important;}
+
+.quiz-result-kicker{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--mid);}
+.quiz-tier{font:500 clamp(34px,5vw,48px)/1.05 var(--display);color:var(--accent);margin:.35rem 0 .5rem;outline:none;}
+.quiz-tier-tag{font-size:1rem;color:var(--fg);margin-bottom:.35rem;}
+.quiz-tier-time{font-size:.85rem;color:var(--mid);margin-bottom:1.75rem;}
+.quiz-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.75rem;padding-top:1.5rem;border-top:1px solid var(--rule);}
+.quiz-cols h4{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--accent);margin-bottom:.75rem;}
+.quiz-cols ul{list-style:none;padding:0;margin:0;display:grid;gap:.45rem;}
+.quiz-cols li{font-size:.88rem;color:var(--fg);line-height:1.45;padding-left:1.1rem;position:relative;}
+.quiz-cols li::before{content:'';position:absolute;left:0;top:.65em;width:6px;height:1px;background:var(--accent);}
+.quiz-cols .quiz-why li{color:var(--mid);}
+.quiz-cols li.quiz-lead{padding-left:0;color:var(--mid);}
+.quiz-cols li.quiz-lead::before{display:none;}
+.quiz-note{font-size:.8rem;color:var(--dim);margin-top:1.5rem;line-height:1.5;}
+@media(max-width:600px){.quiz-cols{grid-template-columns:1fr;}}
+@media(prefers-reduced-motion:reduce){.quiz[open]{animation:none;}}
+
 /* ── FOOTER ── */
 footer{
   max-width:var(--container);
@@ -1323,12 +1399,23 @@ footer{
             <a href="mailto:julien@manndev.com" style="color:var(--accent);border-bottom:1px solid rgba(242,201,76,.3);">julien@manndev.com</a>
           </div>
         </div>
+        <div class="quiz-promo">
+          <div class="contact-label">Build Finder</div>
+          <h3 class="quiz-promo-h">Not sure what you need?</h3>
+          <p>Answer seven quick questions and get a suggested build. Your answers carry over to the form.</p>
+          <button type="button" class="link-cta quiz-open" data-quiz-open>
+            Find my build
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+          </button>
+        </div>
       </div>
 
       <form id="contact-form">
         <input type="hidden" name="access_key" value="3da1f7ac-99e9-49bd-8aa1-c3b621510613">
         <input type="hidden" name="subject" value="New Web Dev Enquiry — Mann Dev">
         <input type="checkbox" name="botcheck" style="display:none;">
+        <input type="hidden" name="build_finder" id="build-finder-field" value="">
         <div class="form-row">
           <div class="form-field">
             <input class="form-input" type="text" id="fname" name="fname" placeholder="x" autocomplete="off" required>
@@ -1370,6 +1457,28 @@ footer{
     </div>
   </div>
 </section>
+
+<!-- BUILD FINDER — questionnaire that suggests a build tier -->
+<dialog class="quiz" id="quiz" aria-labelledby="quiz-title">
+  <div class="quiz-inner">
+    <div class="quiz-head">
+      <span class="quiz-step" id="quiz-step">Build Finder</span>
+      <button type="button" class="quiz-close" data-quiz-close aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="quiz-bar" aria-hidden="true"><span id="quiz-bar"></span></div>
+    <div id="quiz-body" aria-live="polite"></div>
+    <div class="quiz-nav">
+      <button type="button" class="quiz-back" id="quiz-back">&larr; Back</button>
+      <button type="button" class="form-submit" id="quiz-next">
+        <span id="quiz-next-label">Next</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+      </button>
+    </div>
+  </div>
+</dialog>
 
 <!-- FOOTER -->
 <footer>
@@ -1804,6 +1913,243 @@ function adjustProcessGrid() {
 adjustProcessGrid();
 window.addEventListener('resize', adjustProcessGrid, { passive: true });
 });
+</script>
+<script>
+/* ──────────────────────────────────────────
+   BUILD FINDER — suggests Launch / Business / Custom.
+   Each option carries a level (0 Launch, 1 Business, 2 Custom);
+   the suggestion is the highest level any answer requires.
+────────────────────────────────────────── */
+(function () {
+  const dlg = document.getElementById('quiz');
+  if (!dlg) return;
+
+  const TIERS = [
+    {
+      name: 'Launch',
+      tag: 'A clean, fast site to get your business online.',
+      time: 'Ready in under a week',
+      service: 'Landing Page',
+      inc: ['Up to 3 pages', 'Mobile-first design', 'Contact form & click-to-call', 'Google Maps & hours', 'Basic SEO setup', 'Law 25 cookie banner & privacy policy', 'Google Analytics', '1 round of revisions']
+    },
+    {
+      name: 'Business',
+      tag: 'A custom, bilingual site that turns visitors into customers.',
+      time: 'Ready in 1–2 weeks',
+      service: 'Full Website',
+      inc: ['Everything in Launch, plus:', 'Up to 8 pages', 'Custom design matched to your brand', 'Fully bilingual FR/EN', 'Google Business Profile setup', 'On-page SEO for every page', 'Conversion tracking (calls, forms)', 'Copy polish on your text', '2 rounds of revisions']
+    },
+    {
+      name: 'Custom',
+      tag: 'Booking, ordering and automation built in.',
+      time: 'Ready in about 2 weeks',
+      service: 'Full Website',
+      inc: ['Everything in Business, plus:', 'Online booking or ordering', 'Integrations (POS, CRM, reservations)', 'Bilingual AI chatbot', 'Full copywriting, FR & EN', 'Professional photo shoot', 'Unlimited pages', '3 rounds of revisions']
+    }
+  ];
+
+  const QS = [
+    {
+      id: 'goal', q: 'What should your website do first?', hint: 'Pick the one that matters most.',
+      opts: [
+        { t: 'Get me online', d: 'People can find me, see what I do and get in touch.', lvl: 0, why: 'You mainly need a clear, findable presence' },
+        { t: 'Win more customers', d: 'Look established and turn visitors into calls and enquiries.', lvl: 1, why: 'You want the site to actively convert visitors' },
+        { t: 'Run part of my business', d: 'Take bookings, orders or answer questions automatically.', lvl: 2, why: 'You want bookings, orders or automation on the site' }
+      ]
+    },
+    {
+      id: 'pages', q: 'How many pages do you picture?', hint: 'Home, services, about and contact each count as one.',
+      opts: [
+        { t: '1 to 3 pages', d: 'A focused site with the essentials.', lvl: 0 },
+        { t: '4 to 8 pages', d: 'A page per service, an about page, a gallery…', lvl: 1, why: 'You need more than three pages' },
+        { t: 'More than 8', d: 'A menu, a catalogue, lots of services or locations.', lvl: 2, why: 'You need more than eight pages' }
+      ]
+    },
+    {
+      id: 'lang', q: 'Which languages should it speak?', hint: '',
+      opts: [
+        { t: 'One language', d: 'English or French only.', lvl: 0 },
+        { t: 'French and English', d: 'Fully bilingual, every page in both.', lvl: 1, why: 'Your site needs to be fully bilingual' }
+      ]
+    },
+    {
+      id: 'brand', q: 'How should it look?', hint: '',
+      opts: [
+        { t: 'Clean and simple', d: 'Professional and tidy, no strong brand guidelines.', lvl: 0 },
+        { t: 'Matched to my brand', d: 'I have a logo, colours and a feel it should follow closely.', lvl: 1, why: 'The design has to match your brand closely' }
+      ]
+    },
+    {
+      id: 'content', q: 'Where are your words and photos at?', hint: '',
+      opts: [
+        { t: 'Ready to go', d: 'I have the text and images I want to use.', lvl: 0 },
+        { t: 'Drafted, needs polish', d: 'I have something written but it could read better.', lvl: 1, why: 'Your text could use a copy polish' },
+        { t: 'Starting from scratch', d: 'I need the copy written and photos taken.', lvl: 2, why: 'You need full copywriting and a photo shoot' }
+      ]
+    },
+    {
+      id: 'features', q: 'Which of these would you like?', hint: 'Select all that apply, or none.', multi: true,
+      opts: [
+        { t: 'Show up on Google Maps', d: 'Set up your Google Business Profile.', lvl: 1, why: 'You want your Google Business Profile set up' },
+        { t: 'Track calls and form leads', d: 'Know which visits turn into customers.', lvl: 1, why: 'You want to track calls and form leads' },
+        { t: 'Online booking or ordering', d: 'Appointments, reservations, takeout, online sales.', lvl: 2, why: 'You need online booking or ordering' },
+        { t: 'Connect my existing tools', d: 'POS, CRM or reservation system.', lvl: 2, why: 'The site needs to connect to your POS, CRM or reservations' },
+        { t: 'AI chatbot', d: 'Answers common questions in French and English, 24/7.', lvl: 2, why: 'You want a bilingual AI chatbot' }
+      ]
+    },
+    {
+      id: 'time', q: 'When do you need it live?', hint: 'This won’t change the suggestion, it helps me plan.',
+      opts: [
+        { t: 'As soon as possible', d: 'Within a week or so.', lvl: 0 },
+        { t: 'In the next few weeks', d: '', lvl: 0 },
+        { t: 'I’m flexible', d: 'Getting it right matters more than speed.', lvl: 0 }
+      ]
+    }
+  ];
+
+  const body   = document.getElementById('quiz-body');
+  const stepEl = document.getElementById('quiz-step');
+  const barEl  = document.getElementById('quiz-bar');
+  const back   = document.getElementById('quiz-back');
+  const next   = document.getElementById('quiz-next');
+  const nextLb = document.getElementById('quiz-next-label');
+
+  let step = 0;
+  let answers = {};   // id -> array of option indexes
+  let result = null;
+  let opener = null;
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  function renderQuestion() {
+    const Q = QS[step];
+    const picked = answers[Q.id] || [];
+    const type = Q.multi ? 'checkbox' : 'radio';
+    stepEl.textContent = 'Question ' + (step + 1) + ' of ' + QS.length;
+    barEl.style.width = (step / QS.length * 100) + '%';
+    body.innerHTML =
+      '<h2 class="quiz-q" id="quiz-title">' + esc(Q.q) + '</h2>' +
+      (Q.hint ? '<p class="quiz-hint">' + esc(Q.hint) + '</p>' : '<div style="height:1.1rem"></div>') +
+      '<fieldset class="quiz-opts"><legend class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">' + esc(Q.q) + '</legend>' +
+      Q.opts.map((o, i) =>
+        '<label class="quiz-opt"><input type="' + type + '" name="q-' + Q.id + '" value="' + i + '"' + (picked.includes(i) ? ' checked' : '') + '>' +
+        '<span class="quiz-mark" aria-hidden="true"></span><span><span class="quiz-opt-t">' + esc(o.t) + '</span>' +
+        (o.d ? '<span class="quiz-opt-d">' + esc(o.d) + '</span>' : '') + '</span></label>'
+      ).join('') + '</fieldset>';
+    back.hidden = step === 0;
+    nextLb.textContent = step === QS.length - 1 ? 'See my build' : 'Next';
+    syncNext();
+    body.querySelectorAll('input').forEach(inp => inp.addEventListener('change', () => {
+      answers[Q.id] = [...body.querySelectorAll('input:checked')].map(x => +x.value);
+      syncNext();
+      /* single-choice: advance on pick for a quicker flow */
+      if (!Q.multi && inp.checked) setTimeout(() => { if (QS[step] === Q) go(1); }, 220);
+    }));
+    const first = body.querySelector('input:checked') || body.querySelector('input');
+    if (first) first.focus({ preventScroll: true });
+  }
+
+  function syncNext() {
+    const Q = QS[step];
+    next.disabled = !Q.multi && !(answers[Q.id] || []).length;
+  }
+
+  function compute() {
+    let lvl = 0;
+    const why = [[], [], []];
+    QS.forEach(Q => (answers[Q.id] || []).forEach(i => {
+      const o = Q.opts[i];
+      lvl = Math.max(lvl, o.lvl);
+      if (o.why) why[o.lvl].push(o.why);
+    }));
+    const reasons = why[lvl].length ? why[lvl]
+      : ['A focused site with the essentials covers what you described', 'Your content is ready, so we can move fast'];
+    return { lvl, tier: TIERS[lvl], reasons };
+  }
+
+  function renderResult() {
+    result = compute();
+    const T = result.tier;
+    stepEl.textContent = 'Your suggested build';
+    barEl.style.width = '100%';
+    body.innerHTML =
+      '<p class="quiz-result-kicker">Based on your answers</p>' +
+      '<h2 class="quiz-tier" id="quiz-title">' + esc(T.name) + '</h2>' +
+      '<p class="quiz-tier-tag">' + esc(T.tag) + '</p>' +
+      '<p class="quiz-tier-time">' + esc(T.time) + '</p>' +
+      '<div class="quiz-cols"><div class="quiz-why"><h4>Why this fits</h4><ul>' +
+      result.reasons.map(r => '<li>' + esc(r) + '</li>').join('') + '</ul></div>' +
+      '<div><h4>What’s included</h4><ul>' + T.inc.map(r => '<li' + (/plus:$/.test(r) ? ' class="quiz-lead"' : '') + '>' + esc(r) + '</li>').join('') + '</ul></div></div>' +
+      '<p class="quiz-note">This is a starting point, not a quote. Every project is scoped personally, and a free audit of your current presence comes first.</p>';
+    back.hidden = false;
+    nextLb.textContent = 'Start my enquiry';
+    next.disabled = false;
+    body.querySelector('.quiz-tier').setAttribute('tabindex', '-1');
+    body.querySelector('.quiz-tier').focus({ preventScroll: true });
+    if (typeof gtag === 'function') gtag('event', 'build_finder_result', { tier: T.name });
+  }
+
+  function go(dir) {
+    if (result && dir < 0) { result = null; renderQuestion(); return; }
+    if (result && dir > 0) { handoff(); return; }
+    step += dir;
+    if (step < 0) step = 0;
+    if (step >= QS.length) { step = QS.length - 1; renderResult(); return; }
+    renderQuestion();
+  }
+
+  /* Carry the result into the contact form */
+  function handoff() {
+    const T = result.tier;
+    const summary = 'Suggested: ' + T.name + ' | ' + QS.map(Q =>
+      Q.q.replace(/\?$/, '') + ': ' + ((answers[Q.id] || []).map(i => Q.opts[i].t).join(', ') || 'None')
+    ).join(' | ');
+    const field = document.getElementById('build-finder-field');
+    if (field) field.value = summary;
+
+    const select = document.getElementById('service');
+    if (select) { select.value = T.service; select.style.color = 'var(--fg)'; }
+
+    const msg = document.getElementById('message');
+    if (msg && !msg.value.trim()) {
+      msg.value = 'The Build Finder suggested the ' + T.name + ' build. ';
+      msg.dispatchEvent(new Event('input'));
+    }
+    close();
+    const contact = document.getElementById('contact-form');
+    if (contact) {
+      contact.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+      const target = document.getElementById('fname');
+      if (target) setTimeout(() => target.focus({ preventScroll: true }), 450);
+    }
+  }
+
+  function open(e) {
+    opener = e && e.currentTarget;
+    step = 0; answers = {}; result = null;
+    renderQuestion();
+    dlg.showModal();
+    document.documentElement.style.overflow = 'hidden';
+  }
+  function close() { dlg.close(); }
+
+  dlg.addEventListener('close', () => {
+    document.documentElement.style.overflow = '';
+    if (opener && !result) opener.focus();
+  });
+  dlg.addEventListener('click', e => { if (e.target === dlg) close(); });   // backdrop click
+  document.querySelectorAll('[data-quiz-open]').forEach(b => b.addEventListener('click', open));
+  dlg.querySelector('[data-quiz-close]').addEventListener('click', close);
+  back.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+
+  /* Clear the carried-over summary once an enquiry is sent */
+  const form = document.getElementById('contact-form');
+  if (form) form.addEventListener('reset', () => {
+    const f = document.getElementById('build-finder-field');
+    if (f) f.value = '';
+  });
+})();
 </script>
 </body>
 </html>
