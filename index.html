@@ -1610,29 +1610,33 @@ if (!reduced) {
     );
   }
 
-  /* sub, CTA, footer stagger */
+  /* Second stage: underline, sub, CTA and footer overlap, starting as the
+     headline lands rather than queuing one after another. */
+  heroTl.addLabel('settle', '-=0.35');
+  heroTl.add(() => document.querySelectorAll('.hw-clip').forEach(c => c.style.overflow = 'visible'), 'settle');
+
   /* hand-drawn underline under "found" */
   heroTl.fromTo('.hero-scribble path',
     { strokeDashoffset: 1 },
-    { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' },
-    '-=0.15'
+    { strokeDashoffset: 0, duration: 0.55, ease: 'power2.inOut' },
+    'settle'
   );
-  heroTl.add(() => document.querySelectorAll('.hw-clip').forEach(c => c.style.overflow = 'visible'));
 
+  /* sub, CTA, footer stagger */
   heroTl.fromTo('.hero-sub',
-    { autoAlpha: 0, y: 16 },
-    { autoAlpha: 1, y: 0, duration: 0.55, ease: 'power3.out' },
-    '-=0.4'
+    { autoAlpha: 0, y: 12 },
+    { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power3.out' },
+    'settle+=0.05'
   );
   heroTl.fromTo('#hero .link-cta',
-    { autoAlpha: 0, y: 14 },
-    { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' },
-    '-=0.38'
+    { autoAlpha: 0, y: 10 },
+    { autoAlpha: 1, y: 0, duration: 0.35, ease: 'power3.out' },
+    'settle+=0.13'
   );
   heroTl.fromTo('.hero-footer',
     { autoAlpha: 0 },
-    { autoAlpha: 1, duration: 0.5, ease: 'power2.out' },
-    '-=0.3'
+    { autoAlpha: 1, duration: 0.35, ease: 'power2.out' },
+    'settle+=0.2'
   );
 
   /* Failsafe: the intro is driven by requestAnimationFrame, which the browser
