@@ -18,7 +18,7 @@ The nginx location block for `/client-files/` needs `try_files $uri $uri/ =404;`
 
 ## 1. Manage clients with the admin page
 
-`admin.html` is deployed alongside the portal (`/portal/admin.html`), gated by a client-side password prompt (see `admin-gate.ts` — hashed, but not real security; anyone reading the JS bundle could brute-force it, it just keeps casual visitors out). It uses the File System Access API (Chrome/Edge only) to write directly into a folder you pick on your own machine — the tool never talks to the server directly, so picking a folder there doesn't give a stranger access to your real `client-files/`.
+`admin.html` is deployed alongside the portal (`https://portal.manndev.com/admin.html`), gated by a client-side password prompt (see `admin-gate.ts` — hashed, but not real security; anyone reading the JS bundle could brute-force it, it just keeps casual visitors out). It uses the File System Access API (Chrome/Edge only) to write directly into a folder you pick on your own machine — the tool never talks to the server directly, so picking a folder there doesn't give a stranger access to your real `client-files/`.
 
 For local iteration: `cd portal-src && npm install && npm run dev`, then open `http://localhost:5173/admin.html`.
 
@@ -47,7 +47,33 @@ rsync -av client-files/ lmann@lionelmann.com:/srv/www/manndev/client-files/
 
 **Permissions note:** the File System Access API (used by `admin.html`) can create files/folders too restrictive for nginx's worker user to read (e.g. `700`/`600`), which makes even a correct code silently fail the same way an invalid one does. The obvious fix — `rsync --chmod=D755,F644` — doesn't work on macOS's stock rsync (it's `openrsync`, a BSD reimplementation that accepts the flag but silently no-ops it; the GNU-style `D755,F644` syntax is rejected outright as "invalid argument"). Instead, a cron job on the server (`crontab -l` as `lmann`) re-chmods `client-files/` to `755`/`644` every 5 minutes, scoped only to that one directory. So a sync with wrong permissions self-heals within a few minutes rather than needing a special rsync invocation. If you need it fixed immediately rather than waiting: `ssh lmann@lionelmann.com "find /srv/www/manndev/client-files -mindepth 1 -type d -exec chmod 755 {} \; ; find /srv/www/manndev/client-files -mindepth 1 -type f -exec chmod 644 {} \;"`.
 
-Since the app is built with `base: '/portal/'` in `vite.config.ts`, it assumes `/portal/` and `/client-files/` are sibling paths served from the same domain — no separate subdomain or DNS entry needed, just make sure the web server serves the repo root's static folders as-is.
+The portal lives at **https://portal.manndev.com/**. It's built with `base: '/'` in `vite.config.ts`, and still fetches `/client-files/…` and `/img/…` by absolute path, so the subdomain's nginx block serves the built `portal/` folder at `/` and the repo root's `client-files/` and `img/` folders alongside it:
+
+```nginx
+server {
+    server_name portal.manndev.com;
+    root /srv/www/manndev;                      # so /img/ and /client-files/ resolve
+
+    location / {
+        root /srv/www/manndev/portal;           # the built portal
+        try_files $uri $uri/ =404;
+    }
+    location /img/          { try_files $uri =404; }
+    location /client-files/ { try_files $uri $uri/ =404; }   # $uri/ needed for preview/ dirs
+
+    # listen 443 ssl + certificate lines are added by certbot
+}
+```
+
+The old path on the main site redirects, in the `manndev.com` server block:
+
+```nginx
+location ^~ /portal/ {
+    rewrite ^/portal/(.*)$ https://portal.manndev.com/$1 permanent;
+}
+```
+
+DNS: an `A` record (or `CNAME` to `manndev.com`) for `portal` pointing at the same server. TLS: `sudo certbot --nginx -d portal.manndev.com`.
 
 ## 3. Give the client their code
 

@@ -2,7 +2,7 @@
 
 > Custom websites and web apps built from scratch in Montréal. No templates, no page builders — just clean, fast code you own outright.
 
-Mann Dev is a solo web design and development practice run by Julien Mann, based in Montréal, Québec, working remotely worldwide. Every project is hand-coded — no templates, no page builders — with a focus on performance, accessibility, and code the client owns outright.
+Mann Dev is a web design and development studio founded by Julien Mann, based in Montréal, Québec, working remotely worldwide. Every project is hand-coded — no templates, no page builders — with a focus on performance, accessibility, and code the client owns outright.
 
 ## Services
 
@@ -19,4 +19,4 @@ Mann Dev is a solo web design and development practice run by Julien Mann, based
 
 ## Optional
 
-- [Client Portal](https://manndev.com/portal/): Login for existing clients.
+- [Client Portal](https://portal.manndev.com/): Login for existing clients.
