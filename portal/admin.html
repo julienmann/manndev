@@ -11,10 +11,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="/assets/admin-BCWkoRvT.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/session-Cxifpqtq.js">
+  <script type="module" crossorigin src="/assets/admin-DrEmsGY4.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/session-D9QC-iPP.js">
   <link rel="stylesheet" crossorigin href="/assets/session-sttGnNTc.css">
-  <link rel="stylesheet" crossorigin href="/assets/admin-mrCMTMrw.css">
+  <link rel="stylesheet" crossorigin href="/assets/admin-CT_hD435.css">
 </head>
 <body>
   <div id="gate" class="gate-overlay">
@@ -61,10 +61,19 @@
 
     <section class="admin-section">
       <h2 class="admin-heading">Add / update a client</h2>
+      <p class="admin-note">The client signs in with this username and password. Passwords aren't stored anywhere (the folder name is derived from them), so copy the password before saving: there's no way to look it up later.</p>
       <form id="add-form" novalidate>
+        <p class="admin-note admin-migrate-note" id="migrate-note" hidden></p>
         <div class="field">
-          <label class="field-label" for="add-pin">Access code (4 digits)</label>
-          <input type="text" id="add-pin" name="pin" class="field-pin" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" required>
+          <label class="field-label" for="add-username">Username</label>
+          <input type="text" id="add-username" name="username" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="acme" required>
+        </div>
+        <div class="field">
+          <label class="field-label" for="add-password">Password</label>
+          <div class="admin-row">
+            <input type="text" id="add-password" name="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+            <button type="button" class="admin-remove-btn" id="gen-password-btn">Generate</button>
+          </div>
         </div>
         <div class="field">
           <label class="field-label" for="add-name">Client / business name</label>
@@ -87,6 +96,7 @@
       <h2 class="admin-heading">Deploy</h2>
       <p class="admin-note">After adding clients, push the folder to the server (never committed to git). A cron job on the server fixes permissions automatically every 5 minutes, so you don't need a <code>--chmod</code> flag here (macOS's built-in rsync doesn't support it anyway):</p>
       <pre class="admin-code">rsync -av client-files/ lmann@lionelmann.com:/srv/www/manndev/client-files/</pre>
+      <p class="admin-note">Removed or moved a client? Plain rsync never deletes on the server. Add <code>--delete</code> to mirror your local folder exactly (it removes anything on the server that isn't in your local <code>client-files/</code>).</p>
     </section>
   </main>
 

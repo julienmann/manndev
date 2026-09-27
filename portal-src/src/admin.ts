@@ -1,5 +1,5 @@
 import { unzipSync } from 'fflate';
-import { escapeHtml } from './session';
+import { escapeHtml, deriveClientKey, normalizeUsername } from './session';
 
 const DB_NAME = 'portal-admin';
 const STORE_NAME = 'handles';
@@ -34,20 +34,29 @@ async function idbSet(key: string, value: unknown): Promise<void> {
   });
 }
 
-type ClientInfo = { name: string | null; file: string; uploadedAt: string | null };
+type ClientInfo = { name: string | null; username?: string; file: string; uploadedAt: string | null };
 
 const pickFolderBtn = document.querySelector<HTMLButtonElement>('#pick-folder-btn')!;
 const folderNameEl = document.querySelector<HTMLSpanElement>('#folder-name')!;
 const clientListEl = document.querySelector<HTMLDivElement>('#client-list')!;
 const addForm = document.querySelector<HTMLFormElement>('#add-form')!;
-const addPinInput = document.querySelector<HTMLInputElement>('#add-pin')!;
+const addUsernameInput = document.querySelector<HTMLInputElement>('#add-username')!;
+const addPasswordInput = document.querySelector<HTMLInputElement>('#add-password')!;
+const genPasswordBtn = document.querySelector<HTMLButtonElement>('#gen-password-btn')!;
 const addNameInput = document.querySelector<HTMLInputElement>('#add-name')!;
 const addFileInput = document.querySelector<HTMLInputElement>('#add-file')!;
 const addSubmitBtn = document.querySelector<HTMLButtonElement>('#add-submit-btn')!;
 const addSubmitLabel = document.querySelector<HTMLSpanElement>('#add-submit-label')!;
 const addStatus = document.querySelector<HTMLParagraphElement>('#add-status')!;
+const migrateNote = document.querySelector<HTMLParagraphElement>('#migrate-note')!;
 
 let dirHandle: FileSystemDirectoryHandle | null = null;
+// Set while moving an old 4-digit-code client onto a username/password login.
+let migrateFrom: string | null = null;
+
+const LEGACY_PIN = /^\d{4}$/;
+const USERNAME_RE = /^[a-z0-9][a-z0-9._-]{2,31}$/;
+const MIN_PASSWORD = 10;
 
 function setAddStatus(message: string, tone?: 'error' | 'success') {
   addStatus.textContent = message;
@@ -55,10 +64,10 @@ function setAddStatus(message: string, tone?: 'error' | 'success') {
   else delete addStatus.dataset.tone;
 }
 
-// Best-effort: unzip the client's build into <pin>/preview/ so the dashboard
+// Best-effort: unzip the client's build into <client folder>/preview/ so the dashboard
 // can offer a live view. Silently skips (returns false) if the zip doesn't
 // look like a static site — the raw zip download still works either way.
-async function extractPreview(pinDir: FileSystemDirectoryHandle, zipFile: File): Promise<boolean> {
+async function extractPreview(clientDir: FileSystemDirectoryHandle, zipFile: File): Promise<boolean> {
   let entries: Record<string, Uint8Array>;
   try {
     entries = unzipSync(new Uint8Array(await zipFile.arrayBuffer()));
@@ -88,8 +97,8 @@ async function extractPreview(pinDir: FileSystemDirectoryHandle, zipFile: File):
 
   if (!paths.some(path => path.slice(stripPrefix.length) === 'index.html')) return false;
 
-  await pinDir.removeEntry('preview', { recursive: true }).catch(() => {});
-  const previewDir = await pinDir.getDirectoryHandle('preview', { create: true });
+  await clientDir.removeEntry('preview', { recursive: true }).catch(() => {});
+  const previewDir = await clientDir.getDirectoryHandle('preview', { create: true });
 
   for (const path of paths) {
     const relPath = path.slice(stripPrefix.length);
@@ -111,9 +120,9 @@ async function extractPreview(pinDir: FileSystemDirectoryHandle, zipFile: File):
   return true;
 }
 
-async function readInfo(pinDir: FileSystemDirectoryHandle): Promise<ClientInfo | null> {
+async function readInfo(clientDir: FileSystemDirectoryHandle): Promise<ClientInfo | null> {
   try {
-    const fileHandle = await pinDir.getFileHandle('info.json');
+    const fileHandle = await clientDir.getFileHandle('info.json');
     const file = await fileHandle.getFile();
     return JSON.parse(await file.text());
   } catch {
@@ -121,53 +130,128 @@ async function readInfo(pinDir: FileSystemDirectoryHandle): Promise<ClientInfo |
   }
 }
 
-async function refreshClientList() {
-  if (!dirHandle) return;
+// 12 characters from an alphabet without look-alikes (0/O, 1/l/I, 5/S…),
+// grouped for reading aloud: e.g. "kq7m-Xw3t-9fRa". ~70 bits of entropy.
+function generatePassword(): string {
+  const alphabet = 'abcdefghjkmnpqrstuvwxyzACDEFGHJKLMNPQRTUVWXY2346789';
+  const out: string[] = [];
+  const buf = new Uint8Array(1);
+  while (out.length < 12) {
+    crypto.getRandomValues(buf);
+    if (buf[0] < 256 - (256 % alphabet.length)) out.push(alphabet[buf[0] % alphabet.length]);
+  }
+  return [0, 4, 8].map(i => out.slice(i, i + 4).join('')).join('-');
+}
 
-  const rows: string[] = [];
+async function writeFile(dir: FileSystemDirectoryHandle, name: string, data: FileSystemWriteChunkType) {
+  const handle = await dir.getFileHandle(name, { create: true });
+  const writable = await handle.createWritable();
+  await writable.write(data);
+  await writable.close();
+}
+
+async function copyDir(from: FileSystemDirectoryHandle, to: FileSystemDirectoryHandle) {
+  for await (const entry of from.values()) {
+    if (entry.kind === 'file') {
+      await writeFile(to, entry.name, await (entry as FileSystemFileHandle).getFile());
+    } else {
+      await copyDir(entry as FileSystemDirectoryHandle, await to.getDirectoryHandle(entry.name, { create: true }));
+    }
+  }
+}
+
+type ClientEntry = { folder: string; info: ClientInfo; hasPreview: boolean };
+
+async function listClients(): Promise<ClientEntry[]> {
+  if (!dirHandle) return [];
+  const clients: ClientEntry[] = [];
   for await (const entry of dirHandle.values()) {
     if (entry.kind !== 'directory') continue;
-    const pinDir = entry as FileSystemDirectoryHandle;
-    const info = await readInfo(pinDir);
+    const clientDir = entry as FileSystemDirectoryHandle;
+    const info = await readInfo(clientDir);
     if (!info) continue;
-    const hasPreview = await pinDir.getDirectoryHandle('preview').then(() => true).catch(() => false);
-    rows.push(`
-      <div class="admin-client-row">
-        <span class="admin-client-pin">${escapeHtml(entry.name)}</span>
-        <span class="admin-client-name">${escapeHtml(info.name ?? '—')}</span>
-        <span class="admin-client-file">${escapeHtml(info.file)}${hasPreview ? ' · preview' : ''}</span>
-        <button type="button" class="admin-remove-btn" data-remove-pin="${escapeHtml(entry.name)}">Remove</button>
-      </div>
-    `);
+    const hasPreview = await clientDir.getDirectoryHandle('preview').then(() => true).catch(() => false);
+    clients.push({ folder: entry.name, info, hasPreview });
   }
+  return clients;
+}
 
-  clientListEl.innerHTML = rows.length
-    ? rows.join('')
+function describe(c: ClientEntry): string {
+  const who = c.info.name ?? (c.info.username ? `@${c.info.username}` : 'client');
+  return LEGACY_PIN.test(c.folder) ? `${who} (code ${c.folder})` : `${who} (${c.info.username ?? 'no username'})`;
+}
+
+async function refreshClientList() {
+  const clients = await listClients();
+
+  clientListEl.innerHTML = clients.length
+    ? clients.map(c => {
+        const legacy = LEGACY_PIN.test(c.folder);
+        const login = legacy
+          ? `${escapeHtml(c.folder)}<span class="admin-client-legacy">old code</span>`
+          : escapeHtml(c.info.username ?? '—');
+        return `
+          <div class="admin-client-row">
+            <span class="admin-client-pin">${login}</span>
+            <span class="admin-client-name">${escapeHtml(c.info.name ?? '—')}</span>
+            <span class="admin-client-file">${escapeHtml(c.info.file)}${c.hasPreview ? ' · preview' : ''}</span>
+            <span class="admin-client-actions">
+              ${legacy ? `<button type="button" class="admin-remove-btn" data-migrate="${escapeHtml(c.folder)}">Set login</button>` : ''}
+              <button type="button" class="admin-remove-btn" data-remove="${escapeHtml(c.folder)}">Remove</button>
+            </span>
+          </div>
+        `;
+      }).join('')
     : '<p class="admin-note">No clients yet.</p>';
 
-  clientListEl.querySelectorAll<HTMLButtonElement>('[data-remove-pin]').forEach(btn => {
-    btn.addEventListener('click', () => removeClient(btn.dataset.removePin!));
+  clientListEl.querySelectorAll<HTMLButtonElement>('[data-remove]').forEach(btn => {
+    btn.addEventListener('click', () => removeClient(btn.dataset.remove!));
+  });
+  clientListEl.querySelectorAll<HTMLButtonElement>('[data-migrate]').forEach(btn => {
+    btn.addEventListener('click', () => startMigrate(btn.dataset.migrate!));
   });
 }
 
-async function removeClient(pin: string) {
+async function removeClient(folder: string) {
   if (!dirHandle) return;
 
-  const pinDir = await dirHandle.getDirectoryHandle(pin).catch(() => null);
-  const info = pinDir ? await readInfo(pinDir) : null;
-  const label = info?.name ? `${info.name} (code ${pin})` : `code ${pin}`;
+  const clientDir = await dirHandle.getDirectoryHandle(folder).catch(() => null);
+  const info = clientDir ? await readInfo(clientDir) : null;
+  const label = info ? describe({ folder, info, hasPreview: false }) : folder;
 
   if (!confirm(`Remove ${label}? This deletes their zip, info, and preview from this folder. You'll still need to push the change to the server.`)) {
     return;
   }
 
   try {
-    await dirHandle.removeEntry(pin, { recursive: true });
+    await dirHandle.removeEntry(folder, { recursive: true });
+    if (migrateFrom === folder) cancelMigrate();
     setAddStatus(`Removed ${label}.`, 'success');
     await refreshClientList();
   } catch (err) {
     setAddStatus(err instanceof Error ? err.message : 'Could not remove that client.', 'error');
   }
+}
+
+async function startMigrate(folder: string) {
+  if (!dirHandle) return;
+  const info = await readInfo(await dirHandle.getDirectoryHandle(folder));
+  migrateFrom = folder;
+  addNameInput.value = info?.name ?? '';
+  addUsernameInput.value = '';
+  addPasswordInput.value = generatePassword();
+  migrateNote.hidden = false;
+  migrateNote.textContent = `Moving ${info?.name ?? 'this client'} (code ${folder}) to a username and password. Their files come along, so the zip is optional. The old code stops working once you push.`;
+  addSubmitLabel.textContent = 'Move to login';
+  setAddStatus('');
+  addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  addUsernameInput.focus({ preventScroll: true });
+}
+
+function cancelMigrate() {
+  migrateFrom = null;
+  migrateNote.hidden = true;
+  addSubmitLabel.textContent = 'Save client';
 }
 
 async function setDirHandle(handle: FileSystemDirectoryHandle) {
@@ -188,37 +272,33 @@ pickFolderBtn.addEventListener('click', async () => {
   }
 });
 
-addPinInput.addEventListener('input', () => {
-  addPinInput.value = addPinInput.value.replace(/\D/g, '').slice(0, 4);
+genPasswordBtn.addEventListener('click', () => {
+  addPasswordInput.value = generatePassword();
+});
+
+addUsernameInput.addEventListener('input', () => {
+  addUsernameInput.value = addUsernameInput.value.toLowerCase().replace(/\s/g, '');
 });
 
 addForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!dirHandle) return;
 
-  const pin = addPinInput.value.trim();
+  const username = normalizeUsername(addUsernameInput.value);
+  const password = addPasswordInput.value;
   const name = addNameInput.value.trim();
   const file = addFileInput.files?.[0];
 
-  if (pin.length !== 4) {
-    setAddStatus('Access code must be 4 digits.', 'error');
+  if (!USERNAME_RE.test(username)) {
+    setAddStatus('Username must be 3–32 characters: lowercase letters, numbers, dots, dashes or underscores.', 'error');
     return;
   }
-  if (!file) {
+  if (password.length < MIN_PASSWORD) {
+    setAddStatus(`Password must be at least ${MIN_PASSWORD} characters. Use Generate for a strong one.`, 'error');
+    return;
+  }
+  if (!file && !migrateFrom) {
     setAddStatus('Choose a zip file.', 'error');
-    return;
-  }
-
-  const existing = await (async () => {
-    try {
-      const existingDir = await dirHandle!.getDirectoryHandle(pin);
-      return readInfo(existingDir);
-    } catch {
-      return null;
-    }
-  })();
-
-  if (existing && !confirm(`Code ${pin} already has "${existing.file}" for ${existing.name ?? 'a client'}. Overwrite?`)) {
     return;
   }
 
@@ -227,34 +307,59 @@ addForm.addEventListener('submit', async (e) => {
   setAddStatus('');
 
   try {
-    const pinDir = await dirHandle.getDirectoryHandle(pin, { create: true });
+    const key = await deriveClientKey(username, password);
+    const clients = await listClients();
 
-    const zipHandle = await pinDir.getFileHandle(file.name, { create: true });
-    const zipWritable = await zipHandle.createWritable();
-    await zipWritable.write(file);
-    await zipWritable.close();
+    // Usernames must stay unique: the same username with two passwords
+    // would silently be two separate accounts.
+    const clash = clients.find(c => c.info.username === username && c.folder !== key);
+    if (clash) {
+      setAddStatus(`The username "${username}" is already used by ${describe(clash)}. To change that client's password, remove them and add them again.`, 'error');
+      return;
+    }
 
-    const hasPreview = await extractPreview(pinDir, file);
+    const existing = clients.find(c => c.folder === key);
+    if (existing && !confirm(`${describe(existing)} already has "${existing.info.file}". Overwrite?`)) return;
 
-    const info: ClientInfo = { name: name || null, file: file.name, uploadedAt: new Date().toISOString() };
-    const infoHandle = await pinDir.getFileHandle('info.json', { create: true });
-    const infoWritable = await infoHandle.createWritable();
-    await infoWritable.write(JSON.stringify(info, null, 2));
-    await infoWritable.close();
+    const clientDir = await dirHandle.getDirectoryHandle(key, { create: true });
+    let fileName: string;
+    let hasPreview: boolean;
+
+    if (migrateFrom && !file) {
+      const oldDir = await dirHandle.getDirectoryHandle(migrateFrom);
+      await copyDir(oldDir, clientDir);
+      const oldInfo = await readInfo(oldDir);
+      fileName = oldInfo?.file ?? '';
+      hasPreview = await clientDir.getDirectoryHandle('preview').then(() => true).catch(() => false);
+    } else {
+      await writeFile(clientDir, file!.name, file!);
+      hasPreview = await extractPreview(clientDir, file!);
+      fileName = file!.name;
+    }
+
+    const info: ClientInfo = { name: name || null, username, file: fileName, uploadedAt: new Date().toISOString() };
+    await writeFile(clientDir, 'info.json', JSON.stringify(info, null, 2));
+
+    if (migrateFrom) await dirHandle.removeEntry(migrateFrom, { recursive: true });
 
     setAddStatus(
-      `Saved. Code ${pin} now unlocks ${file.name}.${hasPreview ? ' Live preview generated.' : ' (No index.html found at the zip root, so no live preview — the download still works.)'}`,
+      `Saved. Send the client: username "${username}", password "${password}". ` +
+      (hasPreview ? 'Live preview available.' : 'No live preview (no index.html at the zip root), but the download still works.') +
+      ' Then push the folder to the server.',
       'success'
     );
     addForm.reset();
+    cancelMigrate();
     await refreshClientList();
   } catch (err) {
     setAddStatus(err instanceof Error ? err.message : 'Something went wrong writing that file.', 'error');
   } finally {
     addSubmitBtn.disabled = false;
-    addSubmitLabel.textContent = 'Save client';
+    addSubmitLabel.textContent = migrateFrom ? 'Move to login' : 'Save client';
   }
 });
+
+addPasswordInput.value = generatePassword();
 
 (async () => {
   const savedHandle = await idbGet<FileSystemDirectoryHandle>(DIR_HANDLE_KEY);

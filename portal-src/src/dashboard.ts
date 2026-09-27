@@ -1,4 +1,4 @@
-import { PIN_STORAGE_KEY, fetchClientInfo, escapeHtml, type ClientInfo } from './session';
+import { SESSION_KEY, fetchClientInfo, escapeHtml, type ClientInfo } from './session';
 
 const CTA_ARROW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
 const CTA_UNDERLINE = '<div class="cta-underline-wrap"><div class="cta-underline"></div></div>';
@@ -24,17 +24,17 @@ function renderError() {
   document.querySelector<HTMLButtonElement>('#retry-btn')!.addEventListener('click', init);
 }
 
-async function hasLivePreview(pin: string): Promise<boolean> {
+async function hasLivePreview(key: string): Promise<boolean> {
   try {
-    const res = await fetch(`/client-files/${pin}/preview/`, { method: 'HEAD', cache: 'no-store' });
+    const res = await fetch(`/client-files/${key}/preview/`, { method: 'HEAD', cache: 'no-store' });
     return res.ok;
   } catch {
     return false;
   }
 }
 
-function renderFiles(pin: string, info: ClientInfo, previewAvailable: boolean) {
-  const previewUrl = `/client-files/${pin}/preview/`;
+function renderFiles(key: string, info: ClientInfo, previewAvailable: boolean) {
+  const previewUrl = `/client-files/${key}/preview/`;
   const previewAction = previewAvailable
     ? `
       <a class="link-cta" href="${previewUrl}" target="_blank" rel="noopener noreferrer">
@@ -63,32 +63,32 @@ function renderFiles(pin: string, info: ClientInfo, previewAvailable: boolean) {
 }
 
 async function init() {
-  const pin = localStorage.getItem(PIN_STORAGE_KEY);
+  const key = localStorage.getItem(SESSION_KEY);
 
-  if (!pin) {
+  if (!key) {
     window.location.replace('./index.html?expired=1');
     return;
   }
 
-  const result = await fetchClientInfo(pin);
+  const result = await fetchClientInfo(key);
 
   if (!result.ok) {
     if (result.reason === 'network') {
       renderError();
     } else {
-      localStorage.removeItem(PIN_STORAGE_KEY);
+      localStorage.removeItem(SESSION_KEY);
       window.location.replace('./index.html?expired=1');
     }
     return;
   }
 
   accountName.textContent = result.info.name ?? '';
-  const previewAvailable = await hasLivePreview(pin);
-  renderFiles(pin, result.info, previewAvailable);
+  const previewAvailable = await hasLivePreview(key);
+  renderFiles(key, result.info, previewAvailable);
 }
 
 logoutBtn.addEventListener('click', () => {
-  localStorage.removeItem(PIN_STORAGE_KEY);
+  localStorage.removeItem(SESSION_KEY);
   window.location.replace('./index.html');
 });
 
