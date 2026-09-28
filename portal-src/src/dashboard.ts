@@ -59,39 +59,24 @@ function renderFiles(folder: string, info: ClientInfo, previewAvailable: boolean
         ${previewAction}
       </div>
     </div>
-    ${info.username ? `
-    <section class="dash-account" aria-labelledby="pw-heading">
-      <h2 class="dash-account-title" id="pw-heading">Change password</h2>
-      <p class="dash-note">Signed in as <strong>${escapeHtml(info.username)}</strong>. Your username stays the same.</p>
-      <form id="pw-form" novalidate>
-        <input type="text" name="username" value="${escapeHtml(info.username)}" autocomplete="username" hidden>
-        <div class="field">
-          <label class="field-label" for="pw-current">Current password</label>
-          <input type="password" id="pw-current" autocomplete="current-password" required>
-        </div>
-        <div class="field">
-          <label class="field-label" for="pw-new">New password (at least ${MIN_PASSWORD} characters)</label>
-          <input type="password" id="pw-new" autocomplete="new-password" minlength="${MIN_PASSWORD}" required>
-        </div>
-        <div class="field">
-          <label class="field-label" for="pw-confirm">Confirm new password</label>
-          <input type="password" id="pw-confirm" autocomplete="new-password" required>
-        </div>
-        <button type="submit" class="link-cta" id="pw-submit">
-          <span id="pw-submit-label">Update password</span>
-          ${CTA_ARROW}
-          ${CTA_UNDERLINE}
-        </button>
-        <p class="login-status" id="pw-status" role="status" aria-live="polite"></p>
-      </form>
-    </section>` : ''}
   `;
-  if (info.username) bindPasswordForm(info.username);
 }
+
 
 const MIN_PASSWORD = 10;
 
+const pwDialog = document.querySelector<HTMLDialogElement>('#pw-dialog')!;
+const pwOpenBtn = document.querySelector<HTMLButtonElement>('#pw-open-btn')!;
+let passwordFormBound = false;
+
+// The "Change password" button in the top bar opens the form in a dialog.
 function bindPasswordForm(username: string) {
+  document.querySelector<HTMLElement>('#pw-username')!.textContent = username;
+  document.querySelector<HTMLInputElement>('#pw-username-field')!.value = username;
+  pwOpenBtn.hidden = false;
+  if (passwordFormBound) return;
+  passwordFormBound = true;
+
   const form = document.querySelector<HTMLFormElement>('#pw-form')!;
   const current = document.querySelector<HTMLInputElement>('#pw-current')!;
   const next = document.querySelector<HTMLInputElement>('#pw-new')!;
@@ -104,6 +89,17 @@ function bindPasswordForm(username: string) {
     status.textContent = msg;
     if (tone) status.dataset.tone = tone; else delete status.dataset.tone;
   };
+
+  let closeTimer: number | undefined;
+  pwOpenBtn.addEventListener('click', () => {
+    window.clearTimeout(closeTimer);
+    form.reset();
+    say('');
+    pwDialog.showModal();
+    current.focus();
+  });
+  document.querySelector<HTMLButtonElement>('#pw-close-btn')!.addEventListener('click', () => pwDialog.close());
+  pwDialog.addEventListener('click', (e) => { if (e.target === pwDialog) pwDialog.close(); });   // backdrop
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -134,6 +130,7 @@ function bindPasswordForm(username: string) {
         localStorage.setItem(SESSION_KEY, newKey);
         form.reset();
         say('Password updated. Use your new password next time you sign in.', 'success');
+        closeTimer = window.setTimeout(() => pwDialog.close(), 2200);
       } else if (res.status === 429) {
         say('Too many attempts. Wait a few minutes and try again.', 'error');
       } else if (res.status === 404) {
@@ -173,6 +170,7 @@ async function init() {
   }
 
   accountName.textContent = result.info.name ?? '';
+  if (result.info.username) bindPasswordForm(result.info.username);
   const previewAvailable = await hasLivePreview(result.folder);
   renderFiles(result.folder, result.info, previewAvailable);
 }
