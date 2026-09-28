@@ -1,142 +1,369 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-12T00:00:00Z",
+  "generatedAt": "2026-09-28T18:13:30+00:00",
   "title": "Design System: Mann Dev",
   "extensions": {
     "colorMeta": {
-      "accent": { "role": "primary", "displayName": "Accent Gold", "canonical": "#f2c94c" },
-      "bg": { "role": "neutral", "displayName": "Background Navy", "canonical": "#1e2530" },
-      "surface": { "role": "neutral", "displayName": "Surface Navy", "canonical": "#252b34" },
-      "fg": { "role": "neutral", "displayName": "Foreground", "canonical": "#f0f2f4" },
-      "mid": { "role": "neutral", "displayName": "Mid Grey", "canonical": "#969ba6" },
-      "dim": { "role": "neutral", "displayName": "Dim Grey", "canonical": "#636872" },
-      "rule": { "role": "neutral", "displayName": "Hairline Rule", "canonical": "rgba(240,242,244,.09)" },
-      "rule-accent": { "role": "primary", "displayName": "Gold-Tinted Rule", "canonical": "rgba(242,201,76,.22)" }
+      "bg": {
+        "role": "neutral",
+        "displayName": "Dusk Water",
+        "canonical": "oklch(26.3% 0.023 259)",
+        "tonalRamp": [
+          "oklch(15% 0.011 259)",
+          "oklch(26% 0.014 259)",
+          "oklch(37% 0.017 259)",
+          "oklch(48% 0.020 259)",
+          "oklch(59% 0.023 259)",
+          "oklch(70% 0.020 259)",
+          "oklch(82% 0.017 259)",
+          "oklch(95% 0.013 259)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Harbour Slate",
+        "canonical": "oklch(28.7% 0.019 258)",
+        "tonalRamp": [
+          "oklch(15% 0.019 258)",
+          "oklch(26% 0.019 258)",
+          "oklch(37% 0.019 258)",
+          "oklch(48% 0.019 258)",
+          "oklch(59% 0.019 258)",
+          "oklch(70% 0.019 258)",
+          "oklch(82% 0.019 258)",
+          "oklch(95% 0.019 258)"
+        ]
+      },
+      "fg": {
+        "role": "neutral",
+        "displayName": "Sea Fog",
+        "canonical": "oklch(96.0% 0.003 248)",
+        "tonalRamp": [
+          "oklch(15% 0.003 248)",
+          "oklch(26% 0.003 248)",
+          "oklch(37% 0.003 248)",
+          "oklch(48% 0.003 248)",
+          "oklch(59% 0.003 248)",
+          "oklch(70% 0.003 248)",
+          "oklch(82% 0.003 248)",
+          "oklch(95% 0.003 248)"
+        ]
+      },
+      "mid": {
+        "role": "neutral",
+        "displayName": "Weathered Grey",
+        "canonical": "oklch(68.9% 0.017 266)",
+        "tonalRamp": [
+          "oklch(15% 0.017 266)",
+          "oklch(26% 0.017 266)",
+          "oklch(37% 0.017 266)",
+          "oklch(48% 0.017 266)",
+          "oklch(59% 0.017 266)",
+          "oklch(70% 0.017 266)",
+          "oklch(82% 0.017 266)",
+          "oklch(95% 0.017 266)"
+        ]
+      },
+      "dim": {
+        "role": "neutral",
+        "displayName": "Hull Grey",
+        "canonical": "oklch(51.6% 0.017 264)",
+        "tonalRamp": [
+          "oklch(15% 0.017 264)",
+          "oklch(26% 0.017 264)",
+          "oklch(37% 0.017 264)",
+          "oklch(48% 0.017 264)",
+          "oklch(59% 0.017 264)",
+          "oklch(70% 0.017 264)",
+          "oklch(82% 0.017 264)",
+          "oklch(95% 0.017 264)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Lamplight Gold",
+        "canonical": "oklch(85.0% 0.146 90)",
+        "tonalRamp": [
+          "oklch(15% 0.067 90)",
+          "oklch(26% 0.087 90)",
+          "oklch(37% 0.106 90)",
+          "oklch(48% 0.125 90)",
+          "oklch(59% 0.145 90)",
+          "oklch(70% 0.129 90)",
+          "oklch(82% 0.108 90)",
+          "oklch(95% 0.085 90)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgba(240,242,244,.09)",
+        "tonalRamp": [
+          "oklch(15% 0.003 248)",
+          "oklch(26% 0.003 248)",
+          "oklch(37% 0.003 248)",
+          "oklch(48% 0.003 248)",
+          "oklch(59% 0.003 248)",
+          "oklch(70% 0.003 248)",
+          "oklch(82% 0.003 248)",
+          "oklch(95% 0.003 248)"
+        ]
+      },
+      "rule-soft": {
+        "role": "neutral",
+        "displayName": "Soft Hairline",
+        "canonical": "rgba(240,242,244,.06)",
+        "tonalRamp": [
+          "oklch(15% 0.003 248)",
+          "oklch(26% 0.003 248)",
+          "oklch(37% 0.003 248)",
+          "oklch(48% 0.003 248)",
+          "oklch(59% 0.003 248)",
+          "oklch(70% 0.003 248)",
+          "oklch(82% 0.003 248)",
+          "oklch(95% 0.003 248)"
+        ]
+      },
+      "rule-accent": {
+        "role": "primary",
+        "displayName": "Gold Hairline",
+        "canonical": "rgba(242,201,76,.22)",
+        "tonalRamp": [
+          "oklch(15% 0.067 90)",
+          "oklch(26% 0.087 90)",
+          "oklch(37% 0.106 90)",
+          "oklch(48% 0.125 90)",
+          "oklch(59% 0.145 90)",
+          "oklch(70% 0.129 90)",
+          "oklch(82% 0.108 90)",
+          "oklch(95% 0.085 90)"
+        ]
+      }
     },
     "typographyMeta": {
-      "display-hero": { "displayName": "Display Hero", "purpose": "The h1 hero line only." },
-      "display-headline": { "displayName": "Display Headline", "purpose": "Section-opening statements (About, Process, Principles, Contact)." },
-      "display-title": { "displayName": "Display Title", "purpose": "Service tab-panel card titles." },
-      "display-card-title": { "displayName": "Display Card Title", "purpose": "Process-card and principle-card titles." },
-      "display-numeral": { "displayName": "Display Numeral", "purpose": "Ghost step numbers (01-05) on process cards." },
-      "body": { "displayName": "Body", "purpose": "Base running copy." },
-      "body-copy": { "displayName": "Body Copy", "purpose": "Card/panel description copy, set smaller than base body." },
-      "label": { "displayName": "Label", "purpose": "Nav links, kickers, tags, badges, form labels, status pill text — uppercase, wide-tracked." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "The hero h1 only; one word may be italic gold."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section openers."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Service panel titles."
+      },
+      "card-title": {
+        "displayName": "Card Title",
+        "purpose": "Process and principle card titles."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Ghost step numbers on process cards."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running copy in Weathered Grey, 45-75ch."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Card copy."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Nav, kickers, tags, badges, form labels, CTAs. Never below 0.7rem."
+      }
     },
     "shadows": [
-      { "name": "process-card-hover", "value": "0 12px 40px rgba(0,0,0,.28)", "purpose": "Applied only on hover/focus of a process card, paired with scale(1.025) and a border-color shift to rgba(242,201,76,.14)." }
+      {
+        "name": "process-lift",
+        "value": "0 12px 40px rgba(0,0,0,.28)",
+        "purpose": "Process card hover, with scale(1.025) and a 14% gold edge."
+      },
+      {
+        "name": "principle-lift",
+        "value": "0 16px 44px rgba(0,0,0,.3)",
+        "purpose": "Principle card hover, with translateY(-6px) and a 20% gold edge."
+      },
+      {
+        "name": "dialog-backdrop",
+        "value": "rgba(14,18,24,.72) + blur(4px)",
+        "purpose": "Behind modal dialogs only."
+      }
     ],
     "motion": [
-      { "name": "ease-power3-out", "value": "power3.out", "purpose": "Default GSAP ease for fade-up section reveals." },
-      { "name": "ease-power4-out", "value": "power4.out", "purpose": "Used for staggered masked text reveals (hero/about headline clip lines)." },
-      { "name": "ease-power2-out", "value": "power2.out", "purpose": "Used for smaller staggered reveals (list items, tags)." },
-      { "name": "ease-tab-indicator", "value": "power3.out, duration 0.35s", "purpose": "Tab underline indicator sliding to the active tab." },
-      { "name": "pulse-status-dot", "value": "2s ease-in-out infinite, scale 1 to .7 / opacity 1 to .4", "purpose": "The 'Available for new projects' status dot." }
+      {
+        "name": "ease-draw",
+        "value": "cubic-bezier(.25,1,.5,1)",
+        "purpose": "CTA underline drawing in (scaleX)."
+      },
+      {
+        "name": "ease-settle",
+        "value": "cubic-bezier(.2,.8,.2,1)",
+        "purpose": "Dialog entrance, icon lift."
+      },
+      {
+        "name": "gsap-entrance",
+        "value": "power3.out / power4.out, 0.5-0.8s, clearProps transform when done",
+        "purpose": "Scroll and hero entrances."
+      },
+      {
+        "name": "ring-spin",
+        "value": "120s linear infinite",
+        "purpose": "Hero mark ring; off under reduced motion."
+      }
     ],
     "breakpoints": [
-      { "name": "tablet", "value": "900px" },
-      { "name": "mobile", "value": "600px" }
+      {
+        "name": "mobile",
+        "value": "600px"
+      },
+      {
+        "name": "tablet",
+        "value": "900px"
+      },
+      {
+        "name": "container",
+        "value": "1280px"
+      }
     ]
   },
   "components": [
     {
-      "name": "Link CTA",
+      "name": "Text Link CTA",
       "kind": "button",
       "refersTo": "link-cta",
-      "description": "The only CTA style in the system — text link with animated underline and arrow, no button fill ever.",
-      "html": "<a href=\"#contact\" class=\"link-cta\">Start a project<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg><div class=\"cta-underline-wrap\"><div class=\"cta-underline\"></div></div></a>",
-      "css": ".link-cta{display:inline-flex;align-items:center;gap:.5rem;font-family:'Figtree',sans-serif;font-size:1rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:#f2c94c;position:relative;} .link-cta .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;} .link-cta .cta-underline{height:100%;width:0;background:#f2c94c;transition:width .3s ease;} .link-cta:hover .cta-underline{width:100%;} .link-cta svg{transition:transform .3s ease;} .link-cta:hover svg{transform:translateX(3px);}"
+      "description": "The only button style: gold uppercase label, drawn underline and nudging arrow.",
+      "html": "<a class=\"ds-cta\" href=\"#\">Start a project <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg><span class=\"ds-cta-line\"></span></a>",
+      "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-cta{position:relative;display:inline-flex;align-items:center;gap:.5rem;font-family:Figtree,system-ui,sans-serif;font-size:1rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);text-decoration:none}.ds-cta svg{transition:transform .3s ease}.ds-cta-line{position:absolute;left:0;right:0;bottom:-3px;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.25,1,.5,1)}.ds-cta:hover .ds-cta-line,.ds-cta:focus-visible .ds-cta-line{transform:scaleX(1)}.ds-cta:hover svg{transform:translateX(3px)}.ds-cta:focus-visible{outline:2px solid var(--accent);outline-offset:3px}"
     },
     {
-      "name": "Surface Card",
+      "name": "Principle Card",
       "kind": "card",
       "refersTo": "card",
-      "description": "Base rounded card used for process, principle, and service panels.",
-      "html": "<div class=\"card\">...</div>",
-      "css": ".card{background:#252b34;border-radius:28px;padding:2.5rem;}"
-    },
-    {
-      "name": "Process Card",
-      "kind": "card",
-      "refersTo": "process-card",
-      "description": "Numbered step card with a ghost display numeral that brightens and a hover lift (scale + shadow + border tint) — the one card in the system permitted to lift.",
-      "html": "<div class=\"process-card\"><div class=\"pc-num\">01</div><div class=\"pc-title\">Brief &amp; Discovery</div><div class=\"pc-body\">...</div><span class=\"pc-tag\">30 to 60 min call</span></div>",
-      "css": ".process-card{background:#252b34;border-radius:28px;padding:2.5rem;display:flex;flex-direction:column;gap:1rem;border:1px solid rgba(240,242,244,.06);transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;} .process-card:hover{transform:scale(1.025);box-shadow:0 12px 40px rgba(0,0,0,.28);border-color:rgba(242,201,76,.14);} .pc-num{font:700 3.5rem/1 'Lora',serif;color:rgba(242,201,76,.18);transition:color .25s ease;} .process-card:hover .pc-num{color:rgba(242,201,76,.85);} .pc-title{font:600 1.25rem/1.2 'Lora',serif;color:#f0f2f4;} .pc-body{font-size:.92rem;color:#969ba6;line-height:1.85;}"
+      "description": "Slate card with a hairline edge that rises on hover: shadow, gold edge, icon lift, tag fill.",
+      "html": "<article class=\"ds-card\"><h3 class=\"ds-card-title\">Ethical Design</h3><p class=\"ds-card-copy\">Clear choices, honest interfaces, and visitors who feel respected.</p><span class=\"ds-tag\">No dark patterns</span></article>",
+      "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-card{background:var(--surface);border:1px solid var(--rule-soft);border-radius:28px;padding:2.5rem;max-width:360px;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}.ds-card-title{font:600 1.3rem/1.2 Lora,Georgia,serif;color:var(--fg);margin:0 0 .75rem}.ds-card-copy{font:400 .9rem/1.8 Figtree,system-ui,sans-serif;color:var(--mid);margin:0}.ds-tag{display:inline-block;margin-top:1.25rem;font:600 .7rem/1 Figtree,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid var(--rule-accent);padding:.3rem .8rem;transition:background-color .3s ease,border-color .3s ease}@media(hover:hover){.ds-card:hover{transform:translateY(-6px);box-shadow:0 16px 44px rgba(0,0,0,.3);border-color:rgba(242,201,76,.2)}.ds-card:hover .ds-tag{background:rgba(242,201,76,.08);border-color:rgba(242,201,76,.45)}}"
     },
     {
       "name": "Outline Tag",
-      "kind": "card",
+      "kind": "chip",
       "refersTo": "tag",
-      "description": "Small uppercase chip with transparent fill and a gold-tinted border, used for process/principle/service tags.",
-      "html": "<span class=\"pc-tag\">Lighthouse &middot; Cross-browser &middot; A11y</span>",
-      "css": ".pc-tag{display:inline-block;font-family:'Figtree',sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;border:1px solid rgba(242,201,76,.22);padding:.3rem .8rem;color:#f2c94c;width:fit-content;}"
+      "description": "Gold label in a gold hairline box.",
+      "html": "<span class=\"ds-tag\">WCAG 2.2 AA</span>",
+      "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-tag{display:inline-block;font:600 .7rem/1 Figtree,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid var(--rule-accent);padding:.3rem .8rem}"
     },
     {
-      "name": "Filled Badge",
-      "kind": "card",
-      "refersTo": "filled-badge",
-      "description": "The one place gold is used as a solid fill — MRR/care upsell chips (tab badge, care badge).",
-      "html": "<span class=\"tab-mrr-badge\">Monthly</span>",
-      "css": ".tab-mrr-badge{display:inline-block;font-size:.55rem;letter-spacing:.12em;font-weight:700;background:#f2c94c;color:#1e2530;padding:.15rem .45rem;}"
+      "name": "Monthly Badge",
+      "kind": "chip",
+      "refersTo": "badge-filled",
+      "description": "The only gold fill in the system.",
+      "html": "<span class=\"ds-badge\">Monthly</span>",
+      "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-badge{display:inline-block;background:var(--accent);color:var(--bg);font:600 .7rem/1 Figtree,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .5rem;border-radius:3px}"
     },
     {
-      "name": "Floating-Label Input",
+      "name": "Underline Field",
       "kind": "input",
       "refersTo": "input-text",
-      "description": "Underline-only text field whose label floats up on focus/fill.",
-      "html": "<div class=\"form-field\"><input class=\"form-input\" type=\"text\" placeholder=\"x\" /><label class=\"form-label\">Name</label></div>",
-      "css": ".form-input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(240,242,244,.09);padding:.8rem 0 .6rem;color:#f0f2f4;font-family:'Figtree',sans-serif;font-size:.95rem;outline:none;transition:border-color .3s;} .form-input:focus{border-bottom-color:#f2c94c;} .form-label{position:absolute;top:.8rem;left:0;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:#969ba6;pointer-events:none;transition:all .25s ease;} .form-input:focus~.form-label,.form-input:not(:placeholder-shown)~.form-label{top:-1rem;font-size:.58rem;color:#f0f2f4;}"
+      "description": "No box: a hairline underline with a floating label; the line turns gold on focus.",
+      "html": "<label class=\"ds-field\"><input class=\"ds-input\" placeholder=\" \"><span class=\"ds-label\">Email address</span></label>",
+      "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-field{position:relative;display:block;max-width:320px;padding-top:1rem}.ds-input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:.8rem 0 .6rem;color:var(--fg);font:400 .95rem Figtree,system-ui,sans-serif;outline:none;transition:border-color .3s}.ds-input:focus{border-bottom-color:var(--accent)}.ds-label{position:absolute;left:0;top:1.8rem;font:500 .74rem Figtree,system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);pointer-events:none;transition:all .25s ease}.ds-input:focus+.ds-label,.ds-input:not(:placeholder-shown)+.ds-label{top:0;font-size:.7rem;color:var(--fg)}"
     },
     {
-      "name": "Service Visual",
-      "kind": "custom",
-      "refersTo": "service-visual",
-      "description": "Signature 'abstract site preview' panel — traffic-light dots plus a wireframe mockup (nav rail, content lines, or node/flow diagram depending on the service tab) standing in for a rendered site. Replaces the retired literal code-block device.",
-      "html": "<div class=\"service-visual\" aria-hidden=\"true\"><div class=\"sv-dots\"><span></span><span></span><span></span></div><div class=\"sv-hero\"><div class=\"sv-line sv-line-lg\"></div><div class=\"sv-line sv-line-sm\"></div><div class=\"sv-btn\"></div></div></div>",
-      "css": ".service-visual{flex:1;margin-top:2rem;min-height:180px;display:flex;flex-direction:column;border:1px solid rgba(240,242,244,.09);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.02);} .sv-dots{display:flex;gap:.4rem;padding:.6rem .8rem;border-bottom:1px solid rgba(240,242,244,.09);} .sv-dots span{width:7px;height:7px;border-radius:50%;background:rgba(240,242,244,.09);} .sv-line{height:8px;border-radius:4px;background:rgba(240,242,244,.09);} .sv-line-lg{width:65%;height:12px;background:rgba(240,242,244,.16);} .sv-btn{margin-top:.6rem;width:110px;height:26px;border-radius:6px;background:#f2c94c;opacity:.85;}"
-    },
-    {
-      "name": "Status Pill",
+      "name": "Navigation",
       "kind": "nav",
-      "refersTo": "status-pill",
-      "description": "Availability indicator with a pulsing gold dot.",
-      "html": "<span class=\"status-pill\"><span class=\"status-dot\"></span>Available for new projects</span>",
-      "css": ".status-pill{display:inline-flex;align-items:center;gap:.5rem;font-family:'Figtree',sans-serif;font-size:.8rem;color:#f0f2f4;} .status-dot{width:7px;height:7px;border-radius:50%;background:#f2c94c;animation:pulse 2s ease-in-out infinite;} @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}"
+      "refersTo": "link-cta",
+      "description": "Label links with a standing gold underline; the portal link stays unlined until hover.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\">Services</a><a href=\"#\">Process</a><a href=\"#\">Contact</a><a class=\"ds-nav-quiet\" href=\"#\">Client Portal</a></nav>",
+      "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-nav{display:flex;gap:2rem;font:500 .85rem Figtree,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.05em}.ds-nav a{color:var(--fg);text-decoration:none;border-bottom:2px solid var(--accent);padding-bottom:2px;transition:opacity .2s}.ds-nav a:hover{opacity:.75}.ds-nav a.ds-nav-quiet{border-bottom-color:transparent;opacity:.6}.ds-nav a.ds-nav-quiet:hover{opacity:1;border-bottom-color:var(--accent)}"
+    },
+    {
+      "name": "Choice Option",
+      "kind": "custom",
+      "refersTo": "choice-option",
+      "description": "Build Finder answer row: a real radio underneath, gold edge and fill when chosen.",
+      "html": "<label class=\"ds-opt\"><input type=\"radio\" name=\"ds\" checked><span class=\"ds-mark\"></span><span><b>Win more customers</b><small>Look established and turn visitors into enquiries.</small></span></label>",
+      "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-opt{position:relative;display:flex;gap:.9rem;align-items:flex-start;max-width:420px;padding:1rem 1.1rem;border:1px solid var(--rule);border-radius:14px;cursor:pointer;font-family:Figtree,system-ui,sans-serif;color:var(--fg)}.ds-opt input{position:absolute;opacity:0}.ds-mark{flex-shrink:0;width:18px;height:18px;margin-top:.15rem;border:1.5px solid #636872;border-radius:50%;display:grid;place-items:center}.ds-opt b{display:block;font-weight:500}.ds-opt small{display:block;color:var(--mid);font-size:.84rem;margin-top:.15rem}.ds-opt:has(input:checked){border-color:var(--accent);background:rgba(242,201,76,.06)}.ds-opt:has(input:checked) .ds-mark{border-color:var(--accent)}.ds-opt:has(input:checked) .ds-mark::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent)}.ds-opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}"
     }
   ],
   "narrative": {
-    "northStar": "Coastal Navy Editorial",
-    "overview": "Deliberately modelled on lionelmann.com's visual language, carried over to Mann Dev's own content. A deep, warm navy field (never black) holds soft-cornered surface cards, set in a serif/sans pairing — Lora for anything that needs to speak with authority, Figtree for everything functional. There are no filled buttons anywhere in the system: every call to action is a text link with an animated underline and a nudging arrow. Corners are generously rounded (28px on cards, small radii on internal UI), which is the opposite instinct of the site's previous sharp-edged, zero-radius era — softness now reads as considered rather than templated.\n\nDensity is still editorial — long rule dividers, numbered process cards, generous section gaps — but the components are friendlier and less severe than the old ink-and-amber system: rounded surface cards instead of borderless grid cells, a single warm gold accent instead of amber, and abstract wireframe 'site preview' panels instead of literal code blocks.",
+    "northStar": "Harbour at Dusk",
+    "overview": "The last light over a working harbour: deep water navy going dark, one warm gold line on the horizon, and soft, well-worn forms that have clearly been made by hand. Mann Dev is a small studio selling custom, hand-coded websites, so the page itself has to be the proof. Nothing here is a template: every surface, underline and card lift is built for this site, and the restraint is the confidence.\n\nThe system is layered, not flat. The navy field carries a faint printed grain; a large, barely-visible m/d mark turns slowly behind the hero like a harbour light; cards sit a step above the water in a slate fill with a hairline edge, and rise toward you (shadow, gold edge, a few pixels of lift) when you reach for them. Gold is the only colour and it is rationed: text links, underlines, tags, the availability pulse, the one italic word in the hero. Type does the talking: Lora for anything that needs authority, Figtree for everything that needs to work.\n\nThis system rejects what PRODUCT.md names as anti-references: \"generic SaaS landing pages (bright gradients, hero-metric blocks, stock illustrations)\", \"bloated agency sites with layers of process jargon and team photos\", and \"anything that reads as templated, since 'no templates' is a core claim the design must visually back up.\"",
     "keyCharacteristics": [
-      "Deep navy background (#1e2530), never true black; lifted navy-grey surface (#252b34) for every card",
-      "One warm gold accent (#f2c94c) — reserved for links, underlines, tags, active states, the pulsing availability dot",
-      "Lora serif for headlines and card titles, Figtree sans for everything else",
-      "Generously rounded corners (28px cards) — a deliberate softness, not a holdover from a sharp-edged era",
-      "No filled buttons: every CTA is a text link with an animated underline + arrow",
-      "Signature 'service visual' panels: abstract wireframe mockups standing in for a rendered site, not literal code"
+      "Deep dusk-navy field (never black) with a slate surface one step up; printed grain over everything",
+      "One lamplight gold accent, used on no more than a hairline, a word, or a small tag at a time",
+      "Lora serif for headlines, card titles and numerals; Figtree sans for body, labels and UI",
+      "Generously rounded forms (28px cards, 20px panels, 14px choices)",
+      "No filled buttons: every action is a gold text link with a drawn underline and a nudging arrow",
+      "Layered depth: grain and the hero mark at rest, lift and gold edges on intent"
     ],
     "rules": [
-      { "name": "The No-Fill Rule", "body": "Gold never covers more than a hairline, a tag border, a badge chip, or text itself. There is no gold button fill anywhere in the system — CTAs are always text links.", "section": "colors" },
-      { "name": "The Warm-Navy Rule", "body": "Background and surface are both warm-tinted navy, not cool slate or pure black.", "section": "colors" },
-      { "name": "The Serif-For-Weight Rule", "body": "Lora appears only where a line needs authority: h1/h2 headlines and card titles. It never appears in running body copy, labels, or UI chrome.", "section": "typography" },
-      { "name": "The Wide Label Rule", "body": "Anything in Label role is uppercase with meaningful letter-spacing (0.05em minimum, up to 0.2em for the smallest kickers).", "section": "typography" },
-      { "name": "The Hover-Lift Rule", "body": "Process cards lift on hover (scale + shadow + border tint); every other card stays flat at all times.", "section": "elevation" }
+      {
+        "name": "The One Lamp Rule",
+        "body": "Gold appears as a line, a word or a small chip, never as a panel or button fill. The two filled \"Monthly\" badges are the only exception.",
+        "section": "colors"
+      },
+      {
+        "name": "The Legible Grey Rule",
+        "body": "Anything a visitor must read uses `mid` or brighter. `dim` is decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warm Water Rule",
+        "body": "Background and surface stay warm navy. If a screen reads as \"generic dark mode\", the navy has gone too cool or too black.",
+        "section": "colors"
+      },
+      {
+        "name": "The Serif-For-Weight Rule",
+        "body": "Lora appears only where a line needs authority: headlines, card titles, numerals, the Build Finder's question and result. Never in labels or running body copy.",
+        "section": "typography"
+      },
+      {
+        "name": "The Label Floor Rule",
+        "body": "No text below 0.7rem (11.2px). Uppercase, wide-tracked labels read smaller than their size, so the floor is non-negotiable, including badges.",
+        "section": "typography"
+      },
+      {
+        "name": "The Plain Punctuation Rule",
+        "body": "No em dashes in copy. Use commas, colons, parentheses or full stops.",
+        "section": "typography"
+      },
+      {
+        "name": "The Lift On Intent Rule",
+        "body": "Nothing moves until it's reached for. Hover lifts live inside `@media (hover:hover)` so a tap on a phone never leaves a card stuck mid-air; touch devices get the resting state, with anything the hover would have revealed (such as the step numerals at 46% gold) shown by default.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Transform Handoff Rule",
+        "body": "GSAP entrance tweens must end with `clearProps: 'transform,translate,rotate,scale'`. GSAP writes inline transforms (and, since 3.12, inline `translate/scale: none`), which silently block every CSS hover transform.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Compositor Rule",
+        "body": "Animate only `transform` and `opacity`. Underlines scale on `scaleX`, the tab indicator moves with `x` and `scaleX`, the hero ring spins as its own layer. Never animate width, left or margins.",
+        "section": "elevation"
+      }
     ],
     "dos": [
-      "Do keep every CTA a text link with an underline + arrow — never introduce a filled button (The No-Fill Rule).",
-      "Do keep background and surface warm navy tones, never cool slate or pure black (The Warm-Navy Rule).",
-      "Do use Lora only for headlines/card titles and Figtree for everything else (The Serif-For-Weight Rule).",
-      "Do round every card to 28px — consistent softness is the current identity.",
-      "Do reserve the hover-lift (scale + shadow) for process cards only (The Hover-Lift Rule).",
-      "Do use the wireframe 'service visual' idiom rather than literal code blocks when showing 'what gets built.'"
+      "**Do** keep every action a gold text link with a drawn underline and arrow (The One Lamp Rule).",
+      "**Do** keep the water warm navy (`#1e2530`) and the hull slate (`#252b34`).",
+      "**Do** use Lora only for headlines, card titles, numerals and Build Finder questions and results.",
+      "**Do** keep every readable word at `mid` (5.1:1) or brighter, and every label at 0.7rem or larger.",
+      "**Do** put hover lifts in `@media (hover:hover)` and extend small tap targets to 44px on touch.",
+      "**Do** end GSAP entrance tweens with `clearProps` so CSS hovers can work.",
+      "**Do** animate with `transform` and `opacity` only, and respect `prefers-reduced-motion`.",
+      "**Do** keep the principle cards a bento, not a uniform grid."
     ],
     "donts": [
-      "Don't reintroduce sharp/zero-radius corners — that was the previous era's signature, not this one's.",
-      "Don't add a solid-fill button anywhere except the two explicitly-filled badge chips (tab-mrr-badge, care-badge).",
-      "Don't use monospace or script fonts (Bebas Neue, IBM Plex Mono, Playfair Display are retired from this system).",
-      "Don't apply the process-card hover lift to service cards or principle cards.",
-      "Don't fabricate client testimonials or social proof.",
-      "Don't use bright SaaS gradients, hero-metric blocks, or stock illustration."
+      "**Don't** build anything resembling \"generic SaaS landing pages (bright gradients, hero-metric blocks, stock illustrations)\".",
+      "**Don't** drift toward \"bloated agency sites with layers of process jargon and team photos\".",
+      "**Don't** ship \"anything that reads as templated\". \"No templates\" is a core claim the design must visually back up.",
+      "**Don't** add a filled button anywhere; gold fills are for the \"Monthly\" badges only.",
+      "**Don't** use `dim` (`#636872`) for information: it fails contrast.",
+      "**Don't** use gradient text, glass cards, or coloured side stripes thicker than 1px.",
+      "**Don't** use em dashes in copy.",
+      "**Don't** animate `width`, `left`, `top` or margins.",
+      "**Don't** fabricate client testimonials or social proof. Real, attributed testimonials come from Julien directly."
     ]
   }
 }

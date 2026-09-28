@@ -42,8 +42,8 @@
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Figtree:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Figtree:wght@300;400;500;600&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Figtree:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Figtree:wght@300;400;500;600&display=swap"></noscript>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
@@ -55,6 +55,7 @@
   --dim:    #636872;
   --accent: #f2c94c;
   --rule:   rgba(240,242,244,.09);
+  --rule-soft: rgba(240,242,244,.06);
   --rule-accent: rgba(242,201,76,.22);
   --display:'Lora', Georgia, serif;
   --body:   'Figtree', system-ui, sans-serif;
@@ -105,12 +106,15 @@ a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none;}
 .link-cta .cta-underline-wrap{
   position:absolute;bottom:-3px;left:0;right:0;height:2px;
 }
-.link-cta .cta-underline{
-  height:100%;width:0;
+.cta-underline{
+  height:100%;
   background:var(--accent);
-  transition:width .3s ease;
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .3s cubic-bezier(.25,1,.5,1);
 }
-.link-cta:hover .cta-underline{width:100%;}
+.link-cta:hover .cta-underline,
+.service-cta:hover .cta-underline,
+.form-submit:not(:disabled):hover .cta-underline{transform:scaleX(1);}
 .link-cta svg{
   transition:transform .3s ease;
   flex-shrink:0;
@@ -311,7 +315,7 @@ body::after{
   border-radius:var(--card-radius);
   overflow:hidden;
   background:var(--bg);
-  border:1px solid rgba(240,242,244,.06);
+  border:1px solid var(--rule-soft);
   aspect-ratio:16/9;
 }
 .process-film-video{display:block;width:100%;height:100%;object-fit:cover;}
@@ -327,14 +331,8 @@ body::after{
   display:flex;
   flex-direction:column;
   gap:1rem;
-  border:1px solid rgba(240,242,244,.06);
+  border:1px solid var(--rule-soft);
   transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-}
-.process-card:hover{
-  transform:scale(1.025);
-  box-shadow:0 12px 40px rgba(0,0,0,.28);
-  border-color:rgba(242,201,76,.14);
-  z-index:1;
 }
 .process-card:last-child{
   grid-column:span 2;
@@ -343,9 +341,6 @@ body::after{
   font:700 3.5rem/1 var(--display);
   color:rgba(242,201,76,.18);
   transition:color .25s ease;
-}
-.process-card:hover .pc-num{
-  color:rgba(242,201,76,.85);
 }
 .pc-title{
   font:600 1.25rem/1.2 var(--display);
@@ -359,7 +354,7 @@ body::after{
 .pc-tag{
   display:inline-block;
   font-family:var(--body);
-  font-size:.65rem;
+  font-size:.7rem;
   letter-spacing:.18em;
   text-transform:uppercase;
   font-weight:600;
@@ -390,17 +385,14 @@ body::after{
   background:var(--surface);
   border-radius:var(--card-radius);
   padding:2.5rem;
-  border:1px solid rgba(240,242,244,.06);
+  border:1px solid var(--rule-soft);
   transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
 }
-.principle-card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 16px 44px rgba(0,0,0,.3);
-  border-color:rgba(242,201,76,.2);
-}
-.principle-card.principle-care:hover{border-color:rgba(242,201,76,.4);}
 .care-split{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;}
 .care-list{display:flex;flex-direction:column;gap:.5rem;padding-left:2rem;border-left:1px solid var(--rule-accent);}
+.care-list-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;font-weight:600;color:var(--accent);margin-bottom:.75rem;}
+.care-list-item{font-size:.9rem;color:var(--mid);}
+.care-list-cta{margin-top:1.5rem;font-size:.82rem;}
 .principle-card.principle-care{
   background:linear-gradient(135deg, rgba(242,201,76,.07), var(--surface) 60%);
   border:1px solid var(--rule-accent);
@@ -417,8 +409,6 @@ body::after{
   transition:opacity .3s ease;
 }
 .principle-icon svg{display:block;transition:transform .35s cubic-bezier(.2,.8,.2,1);}
-.principle-card:hover .principle-icon{opacity:1;}
-.principle-card:hover .principle-icon svg{transform:translateY(-3px) scale(1.06);}
 .principle-h3{
   font:600 1.3rem/1.2 var(--display);
   color:var(--fg);
@@ -433,7 +423,7 @@ body::after{
   display:inline-block;
   margin-top:1.25rem;
   font-family:var(--body);
-  font-size:.65rem;
+  font-size:.7rem;
   letter-spacing:.18em;
   text-transform:uppercase;
   font-weight:600;
@@ -442,11 +432,10 @@ body::after{
   color:var(--accent);
   transition:background-color .3s ease, border-color .3s ease;
 }
-.principle-card:hover .principle-tag{background:rgba(242,201,76,.08);border-color:rgba(242,201,76,.45);}
 .care-badge{
   display:inline-block;
   font-family:var(--body);
-  font-size:.65rem;
+  font-size:.7rem;
   letter-spacing:.15em;
   text-transform:uppercase;
   font-weight:700;
@@ -470,6 +459,7 @@ body::after{
   margin-bottom:2.5rem;
 }
 .tabs-bar{
+  position:relative;
   display:flex;
   gap:0;
   border-bottom:1px solid var(--rule);
@@ -500,7 +490,7 @@ body::after{
 }
 .tab-mrr-badge{
   display:inline-block;
-  font-size:.55rem;
+  font-size:.7rem;
   letter-spacing:.12em;
   font-weight:700;
   background:var(--accent);
@@ -514,10 +504,12 @@ body::after{
 .tab-indicator{
   position:absolute;
   bottom:-1px;
+  left:0;
+  width:1px;   /* scaled to the active tab's width by GSAP (transform only) */
   height:2px;
   background:var(--accent);
   pointer-events:none;
-  will-change:left,width;
+  transform-origin:left;
   transition:none;
 }
 .tab-panel{display:none;}
@@ -545,7 +537,7 @@ body::after{
 }
 .service-badge{
   font-family:var(--body);
-  font-size:.65rem;
+  font-size:.7rem;
   letter-spacing:.15em;
   text-transform:uppercase;
   font-weight:600;
@@ -568,8 +560,6 @@ body::after{
   flex-shrink:0;
 }
 .service-cta .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
-.service-cta .cta-underline{height:100%;width:0;background:var(--accent);transition:width .3s ease;}
-.service-cta:hover .cta-underline{width:100%;}
 .service-body{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -662,7 +652,7 @@ body::after{
 }
 .service-inc-label{
   font-family:var(--body);
-  font-size:.65rem;
+  font-size:.7rem;
   letter-spacing:.2em;
   text-transform:uppercase;
   font-weight:600;
@@ -683,7 +673,7 @@ body::after{
 .inc-item::before{content:'→';color:var(--accent);flex-shrink:0;line-height:1.6;}
 .stack-tag{
   font-family:var(--body);
-  font-size:.65rem;
+  font-size:.7rem;
   letter-spacing:.15em;
   text-transform:uppercase;
   font-weight:500;
@@ -721,7 +711,7 @@ body::after{
 .contact-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
 .contact-label{
   font-family:var(--body);
-  font-size:.65rem;
+  font-size:.7rem;
   letter-spacing:.2em;
   text-transform:uppercase;
   font-weight:600;
@@ -756,18 +746,18 @@ body::after{
 }
 .form-label{
   position:absolute;top:.8rem;left:0;
-  font-family:var(--body);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+  font-family:var(--body);font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
   color:var(--mid);pointer-events:none;
   transition:all .25s ease;
 }
 .form-input:focus~.form-label,.form-input:not(:placeholder-shown)~.form-label,
 .form-textarea:focus~.form-label,.form-textarea:not(:placeholder-shown)~.form-label{
-  top:-1rem;font-size:.58rem;color:var(--fg);
+  top:-1rem;font-size:.7rem;color:var(--fg);
 }
 .form-input:focus,.form-textarea:focus{border-bottom-color:var(--accent);}
 .form-input::placeholder,.form-textarea::placeholder{opacity:0;}
 .form-textarea{resize:none;height:5.5rem;}
-.char-count{position:absolute;right:0;top:.8rem;font-size:.65rem;color:var(--dim);}
+.char-count{position:absolute;right:0;top:.8rem;font-size:.7rem;color:var(--mid);}
 .char-count.warn{color:var(--accent);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
 .form-select{
@@ -797,38 +787,34 @@ option{background:var(--bg);}
   padding:0;
 }
 .form-submit .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
-.form-submit .cta-underline{height:100%;width:0;background:var(--accent);transition:width .3s ease;}
-.form-submit:not(:disabled):hover .cta-underline{width:100%;}
 .submit-note{font-size:.85rem;color:var(--mid);}
 
-/* ── BUILD FINDER (questionnaire) ── */
-.quiz-promo{
+/* ── BUILD FINDER (inline in Contact) ── */
+.finder{
   margin-top:2.5rem;padding:1.75rem;
   background:var(--surface);border:1px solid var(--rule-accent);border-radius:20px;
 }
-.quiz-promo-h{font:500 1.35rem/1.25 var(--display);color:var(--fg);margin:.4rem 0 .5rem;}
-.quiz-promo p{font-size:.92rem;color:var(--mid);margin-bottom:1.25rem;line-height:1.55;}
-.quiz-open{background:none;border:none;padding:0;cursor:pointer;font-size:.85rem;}
-
-.quiz{
-  width:min(640px,calc(100vw - 2rem));max-height:calc(100dvh - 2rem);
-  margin:auto;padding:0;border:1px solid var(--rule);border-radius:var(--card-radius);
-  background:var(--surface);color:var(--fg);font-family:var(--body);overflow:auto;
+.finder-h{font:500 1.35rem/1.25 var(--display);color:var(--fg);margin:.4rem 0 .5rem;}
+.finder-p{font-size:.92rem;color:var(--mid);margin-bottom:1.25rem;line-height:1.55;}
+.finder-start{background:none;border:none;padding:0;cursor:pointer;font-size:.85rem;}
+.finder-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;}
+.finder-link{
+  background:none;border:none;padding:0;cursor:pointer;color:var(--mid);
+  font:500 .78rem/1 var(--body);letter-spacing:.1em;text-transform:uppercase;
 }
-.quiz::backdrop{background:rgba(14,18,24,.72);backdrop-filter:blur(4px);}
-.quiz[open]{animation:quizIn .35s cubic-bezier(.2,.8,.2,1);}
-@keyframes quizIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
-.quiz-inner{padding:clamp(1.5rem,4vw,2.5rem);}
-.quiz-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.25rem;}
-.quiz-step{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--accent);}
-.quiz-close{
-  width:36px;height:36px;border-radius:50%;border:1px solid var(--rule);background:none;
-  color:var(--mid);cursor:pointer;display:grid;place-items:center;transition:color .2s,border-color .2s;
-}
-.quiz-close:hover{color:var(--fg);border-color:var(--mid);}
-.quiz-bar{height:2px;background:var(--rule);margin-bottom:2rem;border-radius:2px;overflow:hidden;}
-.quiz-bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .35s ease;}
-.quiz-q{font:500 clamp(22px,3vw,30px)/1.2 var(--display);margin-bottom:.4rem;}
+.finder-link:hover{color:var(--fg);}
+.finder-done-line{font-size:.95rem;color:var(--mid);margin:.5rem 0 .9rem;line-height:1.55;}
+.finder-done-line strong{color:var(--accent);font-weight:600;}
+/* while answering, the contact details fold away so the questions sit beside the form */
+.contact-details.is-finding .contact-item{display:none;}
+.contact-details.is-finding .finder{margin-top:0;}
+.finder-enter{animation:finderIn .28s cubic-bezier(.25,1,.5,1);}
+@keyframes finderIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.quiz-step{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--accent);}
+.quiz-bar{height:2px;background:var(--rule);margin-bottom:1.5rem;border-radius:2px;overflow:hidden;}
+.quiz-bar span{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.25,1,.5,1);}
+.quiz-q{font:500 clamp(20px,2.4vw,25px)/1.25 var(--display);margin-bottom:.4rem;color:var(--fg);}
+.quiz-q:focus{outline:none;}
 .quiz-hint{font-size:.88rem;color:var(--mid);margin-bottom:1.5rem;}
 .quiz-opts{display:grid;gap:.6rem;border:none;padding:0;margin:0;min-width:0;}
 .quiz-opt{
@@ -841,7 +827,7 @@ option{background:var(--bg);}
 .quiz-opt:has(input:checked){border-color:var(--accent);background:rgba(242,201,76,.06);}
 .quiz-opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
 .quiz-mark{
-  flex-shrink:0;width:18px;height:18px;margin-top:.15rem;border:1.5px solid var(--dim);
+  flex-shrink:0;width:18px;height:18px;margin-top:.15rem;border:1.5px solid var(--mid);
   border-radius:50%;display:grid;place-items:center;transition:border-color .2s;
 }
 .quiz-opt input[type=checkbox]~.quiz-mark{border-radius:5px;}
@@ -852,31 +838,63 @@ option{background:var(--bg);}
 .quiz-opt-t{display:block;font-size:.98rem;color:var(--fg);font-weight:500;}
 .quiz-opt-d{display:block;font-size:.84rem;color:var(--mid);margin-top:.15rem;line-height:1.45;}
 .quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;gap:1rem;}
-.quiz-back{
-  background:none;border:none;padding:0;cursor:pointer;color:var(--mid);
-  font:500 .78rem/1 var(--body);letter-spacing:.1em;text-transform:uppercase;
-}
-.quiz-back:hover{color:var(--fg);}
-#quiz-next{margin-left:auto;}   /* stays right when Back is hidden */
+#finder-next{margin-left:auto;}   /* stays right when Back is hidden */
 .quiz-q + .quiz-opts{margin-top:1.1rem;}   /* questions without a hint */
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 .form-submit:disabled{opacity:.35;cursor:not-allowed;}
 
-.quiz-result-kicker{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--mid);}
-.quiz-tier{font:500 clamp(34px,5vw,48px)/1.05 var(--display);color:var(--accent);margin:.35rem 0 .5rem;outline:none;}
+.quiz-result-kicker{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--mid);}
+.quiz-tier{font:500 clamp(30px,3.6vw,40px)/1.05 var(--display);color:var(--accent);margin:.35rem 0 .5rem;outline:none;}
 .quiz-tier-tag{font-size:1rem;color:var(--fg);margin-bottom:.35rem;}
 .quiz-tier-time{font-size:.85rem;color:var(--mid);margin-bottom:1.75rem;}
-.quiz-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.75rem;padding-top:1.5rem;border-top:1px solid var(--rule);}
-.quiz-cols h4{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--accent);margin-bottom:.75rem;}
+.quiz-cols{display:grid;gap:1.25rem;padding-top:1.25rem;border-top:1px solid var(--rule);}
+.quiz-cols h4,.quiz-cols summary{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--accent);margin-bottom:.75rem;}
 .quiz-cols ul{list-style:none;padding:0;margin:0;display:grid;gap:.45rem;}
 .quiz-cols li{font-size:.88rem;color:var(--fg);line-height:1.45;padding-left:1.1rem;position:relative;}
 .quiz-cols li::before{content:'';position:absolute;left:0;top:.65em;width:6px;height:1px;background:var(--accent);}
 .quiz-cols .quiz-why li{color:var(--mid);}
 .quiz-cols li.quiz-lead{padding-left:0;color:var(--mid);}
 .quiz-cols li.quiz-lead::before{display:none;}
-.quiz-note{font-size:.8rem;color:var(--dim);margin-top:1.5rem;line-height:1.5;}
-@media(max-width:600px){.quiz-cols{grid-template-columns:1fr;}}
-@media(prefers-reduced-motion:reduce){.quiz[open]{animation:none;}}
+.quiz-cols summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem;}
+.quiz-cols summary::-webkit-details-marker{display:none;}
+.quiz-cols summary::after{content:'+';font-size:.9rem;letter-spacing:0;}
+.quiz-cols details[open] summary::after{content:'−';}
+.quiz-cols details[open] summary{margin-bottom:.75rem;}
+.quiz-note{font-size:.8rem;color:var(--mid);margin-top:1.25rem;line-height:1.5;}
+
+/* card hover lifts: pointer devices only, so a tap on a phone doesn't leave a card stuck "hovered" */
+@media(hover:hover){
+  .process-card:hover{
+    transform:scale(1.025);
+    box-shadow:0 12px 40px rgba(0,0,0,.28);
+    border-color:rgba(242,201,76,.14);
+    z-index:1;
+  }
+  .process-card:hover .pc-num{
+    color:rgba(242,201,76,.85);
+  }
+  .principle-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 16px 44px rgba(0,0,0,.3);
+    border-color:rgba(242,201,76,.2);
+  }
+  .principle-card.principle-care:hover{border-color:rgba(242,201,76,.4);}
+  .principle-card:hover .principle-icon{opacity:1;}
+  .principle-card:hover .principle-icon svg{transform:translateY(-3px) scale(1.06);}
+  .principle-card:hover .principle-tag{background:rgba(242,201,76,.08);border-color:rgba(242,201,76,.45);}
+}
+/* touch devices never see the hover state, so show the step numerals at full 3:1 contrast */
+@media(hover:none){
+  .pc-num{color:rgba(242,201,76,.46);}
+}
+/* bigger tap areas on touch screens without changing the layout: an invisible
+   hit box around each small text link (the links are visually ~17-27px tall) */
+@media(pointer:coarse){
+  nav ul li a,.footer-nav a{position:relative;}
+  nav ul li a::before,.footer-nav a::before,.link-cta::before,.service-cta::before,.form-submit::before{
+    content:'';position:absolute;inset:-14px -8px;
+  }
+}
 
 /* ── FOOTER ── */
 footer{
@@ -954,7 +972,7 @@ footer{
   header{flex-direction:column;align-items:flex-start;gap:1.25rem;margin-bottom:48px;}
   nav{width:100%;}
   nav ul{gap:.6rem 1.1rem;flex-wrap:wrap;justify-content:flex-start;}
-  nav ul li a{font-size:.68rem;}
+  nav ul li a{font-size:.72rem;}
   .nav-hide-mobile{display:none;}
   .hero-h1{font-size:clamp(34px,9vw,52px);}
   .hero-mark{height:auto;width:84vw;right:50%;top:42%;transform:translate(50%,-50%);opacity:.045;}
@@ -1110,35 +1128,35 @@ footer{
     <div class="process-grid fade-up">
 
       <div class="process-card">
-        <div class="pc-num">01</div>
+        <div class="pc-num" aria-hidden="true">01</div>
         <div class="pc-title">Brief &amp; Discovery</div>
         <div class="pc-body">A 30 to 60 minute call to understand your goals, your audience, and what success looks like. We take notes, ask the right questions, and come back with a clear direction. No obligation. If it's not the right fit, we'll say so honestly.</div>
         <span class="pc-tag">30 to 60 min call</span>
       </div>
 
       <div class="process-card">
-        <div class="pc-num">02</div>
+        <div class="pc-num" aria-hidden="true">02</div>
         <div class="pc-title">Design</div>
-        <div class="pc-body">Before a single line of code is written, the site is designed. We establish a visual language — typography, palette, layout — that fits your brand. You see mockups first. We refine until it's right. Design and development never fight each other when they come from the same team.</div>
+        <div class="pc-body">Before a single line of code is written, the site is designed. We establish a visual language (typography, palette, layout) that fits your brand. You see mockups first. We refine until it's right. Design and development never fight each other when they come from the same team.</div>
         <span class="pc-tag">Mockups &middot; Visual identity</span>
       </div>
 
       <div class="process-card">
-        <div class="pc-num">03</div>
+        <div class="pc-num" aria-hidden="true">03</div>
         <div class="pc-title">Build</div>
         <div class="pc-body">Clean HTML, CSS, and JavaScript, or a modern stack like Next.js if the project calls for it. Every component is written from scratch, nothing templated. You get a live preview link from day one and can watch the site take shape in real time.</div>
         <span class="pc-tag">Next.js &middot; TypeScript &middot; Tailwind</span>
       </div>
 
       <div class="process-card">
-        <div class="pc-num">04</div>
+        <div class="pc-num" aria-hidden="true">04</div>
         <div class="pc-title">Review &amp; Refine</div>
         <div class="pc-body">Two structured rounds of feedback built into every project. We test across browsers and devices, optimise for performance, and work through your notes. Lighthouse 100 is the target, not a vanity metric, but a proxy for a site that loads fast and is accessible to everyone.</div>
         <span class="pc-tag">Lighthouse &middot; Cross-browser &middot; A11y</span>
       </div>
 
       <div class="process-card">
-        <div class="pc-num">05</div>
+        <div class="pc-num" aria-hidden="true">05</div>
         <div class="pc-title">Launch</div>
         <div class="pc-body">Deployment to your domain, analytics wired up, and a walkthrough of how to manage it. You get full ownership of everything: code, hosting, accounts. No lock-in, no monthly platform fees unless you want them. We stay available for 30 days post-launch at no extra charge.</div>
         <span class="pc-tag">Deployed</span>
@@ -1168,7 +1186,7 @@ footer{
           </svg>
         </div>
         <h3 class="principle-h3">Inclusivity and Accessibility</h3>
-        <p class="principle-p">A site that only works for some people isn't finished. Every build ships keyboard-navigable, screen-reader compatible, and colour-contrast checked to WCAG 2.2 AA — with reduced motion respected throughout. Accessibility isn't a final pass; it's built in from the first line of code, because the work should reach every visitor, not only the ones on a fast phone in good light.</p>
+        <p class="principle-p">A site that only works for some people isn't finished. Every build ships keyboard-navigable, screen-reader compatible, and colour-contrast checked to WCAG 2.2 AA, with reduced motion respected throughout. Accessibility isn't a final pass; it's built in from the first line of code, because the work should reach every visitor, not only the ones on a fast phone in good light.</p>
         <span class="principle-tag">WCAG 2.2 AA</span>
       </div>
 
@@ -1177,7 +1195,7 @@ footer{
         <div class="principle-inner-row">
           <div>
             <h3 class="principle-h3">Ethical Design</h3>
-            <p class="principle-p">No fake urgency, no pre-ticked consent boxes, no surveillance pixels reporting your visitors to networks you never agreed to. Design here prioritises user well-being over conversion tricks — clear choices, honest interfaces, and visitors who feel respected.</p>
+            <p class="principle-p">No fake urgency, no pre-ticked consent boxes, no surveillance pixels reporting your visitors to networks you never agreed to. Design here prioritises user well-being over conversion tricks: clear choices, honest interfaces, and visitors who feel respected.</p>
             <span class="principle-tag">No dark patterns</span>
           </div>
           <div class="principle-icon">
@@ -1202,7 +1220,7 @@ footer{
           </div>
           <div>
             <h3 class="principle-h3">Sustainability and Performance</h3>
-            <p class="principle-p">Lean, hand-coded sites use a fraction of the energy of bloated template builds — multiplied across every visitor, every day. Optimised performance and a lower carbon footprint aren't two different goals. They're the same thing.</p>
+            <p class="principle-p">Lean, hand-coded sites use a fraction of the energy of bloated template builds, multiplied across every visitor, every day. Optimised performance and a lower carbon footprint aren't two different goals. They're the same thing.</p>
             <span class="principle-tag">Low carbon by default</span>
           </div>
         </div>
@@ -1219,13 +1237,13 @@ footer{
             <p class="principle-p">A site that goes down, runs slow, or quietly breaks costs you more than a retainer. We offer monthly care plans: managed hosting on a global CDN, uptime checks every 5 minutes, security patches, and a developer on call for fixes and content updates. Your site stays healthy; you stay focused on your business.</p>
           </div>
           <div class="care-list">
-            <p style="font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;font-weight:600;color:var(--accent);margin-bottom:.75rem;">Every month, every plan</p>
-            <p style="font-size:.9rem;color:var(--mid);">→ Managed hosting on a global CDN</p>
-            <p style="font-size:.9rem;color:var(--mid);">→ Uptime monitoring every 5 minutes</p>
-            <p style="font-size:.9rem;color:var(--mid);">→ Security &amp; dependency patches</p>
-            <p style="font-size:.9rem;color:var(--mid);">→ Content &amp; copy updates</p>
-            <p style="font-size:.9rem;color:var(--mid);">→ Bug fixes, priority response 24 hrs</p>
-            <a href="#services" class="link-cta" style="margin-top:1.5rem;font-size:.82rem;">
+            <p class="care-list-label">Every month, every plan</p>
+            <p class="care-list-item">→ Managed hosting on a global CDN</p>
+            <p class="care-list-item">→ Uptime monitoring every 5 minutes</p>
+            <p class="care-list-item">→ Security &amp; dependency patches</p>
+            <p class="care-list-item">→ Content &amp; copy updates</p>
+            <p class="care-list-item">→ Bug fixes, priority response 24 hrs</p>
+            <a href="#services" class="link-cta care-list-cta">
               See Care &amp; Hosting plans
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
@@ -1247,7 +1265,7 @@ footer{
     <h2 class="services-h2 fade-up">What we build</h2>
     <p class="services-sub fade-up">Project work is scoped per brief.</p>
 
-    <div class="tabs-bar" role="tablist" aria-label="Services" style="position:relative;">
+    <div class="tabs-bar" role="tablist" aria-label="Services">
       <button class="tab-btn active" id="tabbtn-landing" data-tab="landing" role="tab" aria-selected="true" aria-controls="tab-landing">Landing Page</button>
       <button class="tab-btn" id="tabbtn-website" data-tab="website" role="tab" aria-selected="false" aria-controls="tab-website">Full Website</button>
       <button class="tab-btn" id="tabbtn-maintenance" data-tab="maintenance" role="tab" aria-selected="false" aria-controls="tab-maintenance">Care &amp; Hosting <span class="tab-mrr-badge" aria-label="Monthly plan">Monthly</span></button>
@@ -1444,16 +1462,41 @@ footer{
           <div class="contact-label">Response Time</div>
           <div class="contact-val">Within 24 hours</div>
         </div>
-        <div class="quiz-promo">
-          <div class="contact-label">Build Finder</div>
-          <h3 class="quiz-promo-h">Not sure what you need?</h3>
-          <p>Answer seven quick questions and get a suggested build. Your answers carry over to the form.</p>
-          <button type="button" class="link-cta quiz-open" data-quiz-open>
-            Find my build
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-          </button>
-        </div>
+        <!-- BUILD FINDER: inline questionnaire that suggests a build tier and fills in the form.
+             Hidden until its script runs, so without JS the form simply stands alone. -->
+        <section class="finder" id="finder" aria-labelledby="finder-title" hidden>
+          <div id="finder-intro">
+            <div class="contact-label">Build Finder</div>
+            <h3 class="finder-h" id="finder-title">Not sure what you need?</h3>
+            <p class="finder-p">Four quick questions and we'll suggest a build. Your answers carry over to the form.</p>
+            <button type="button" class="link-cta finder-start" id="finder-start">
+              Find my build
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+            </button>
+          </div>
+          <div id="finder-flow" hidden>
+            <div class="finder-head">
+              <span class="quiz-step" id="finder-step" aria-live="polite"></span>
+              <button type="button" class="finder-link" id="finder-cancel">Cancel</button>
+            </div>
+            <div class="quiz-bar" aria-hidden="true"><span id="finder-bar"></span></div>
+            <div id="finder-body"></div>
+            <div class="quiz-nav">
+              <button type="button" class="finder-link" id="finder-back">&larr; Back</button>
+              <button type="button" class="form-submit" id="finder-next">
+                <span id="finder-next-label">Next</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+              </button>
+            </div>
+          </div>
+          <div id="finder-done" hidden>
+            <div class="contact-label">Build Finder</div>
+            <p class="finder-done-line">Suggested build: <strong id="finder-done-tier"></strong>. We've added it to your enquiry.</p>
+            <button type="button" class="finder-link" id="finder-change">Change answers</button>
+          </div>
+        </section>
       </div>
 
       <form id="contact-form">
@@ -1485,7 +1528,7 @@ footer{
             <option>Not sure yet</option>
           </select>
         </div>
-        <div class="form-field" style="position:relative;">
+        <div class="form-field">
           <textarea class="form-textarea" id="message" name="message" placeholder="x" maxlength="300" required></textarea>
           <label class="form-label" for="message">Tell us about your project</label>
           <span class="char-count" id="char-count">300</span>
@@ -1505,27 +1548,6 @@ footer{
 
 </main>
 
-<!-- BUILD FINDER — questionnaire that suggests a build tier -->
-<dialog class="quiz" id="quiz" aria-labelledby="quiz-title">
-  <div class="quiz-inner">
-    <div class="quiz-head">
-      <span class="quiz-step" id="quiz-step">Build Finder</span>
-      <button type="button" class="quiz-close" data-quiz-close aria-label="Close">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-    <div class="quiz-bar" aria-hidden="true"><span id="quiz-bar"></span></div>
-    <div id="quiz-body" aria-live="polite"></div>
-    <div class="quiz-nav">
-      <button type="button" class="quiz-back" id="quiz-back">&larr; Back</button>
-      <button type="button" class="form-submit" id="quiz-next">
-        <span id="quiz-next-label">Next</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-      </button>
-    </div>
-  </div>
-</dialog>
 
 <!-- FOOTER -->
 <footer>
@@ -1836,8 +1858,8 @@ function positionIndicator(btn, animate) {
   const left  = bRect.left - rRect.left;
   const width = bRect.width;
   animate
-    ? gsap.to(tabIndicator, { left, width, duration: 0.35, ease: 'power3.out' })
-    : gsap.set(tabIndicator, { left, width });
+    ? gsap.to(tabIndicator, { x: left, scaleX: width, duration: 0.35, ease: 'power3.out' })
+    : gsap.set(tabIndicator, { x: left, scaleX: width });
 }
 
 document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1947,13 +1969,12 @@ function handleSubmit(e) {
 </script>
 <script>
 /* ──────────────────────────────────────────
-   BUILD FINDER — suggests Launch / Business / Custom.
-   Each option carries a level (0 Launch, 1 Business, 2 Custom);
-   the suggestion is the highest level any answer requires.
+   BUILD FINDER (inline in Contact): suggests Launch / Business / Custom.
+   Each option carries a level (0 Launch, 1 Business, 2 Custom); the
+   suggestion is the highest level any answer requires.
 ────────────────────────────────────────── */
 (function () {
-  const dlg = document.getElementById('quiz');
-
+  const finder = document.getElementById('finder');
   const TIERS = [
     {
       name: 'Launch',
@@ -1982,7 +2003,7 @@ function handleSubmit(e) {
     {
       id: 'goal', q: 'What should your website do first?', hint: 'Pick the one that matters most.',
       opts: [
-        { t: 'Get me online', d: 'People can find me, see what I do and get in touch.', lvl: 0, why: 'You mainly need a clear, findable presence' },
+        { t: 'Get me online', d: 'People can find me, see what I do and get in touch.', lvl: 0 },
         { t: 'Win more customers', d: 'Look established and turn visitors into calls and enquiries.', lvl: 1, why: 'You want the site to actively convert visitors' },
         { t: 'Run part of my business', d: 'Take bookings, orders or answer questions automatically.', lvl: 2, why: 'You want bookings, orders or automation on the site' }
       ]
@@ -1991,7 +2012,7 @@ function handleSubmit(e) {
       id: 'pages', q: 'How many pages do you picture?', hint: 'Home, services, about and contact each count as one.',
       opts: [
         { t: '1 to 3 pages', d: 'A focused site with the essentials.', lvl: 0 },
-        { t: '4 to 8 pages', d: 'A page per service, an about page, a gallery…', lvl: 1, why: 'You need more than three pages' },
+        { t: '4 to 8 pages', d: 'A page per service, an about page, a gallery.', lvl: 1, why: 'You need more than three pages' },
         { t: 'More than 8', d: 'A menu, a catalogue, lots of services or locations.', lvl: 2, why: 'You need more than eight pages' }
       ]
     },
@@ -2003,71 +2024,76 @@ function handleSubmit(e) {
       ]
     },
     {
-      id: 'brand', q: 'How should it look?', hint: '',
+      id: 'features', q: 'Anything else you need?', hint: 'Select all that apply, or none.', multi: true,
       opts: [
-        { t: 'Clean and simple', d: 'Professional and tidy, no strong brand guidelines.', lvl: 0 },
-        { t: 'Matched to my brand', d: 'I have a logo, colours and a feel it should follow closely.', lvl: 1, why: 'The design has to match your brand closely' }
-      ]
-    },
-    {
-      id: 'content', q: 'Where are your words and photos at?', hint: '',
-      opts: [
-        { t: 'Ready to go', d: 'I have the text and images I want to use.', lvl: 0 },
-        { t: 'Drafted, needs polish', d: 'I have something written but it could read better.', lvl: 1, why: 'Your text could use a copy polish' },
-        { t: 'Starting from scratch', d: 'I need the copy written and photos taken.', lvl: 2, why: 'You need full copywriting and a photo shoot' }
-      ]
-    },
-    {
-      id: 'features', q: 'Which of these would you like?', hint: 'Select all that apply, or none.', multi: true,
-      opts: [
-        { t: 'Show up on Google Maps', d: 'Set up your Google Business Profile.', lvl: 1, why: 'You want your Google Business Profile set up' },
-        { t: 'Track calls and form leads', d: 'Know which visits turn into customers.', lvl: 1, why: 'You want to track calls and form leads' },
+        { t: 'Match my brand closely', d: 'I have a logo, colours and a feel it should follow.', lvl: 1, why: 'The design has to match your brand closely' },
+        { t: 'Get found on Google', d: 'Google Business Profile, plus tracking of calls and form leads.', lvl: 1, why: 'You want to be found on Google and track your leads' },
         { t: 'Online booking or ordering', d: 'Appointments, reservations, takeout, online sales.', lvl: 2, why: 'You need online booking or ordering' },
         { t: 'Connect my existing tools', d: 'POS, CRM or reservation system.', lvl: 2, why: 'The site needs to connect to your POS, CRM or reservations' },
-        { t: 'AI chatbot', d: 'Answers common questions in French and English, 24/7.', lvl: 2, why: 'You want a bilingual AI chatbot' }
-      ]
-    },
-    {
-      id: 'time', q: 'When do you need it live?', hint: 'This won’t change the suggestion, it helps us plan.',
-      opts: [
-        { t: 'As soon as possible', d: 'Within a week or so.', lvl: 0 },
-        { t: 'In the next few weeks', d: '', lvl: 0 },
-        { t: 'I’m flexible', d: 'Getting it right matters more than speed.', lvl: 0 }
+        { t: 'AI chatbot', d: 'Answers common questions in French and English, 24/7.', lvl: 2, why: 'You want a bilingual AI chatbot' },
+        { t: 'Write my copy and take photos', d: "I'm starting without text or images.", lvl: 2, why: 'You need full copywriting and a photo shoot' }
       ]
     }
   ];
 
-  const body   = document.getElementById('quiz-body');
-  const stepEl = document.getElementById('quiz-step');
-  const barEl  = document.getElementById('quiz-bar');
-  const back   = document.getElementById('quiz-back');
-  const next   = document.getElementById('quiz-next');
-  const nextLb = document.getElementById('quiz-next-label');
+  const details  = finder.closest('.contact-details');
+  const intro    = document.getElementById('finder-intro');
+  const flow     = document.getElementById('finder-flow');
+  const done     = document.getElementById('finder-done');
+  const body     = document.getElementById('finder-body');
+  const stepEl   = document.getElementById('finder-step');
+  const barEl    = document.getElementById('finder-bar');
+  const back     = document.getElementById('finder-back');
+  const next     = document.getElementById('finder-next');
+  const nextLb   = document.getElementById('finder-next-label');
+  const doneTier = document.getElementById('finder-done-tier');
   const contactForm = document.getElementById('contact-form');
   const finderField = document.getElementById('build-finder-field');
 
   let step = 0;
   let answers = {};   // id -> array of option indexes
   let result = null;
-  let opener = null;
+  let handedOff = false;
 
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* The contact details above the finder fold away while answering, which would
+     yank the card upward; scroll by the difference so it stays where the eye is. */
+  function show(view) {
+    const before = finder.getBoundingClientRect().top;
+    intro.hidden = view !== 'intro';
+    flow.hidden = view !== 'flow';
+    done.hidden = view !== 'done';
+    details.classList.toggle('is-finding', view === 'flow');
+    const shift = finder.getBoundingClientRect().top - before;
+    if (shift) window.scrollBy({ top: shift, behavior: 'instant' });
+  }
+
+  function paint(html) {
+    body.innerHTML = html;
+    body.classList.remove('finder-enter');
+    void body.offsetWidth;   // restart the entrance animation
+    body.classList.add('finder-enter');
+    const heading = body.querySelector('[tabindex="-1"]');
+    if (heading) heading.focus({ preventScroll: true });
+  }
 
   function renderQuestion() {
     const Q = QS[step];
     const picked = answers[Q.id] || [];
     const type = Q.multi ? 'checkbox' : 'radio';
     stepEl.textContent = 'Question ' + (step + 1) + ' of ' + QS.length;
-    barEl.style.width = (step / QS.length * 100) + '%';
-    body.innerHTML =
-      '<h2 class="quiz-q" id="quiz-title">' + esc(Q.q) + '</h2>' +
+    barEl.style.transform = 'scaleX(' + (step / QS.length) + ')';
+    paint(
+      '<h4 class="quiz-q" tabindex="-1">' + esc(Q.q) + '</h4>' +
       (Q.hint ? '<p class="quiz-hint">' + esc(Q.hint) + '</p>' : '') +
       '<fieldset class="quiz-opts"><legend class="sr-only">' + esc(Q.q) + '</legend>' +
       Q.opts.map((o, i) =>
         '<label class="quiz-opt"><input type="' + type + '" name="q-' + Q.id + '" value="' + i + '"' + (picked.includes(i) ? ' checked' : '') + '>' +
         '<span class="quiz-mark" aria-hidden="true"></span><span><span class="quiz-opt-t">' + esc(o.t) + '</span>' +
-        (o.d ? '<span class="quiz-opt-d">' + esc(o.d) + '</span>' : '') + '</span></label>'
-      ).join('') + '</fieldset>';
+        '<span class="quiz-opt-d">' + esc(o.d) + '</span></span></label>'
+      ).join('') + '</fieldset>'
+    );
     back.hidden = step === 0;
     nextLb.textContent = step === QS.length - 1 ? 'See my build' : 'Next';
     syncNext();
@@ -2075,10 +2101,8 @@ function handleSubmit(e) {
       answers[Q.id] = [...body.querySelectorAll('input:checked')].map(x => +x.value);
       syncNext();
       /* single-choice: advance on pick for a quicker flow */
-      if (!Q.multi && inp.checked) setTimeout(() => { if (QS[step] === Q) go(1); }, 220);
+      if (!Q.multi && inp.checked) setTimeout(() => { if (QS[step] === Q && !result) go(1); }, 220);
     }));
-    const first = body.querySelector('input:checked') || body.querySelector('input');
-    if (first) first.focus({ preventScroll: true });
   }
 
   function syncNext() {
@@ -2095,7 +2119,7 @@ function handleSubmit(e) {
       if (o.why) why[o.lvl].push(o.why);
     }));
     const reasons = why[lvl].length ? why[lvl]
-      : ['A focused site with the essentials covers what you described', 'Your content is ready, so we can move fast'];
+      : ['A focused site with the essentials covers what you described', 'One language and a handful of pages keeps it quick to build'];
     return { tier: TIERS[lvl], reasons };
   }
 
@@ -2103,75 +2127,85 @@ function handleSubmit(e) {
     result = compute();
     const T = result.tier;
     stepEl.textContent = 'Your suggested build';
-    barEl.style.width = '100%';
-    body.innerHTML =
+    barEl.style.transform = 'scaleX(1)';
+    paint(
       '<p class="quiz-result-kicker">Based on your answers</p>' +
-      '<h2 class="quiz-tier" id="quiz-title">' + esc(T.name) + '</h2>' +
+      '<h4 class="quiz-tier" tabindex="-1">' + esc(T.name) + '</h4>' +
       '<p class="quiz-tier-tag">' + esc(T.tag) + '</p>' +
       '<p class="quiz-tier-time">' + esc(T.time) + '</p>' +
       '<div class="quiz-cols"><div class="quiz-why"><h4>Why this fits</h4><ul>' +
       result.reasons.map(r => '<li>' + esc(r) + '</li>').join('') + '</ul></div>' +
-      '<div><h4>What’s included</h4><ul>' + T.inc.map(r => '<li' + (/plus:$/.test(r) ? ' class="quiz-lead"' : '') + '>' + esc(r) + '</li>').join('') + '</ul></div></div>' +
-      '<p class="quiz-note">This is a starting point, not a quote. Every project is scoped personally, and a free audit of your current presence comes first.</p>';
+      '<details><summary>What’s included</summary><ul>' +
+      T.inc.map(r => '<li' + (/plus:$/.test(r) ? ' class="quiz-lead"' : '') + '>' + esc(r) + '</li>').join('') + '</ul></details></div>' +
+      '<p class="quiz-note">A starting point, not a quote. Every project is scoped personally, starting with a free audit of your current presence.</p>'
+    );
     back.hidden = false;
-    nextLb.textContent = 'Start my enquiry';
+    nextLb.textContent = 'Use this build';
     next.disabled = false;
-    body.querySelector('.quiz-tier').setAttribute('tabindex', '-1');
-    body.querySelector('.quiz-tier').focus({ preventScroll: true });
     if (typeof gtag === 'function') gtag('event', 'build_finder_result', { tier: T.name });
   }
 
   function go(dir) {
     if (result && dir < 0) { result = null; renderQuestion(); return; }
     if (result && dir > 0) { handoff(); return; }
-    step += dir;
+    step = Math.max(0, step + dir);
     if (step >= QS.length) { step = QS.length - 1; renderResult(); return; }
     renderQuestion();
   }
 
-  /* Carry the result into the contact form */
+  function start(keepAnswers) {
+    if (!keepAnswers) answers = {};
+    step = 0; result = null;
+    show('flow');
+    renderQuestion();
+  }
+
+  function cancel() {
+    result = null;
+    show(handedOff ? 'done' : 'intro');
+    (handedOff ? document.getElementById('finder-change') : document.getElementById('finder-start')).focus();
+  }
+
+  /* Carry the result into the contact form, right beside (or just below) the finder */
   function handoff() {
     const T = result.tier;
-    const summary = 'Suggested: ' + T.name + ' | ' + QS.map(Q =>
+    finderField.value = 'Suggested: ' + T.name + ' | ' + QS.map(Q =>
       Q.q.replace(/\?$/, '') + ': ' + ((answers[Q.id] || []).map(i => Q.opts[i].t).join(', ') || 'None')
     ).join(' | ');
-    finderField.value = summary;
 
     const select = document.getElementById('service');
     select.value = T.service;
     select.style.color = 'var(--fg)';
 
     const msg = document.getElementById('message');
-    if (!msg.value.trim()) {
+    if (!msg.value.trim() || /^The Build Finder suggested the \w+ build\. $/.test(msg.value)) {
       msg.value = 'The Build Finder suggested the ' + T.name + ' build. ';
       msg.dispatchEvent(new Event('input'));
     }
-    close();
-    contactForm.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
-    setTimeout(() => document.getElementById('fname').focus({ preventScroll: true }), 450);
+
+    handedOff = true;
+    doneTier.textContent = T.name;
+    show('done');
+    const first = document.getElementById('fname');
+    first.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    setTimeout(() => first.focus({ preventScroll: true }), 350);
   }
 
-  function open(e) {
-    opener = e && e.currentTarget;
-    step = 0; answers = {}; result = null;
-    renderQuestion();
-    dlg.showModal();
-    document.documentElement.style.overflow = 'hidden';
-  }
-  function close() { dlg.close(); }
-
-  dlg.addEventListener('close', () => {
-    document.documentElement.style.overflow = '';
-    if (opener && !result) opener.focus();
-  });
-  dlg.addEventListener('click', e => { if (e.target === dlg) close(); });   // backdrop click
-  document.querySelectorAll('[data-quiz-open]').forEach(b => b.addEventListener('click', open));
-  dlg.querySelector('[data-quiz-close]').addEventListener('click', close);
+  document.getElementById('finder-start').addEventListener('click', () => start(false));
+  document.getElementById('finder-change').addEventListener('click', () => start(true));
+  document.getElementById('finder-cancel').addEventListener('click', cancel);
   back.addEventListener('click', () => go(-1));
   next.addEventListener('click', () => go(1));
+  flow.addEventListener('keydown', e => { if (e.key === 'Escape') cancel(); });
 
   /* Clear the carried-over summary once an enquiry is sent */
-  contactForm.addEventListener('reset', () => { finderField.value = ''; });
+  contactForm.addEventListener('reset', () => {
+    finderField.value = '';
+    handedOff = false;
+    show('intro');
+  });
+
+  finder.hidden = false;
 })();
 </script>
 </body>
