@@ -218,7 +218,7 @@ Layered. Depth exists at rest, and one more step appears on intent. At rest: a f
 - **Keyboard:** Real radio and checkbox inputs underneath; focus draws the gold outline around the whole row.
 
 ### Navigation
-- **Style:** Static header on the water. Label-role links in Sea Fog, each with a standing 2px gold underline; Client Portal stays unlined until hover.
+- **Style:** Static header on the water. Label-role links in Sea Fog, each with a standing 2px gold underline; Portal stays unlined until hover.
 - **Logo:** The mann/dev wordmark at 20px tall, cropped to its ink so it aligns with the gutter.
 - **Mobile:** Process hides below 600px; links stay on one line.
 

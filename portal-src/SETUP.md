@@ -1,4 +1,4 @@
-# Client Portal — Setup
+# Portal — Setup
 
 The portal lives at **https://portal.manndev.com/**. Each client signs in with a username and password and can change the password from the dashboard. Everything is static files, except one tiny standard-library Python service that handles password changes (§4).
 

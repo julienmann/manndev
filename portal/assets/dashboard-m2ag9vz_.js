@@ -1,4 +1,4 @@
-import{a as e,c as t,i as n,n as r,o as i,r as a}from"./session-CVtAS-hL.js";var o=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`,s=`<div class="cta-underline-wrap"><div class="cta-underline"></div></div>`,c=document.querySelector(`#main`),l=document.querySelector(`#account-name`),u=document.querySelector(`#logout-btn`);function d(){c.innerHTML=`
+import{a as e,c as t,i as n,n as r,o as i,r as a}from"./session-D6JaUAkc.js";var o=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`,s=`<div class="cta-underline-wrap"><div class="cta-underline"></div></div>`,c=document.querySelector(`#main`),l=document.querySelector(`#account-name`),u=document.querySelector(`#logout-btn`);function d(){c.innerHTML=`
     <div class="dash-state">Something went wrong loading your files.</div>
     <button type="button" class="link-cta" id="retry-btn">
       Try again

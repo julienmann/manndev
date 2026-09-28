@@ -19,4 +19,4 @@ Mann Dev is a web design and development studio founded by Julien Mann, based in
 
 ## Optional
 
-- [Client Portal](https://portal.manndev.com/): Login for existing clients.
+- [Portal](https://portal.manndev.com/): Login for existing clients.

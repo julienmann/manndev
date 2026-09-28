@@ -32,6 +32,9 @@ button{font-family:inherit;}
 }
 /* Logo alone, the same size as in the main site header. */
 .portal-wordmark--solo img{height:20px;}
+/* Label beside the logo instead of under it, split by a hairline. */
+.portal-wordmark--inline{flex-direction:row;align-items:center;gap:.8rem;}
+.portal-wordmark--inline span{padding-left:.8rem;border-left:1px solid var(--rule);line-height:16px;}
 .portal-wordmark span{
   display:block;font-size:.7rem;font-weight:300;letter-spacing:.06em;
   opacity:.5;text-transform:uppercase;

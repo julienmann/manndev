@@ -274,7 +274,7 @@
       "kind": "nav",
       "refersTo": "link-cta",
       "description": "Label links with a standing gold underline; the portal link stays unlined until hover.",
-      "html": "<nav class=\"ds-nav\"><a href=\"#\">Services</a><a href=\"#\">Process</a><a href=\"#\">Contact</a><a class=\"ds-nav-quiet\" href=\"#\">Client Portal</a></nav>",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\">Services</a><a href=\"#\">Process</a><a href=\"#\">Contact</a><a class=\"ds-nav-quiet\" href=\"#\">Portal</a></nav>",
       "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-nav{display:flex;gap:2rem;font:500 .85rem Figtree,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.05em}.ds-nav a{color:var(--fg);text-decoration:none;border-bottom:2px solid var(--accent);padding-bottom:2px;transition:opacity .2s}.ds-nav a:hover{opacity:.75}.ds-nav a.ds-nav-quiet{border-bottom-color:transparent;opacity:.6}.ds-nav a.ds-nav-quiet:hover{opacity:1;border-bottom-color:var(--accent)}"
     },
     {

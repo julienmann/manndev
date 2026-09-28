@@ -27,6 +27,7 @@
   background:var(--surface);border:1px solid rgba(240,242,244,.06);border-radius:12px;
   padding:1.1rem 1.4rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   font-size:.82rem;color:var(--fg);overflow-x:auto;
+  margin-bottom:1.8rem;
 }
 
 input[type="file"]{
