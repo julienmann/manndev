@@ -1,10 +1,10 @@
+import { toHex, setStatus } from './session';
+
 const PASSWORD_HASH = '61105e817f96d54deac74e37b490f2ade34516e836950cc921959ccd1579174f';
 const SESSION_KEY = 'admin_unlocked';
 
 async function sha256Hex(text: string): Promise<string> {
-  const data = new TextEncoder().encode(text);
-  const digest = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return toHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)));
 }
 
 const gate = document.querySelector<HTMLDivElement>('#gate')!;
@@ -26,8 +26,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
       sessionStorage.setItem(SESSION_KEY, '1');
       unlock();
     } else {
-      gateStatus.textContent = 'Wrong password.';
-      gateStatus.dataset.tone = 'error';
+      setStatus(gateStatus, 'Wrong password.', 'error');
       gatePassword.value = '';
       gatePassword.focus();
     }

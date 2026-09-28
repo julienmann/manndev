@@ -1,4 +1,4 @@
-import { SESSION_KEY, LEGACY_PIN_KEY, deriveClientKey, fetchClientInfo } from './session';
+import { SESSION_KEY, deriveClientKey, fetchClientInfo, setStatus as showStatus } from './session';
 
 const form = document.querySelector<HTMLFormElement>('#login-form')!;
 const usernameInput = document.querySelector<HTMLInputElement>('#username')!;
@@ -7,11 +7,7 @@ const submitBtn = document.querySelector<HTMLButtonElement>('#submit-btn')!;
 const submitLabel = document.querySelector<HTMLSpanElement>('#submit-label')!;
 const status = document.querySelector<HTMLParagraphElement>('#status')!;
 
-function setStatus(message: string, tone?: 'error' | 'success') {
-  status.textContent = message;
-  if (tone) status.dataset.tone = tone;
-  else delete status.dataset.tone;
-}
+const setStatus = (message: string, tone?: 'error' | 'success') => showStatus(status, message, tone);
 
 async function tryKey(key: string): Promise<boolean> {
   const result = await fetchClientInfo(key);
@@ -20,9 +16,6 @@ async function tryKey(key: string): Promise<boolean> {
   window.location.replace('./dashboard.html');
   return true;
 }
-
-// Old 4-digit-code sessions can't carry over.
-localStorage.removeItem(LEGACY_PIN_KEY);
 
 // Already signed in on this device? Skip straight to the dashboard.
 const storedKey = localStorage.getItem(SESSION_KEY);

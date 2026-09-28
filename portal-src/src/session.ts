@@ -1,12 +1,15 @@
 export const SESSION_KEY = 'portal_key';
-// Pre-username/password sessions stored the raw 4-digit code here.
-export const LEGACY_PIN_KEY = 'portal_pin';
+export const MIN_PASSWORD = 10;
 
-// A client's folder under /client-files/ is named after a PBKDF2 hash of their
-// username + password, so the server never stores a password and the folder
-// name is unguessable without both. The admin page derives the same key when
-// creating the folder. Changing these parameters invalidates every login.
+// A login is a PBKDF2 hash of username + password, derived in the browser, so
+// the server never stores a password. It names the client's pointer file (see
+// LOGINS_DIR). The admin page derives the same key when creating a login.
+// Changing these parameters invalidates every login.
 const KDF_ITERATIONS = 150_000;
+
+export function toHex(bytes: ArrayBuffer | Uint8Array): string {
+  return [...new Uint8Array(bytes)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 export function normalizeUsername(username: string): string {
   return username.trim().toLowerCase();
@@ -20,7 +23,7 @@ export async function deriveClientKey(username: string, password: string): Promi
     material,
     256
   );
-  return [...new Uint8Array(bits)].map(b => b.toString(16).padStart(2, '0')).join('');
+  return toHex(bits);
 }
 
 // Escape values before dropping them into innerHTML. The name/filename come from
@@ -33,6 +36,17 @@ export function escapeHtml(value: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+export function setStatus(el: HTMLElement, message: string, tone?: 'error' | 'success') {
+  el.textContent = message;
+  if (tone) el.dataset.tone = tone;
+  else delete el.dataset.tone;
+}
+
+export function formatDate(iso: string | null): string {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 export type ClientInfo = {
@@ -73,19 +87,13 @@ async function getJson(url: string): Promise<{ ok: true; data: any } | { ok: fal
 }
 
 export async function fetchClientInfo(key: string): Promise<ClientInfoResult> {
-  let folder = key;
   const pointer = await getJson(`/client-files/${LOGINS_DIR}/${key}.json`);
-  if (pointer.ok) {
-    if (typeof pointer.data?.id !== 'string' || !/^[0-9a-f]{32,64}$/.test(pointer.data.id)) return { ok: false, reason: 'invalid' };
-    folder = pointer.data.id;
-  } else if (pointer.reason === 'network') {
-    return pointer;
-  }
-  // No pointer: fall back to a data folder named after the key itself, the
-  // layout used before logins were split out (the admin page upgrades these).
+  if (!pointer.ok) return pointer;
+  const folder = pointer.data?.id;
+  if (typeof folder !== 'string' || !/^[0-9a-f]{32}$/.test(folder)) return { ok: false, reason: 'invalid' };
 
   const info = await getJson(`/client-files/${folder}/info.json`);
   if (!info.ok) return info;
-  if (!info.data || typeof info.data.file !== 'string') return { ok: false, reason: 'invalid' };
+  if (typeof info.data?.file !== 'string') return { ok: false, reason: 'invalid' };
   return { ok: true, info: info.data, folder };
 }

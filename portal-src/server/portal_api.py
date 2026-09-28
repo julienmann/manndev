@@ -8,12 +8,13 @@ password therefore means: prove you know the current key (its pointer exists),
 then write a pointer for the new key and delete the old one. The server never
 sees a password, only the two derived keys.
 
-Standard library only. Runs behind nginx on 127.0.0.1 (see SETUP.md):
+Standard library only. Runs behind nginx on 127.0.0.1:8787 (see SETUP.md §4):
     CLIENT_FILES=/srv/www/manndev/client-files python3 portal_api.py
 """
 
 import json
 import os
+import re
 import secrets
 import threading
 import time
@@ -22,9 +23,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = os.environ.get('CLIENT_FILES', '/srv/www/manndev/client-files')
 LOGINS = os.path.join(ROOT, '_logins')
-HOST = os.environ.get('PORTAL_API_HOST', '127.0.0.1')
-PORT = int(os.environ.get('PORTAL_API_PORT', '8787'))
 
+KEY_RE = re.compile(r'[0-9a-f]{64}')
+FOLDER_RE = re.compile(r'[0-9a-f]{32}')
 MAX_BODY = 1024
 # Failed attempts allowed per IP per window, so the endpoint can't be used to
 # guess keys faster than the static files already allow.
@@ -32,22 +33,15 @@ FAIL_LIMIT = 10
 FAIL_WINDOW = 15 * 60
 
 lock = threading.Lock()
-failures = {}  # ip -> [monotonic timestamps of failed attempts]
+failures = {}  # ip -> [monotonic timestamps of recent failed attempts]
 
 
-def is_key(value) -> bool:
-    return isinstance(value, str) and len(value) == 64 and all(c in '0123456789abcdef' for c in value)
-
-
-def is_folder_id(value) -> bool:
-    return isinstance(value, str) and 32 <= len(value) <= 64 and all(c in '0123456789abcdef' for c in value)
-
-
-def write_json(path: str, data: dict) -> None:
+def write_text(path: str, text: str) -> None:
+    """Atomic write, readable by nginx's worker user."""
     tmp = f'{path}.{secrets.token_hex(4)}.tmp'
     with open(tmp, 'w') as f:
-        json.dump(data, f, indent=2)
-    os.chmod(tmp, 0o644)  # nginx's worker user must be able to read it
+        f.write(text)
+    os.chmod(tmp, 0o644)
     os.replace(tmp, path)
 
 
@@ -66,54 +60,40 @@ def change_password(old_key: str, new_key: str) -> int:
 
     with lock:
         pointer = read_json(old_ptr)
-        if pointer is not None:
-            folder = pointer.get('id')
-            if not is_folder_id(folder):
-                return 500
-        elif os.path.isfile(os.path.join(ROOT, old_key, 'info.json')):
-            # Pre-pointer layout: the data folder is named after the key.
-            # Move it to a random id so the old key stops working entirely.
-            folder = secrets.token_hex(16)
-            os.rename(os.path.join(ROOT, old_key), os.path.join(ROOT, folder))
-        else:
+        if pointer is None:
             return 404
-
+        folder = pointer.get('id')
+        if not isinstance(folder, str) or not FOLDER_RE.fullmatch(folder):
+            return 500
         if os.path.exists(new_ptr):
             return 409
 
-        os.makedirs(LOGINS, mode=0o755, exist_ok=True)
-        write_json(new_ptr, {'id': folder})
-        if pointer is not None:
-            os.remove(old_ptr)
+        write_text(new_ptr, json.dumps({'id': folder}))
+        os.remove(old_ptr)
 
         info_path = os.path.join(ROOT, folder, 'info.json')
         info = read_json(info_path) or {}
         info['passwordChangedAt'] = datetime.now(timezone.utc).isoformat(timespec='seconds')
-        write_json(info_path, info)
+        write_text(info_path, json.dumps(info, indent=2))
 
         # Lets scripts/clients.sh refuse a push that would undo this change.
-        with open(os.path.join(ROOT, '.changed-at'), 'w') as f:
-            f.write(f"{info['passwordChangedAt']} {secrets.token_hex(4)}\n")
-        os.chmod(os.path.join(ROOT, '.changed-at'), 0o644)
+        write_text(os.path.join(ROOT, '.changed-at'), f"{info['passwordChangedAt']} {secrets.token_hex(4)}\n")
     return 200
 
 
 def rate_limited(ip: str) -> bool:
     now = time.monotonic()
     recent = [t for t in failures.get(ip, []) if now - t < FAIL_WINDOW]
-    failures[ip] = recent
+    if recent:
+        failures[ip] = recent
+    else:
+        failures.pop(ip, None)
     return len(recent) >= FAIL_LIMIT
 
 
-def record_failure(ip: str) -> None:
-    failures.setdefault(ip, []).append(time.monotonic())
-
-
 class Handler(BaseHTTPRequestHandler):
-    server_version = 'portal-api'
-
-    def reply(self, status: int, body: dict) -> None:
-        data = json.dumps(body).encode()
+    def reply(self, status: int) -> None:
+        data = json.dumps({'ok': status == 200}).encode()
         self.send_response(status)
         self.send_header('Content-Type', 'application/json')
         self.send_header('Content-Length', str(len(data)))
@@ -123,23 +103,23 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         if self.path != '/api/change-password':
-            return self.reply(404, {'error': 'not found'})
+            return self.reply(404)
 
         ip = self.headers.get('X-Real-IP') or self.client_address[0]
         if rate_limited(ip):
-            return self.reply(429, {'error': 'too many attempts'})
+            return self.reply(429)
 
         length = int(self.headers.get('Content-Length') or 0)
         if length <= 0 or length > MAX_BODY:
-            return self.reply(400, {'error': 'bad request'})
+            return self.reply(400)
         try:
             body = json.loads(self.rfile.read(length))
         except ValueError:
-            return self.reply(400, {'error': 'bad request'})
+            return self.reply(400)
 
         old_key, new_key = body.get('oldKey'), body.get('newKey')
-        if not (is_key(old_key) and is_key(new_key)) or old_key == new_key:
-            return self.reply(400, {'error': 'bad request'})
+        if not all(isinstance(k, str) and KEY_RE.fullmatch(k) for k in (old_key, new_key)):
+            return self.reply(400)
 
         try:
             status = change_password(old_key, new_key)
@@ -148,14 +128,10 @@ class Handler(BaseHTTPRequestHandler):
             status = 500
 
         if status == 404:
-            record_failure(ip)
-        messages = {200: 'ok', 404: 'current password incorrect', 409: 'choose a different password', 500: 'server error'}
-        self.reply(status, {'ok': status == 200} if status == 200 else {'error': messages[status]})
-
-    def do_GET(self):
-        self.reply(404, {'error': 'not found'})
+            failures.setdefault(ip, []).append(time.monotonic())
+        self.reply(status)
 
 
 if __name__ == '__main__':
-    print(f'portal-api on {HOST}:{PORT}, client files in {ROOT}', flush=True)
-    ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
+    print(f'portal-api on 127.0.0.1:8787, client files in {ROOT}', flush=True)
+    ThreadingHTTPServer(('127.0.0.1', 8787), Handler).serve_forever()

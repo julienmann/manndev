@@ -1,29 +1,10 @@
-interface FileSystemHandlePermissionDescriptor {
-  mode?: 'read' | 'readwrite';
-}
-
+// Chromium-only parts of the File System Access API that TypeScript's DOM lib
+// doesn't ship (it has the handle types, but not the picker or permissions).
 interface FileSystemHandle {
-  readonly kind: 'file' | 'directory';
-  readonly name: string;
-  queryPermission(descriptor?: FileSystemHandlePermissionDescriptor): Promise<PermissionState>;
-  requestPermission(descriptor?: FileSystemHandlePermissionDescriptor): Promise<PermissionState>;
+  requestPermission(descriptor?: { mode?: 'read' | 'readwrite' }): Promise<PermissionState>;
 }
 
-interface FileSystemWritableFileStream extends WritableStream {
-  write(data: Uint8Array<ArrayBufferLike> | BufferSource | Blob | string): Promise<void>;
-  close(): Promise<void>;
-}
-
-interface FileSystemFileHandle extends FileSystemHandle {
-  readonly kind: 'file';
-  getFile(): Promise<File>;
-  createWritable(): Promise<FileSystemWritableFileStream>;
-}
-
-interface FileSystemDirectoryHandle extends FileSystemHandle {
-  readonly kind: 'directory';
-  getFileHandle(name: string, options?: { create?: boolean }): Promise<FileSystemFileHandle>;
-  getDirectoryHandle(name: string, options?: { create?: boolean }): Promise<FileSystemDirectoryHandle>;
+interface FileSystemDirectoryHandle {
   values(): AsyncIterableIterator<FileSystemHandle>;
 }
 

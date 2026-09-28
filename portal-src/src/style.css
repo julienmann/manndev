@@ -1,7 +1,7 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
 :root{
-  --bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--dim:#636872;
+  --bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;
   --accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-accent:rgba(242,201,76,.22);
   --display:'Lora',Georgia,serif;--body:'Figtree',system-ui,sans-serif;
   --card-radius:28px;
@@ -28,13 +28,10 @@ button{font-family:inherit;}
   display:inline-flex;flex-direction:column;align-items:flex-start;gap:.35rem;
 }
 .portal-wordmark img{
-  display:block;height:28px;width:auto;
+  display:block;height:16px;width:auto;
 }
-/* Logo alone, matching the main site header: 36px tall, with logo.png's
-   transparent side padding pulled back so the ink sits on the gutter. */
-.portal-wordmark--solo img{
-  height:36px;margin:0 calc(36px * -23 / 106) 0 calc(36px * -24 / 106);
-}
+/* Logo alone, the same size as in the main site header. */
+.portal-wordmark--solo img{height:20px;}
 .portal-wordmark span{
   display:block;font-size:.7rem;font-weight:300;letter-spacing:.06em;
   opacity:.5;text-transform:uppercase;
@@ -82,7 +79,6 @@ button{font-family:inherit;}
   font-family:var(--body);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
   font-weight:500;color:var(--mid);display:block;margin-bottom:.7rem;
 }
-.field-pin{font-size:1.5rem !important;letter-spacing:.6em;text-indent:.6em;}
 
 /* CTAs — text link with expanding underline + arrow, matching the main site's link-cta */
 .link-cta{
@@ -102,7 +98,6 @@ button{font-family:inherit;}
 
 .login-status{margin-top:1.6rem;font-size:.85rem;line-height:1.7;min-height:1.4em;color:var(--mid);}
 .login-status[data-tone="error"]{color:var(--accent);}
-.login-status[data-tone="success"]{color:var(--mid);}
 
 .login-foot{margin-top:3rem;padding-top:1.6rem;border-top:1px solid var(--rule);font-size:.85rem;color:var(--mid);line-height:1.7;}
 .login-foot a{color:var(--fg);border-bottom:1px solid var(--rule-accent);}
@@ -134,11 +129,8 @@ button{font-family:inherit;}
   color:var(--mid);cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:color .2s,border-color .2s;
 }
 .pw-dialog-close:hover{color:var(--fg);border-color:var(--mid);}
-.pw-dialog-note{margin-bottom:2rem;}
-.pw-dialog-note strong{color:var(--fg);font-weight:500;}
-.dash-note{margin-bottom:2rem;}
-.dash-account .dash-note strong{color:var(--fg);font-weight:500;}
-.dash-note{font-size:.95rem;color:var(--mid);line-height:1.8;max-width:48ch;}
+.dash-note{font-size:.95rem;color:var(--mid);line-height:1.8;max-width:48ch;margin-bottom:2rem;}
+.dash-note strong{color:var(--fg);font-weight:500;}
 
 /* delivery (file download) card */
 .delivery{

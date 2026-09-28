@@ -10,7 +10,7 @@
 <title>Admin — Mann Dev</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/style.css" />
 <link rel="stylesheet" href="/src/admin.css" />
 </head>
@@ -19,7 +19,7 @@
     <div class="login-content">
       <h1 class="login-title">Admin access</h1>
       <p class="login-aside">Enter the admin password to continue.</p>
-      <form id="gate-form" novalidate>
+      <form id="gate-form" method="post" novalidate>
         <div class="field">
           <label class="field-label" for="gate-password">Password</label>
           <input type="password" id="gate-password" name="password" autocomplete="current-password" autofocus required>
@@ -35,7 +35,7 @@
   </div>
 
   <div class="portal-bar">
-    <a href="https://manndev.com/" class="portal-wordmark"><img src="/img/logo.png" alt="Mann Dev" width="345" height="106"><span>Admin</span></a>
+    <a href="https://manndev.com/" class="portal-wordmark"><img src="/img/logo.png" alt="Mann Dev" width="298" height="59"><span>Admin</span></a>
   </div>
 
   <main class="portal-main admin-main">
@@ -61,9 +61,9 @@
 
     <section class="admin-section">
       <h2 class="admin-heading">Add / update a client</h2>
-      <p class="admin-note">The client signs in with this username and password. Passwords aren't stored anywhere (the folder name is derived from them), so copy the password before saving: there's no way to look it up later.</p>
+      <p class="admin-note">The client signs in with this username and password. Passwords aren't stored anywhere (only a login file derived from them is), so copy the password before saving: there's no way to look it up later.</p>
       <form id="add-form" novalidate>
-        <p class="admin-note admin-migrate-note" id="migrate-note" hidden></p>
+        <p class="admin-note admin-mode-note" id="mode-note" hidden></p>
         <div class="field" id="f-username">
           <label class="field-label" for="add-username">Username</label>
           <input type="text" id="add-username" name="username" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="acme" required>

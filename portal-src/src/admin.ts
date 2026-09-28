@@ -1,5 +1,5 @@
 import { unzipSync } from 'fflate';
-import { escapeHtml, deriveClientKey, normalizeUsername, LOGINS_DIR } from './session';
+import { escapeHtml, deriveClientKey, normalizeUsername, formatDate, setStatus, toHex, LOGINS_DIR, MIN_PASSWORD, type ClientInfo } from './session';
 
 const DB_NAME = 'portal-admin';
 const STORE_NAME = 'handles';
@@ -34,14 +34,6 @@ async function idbSet(key: string, value: unknown): Promise<void> {
   });
 }
 
-type ClientInfo = {
-  name: string | null;
-  username?: string;
-  file: string;
-  uploadedAt: string | null;
-  passwordChangedAt?: string;
-};
-
 const pickFolderBtn = document.querySelector<HTMLButtonElement>('#pick-folder-btn')!;
 const folderNameEl = document.querySelector<HTMLSpanElement>('#folder-name')!;
 const clientListEl = document.querySelector<HTMLDivElement>('#client-list')!;
@@ -54,7 +46,7 @@ const addFileInput = document.querySelector<HTMLInputElement>('#add-file')!;
 const addSubmitBtn = document.querySelector<HTMLButtonElement>('#add-submit-btn')!;
 const addSubmitLabel = document.querySelector<HTMLSpanElement>('#add-submit-label')!;
 const addStatus = document.querySelector<HTMLParagraphElement>('#add-status')!;
-const migrateNote = document.querySelector<HTMLParagraphElement>('#migrate-note')!;
+const modeNote = document.querySelector<HTMLParagraphElement>('#mode-note')!;
 const cancelModeBtn = document.querySelector<HTMLButtonElement>('#cancel-mode-btn')!;
 const fieldWrap = {
   username: document.querySelector<HTMLDivElement>('#f-username')!,
@@ -66,25 +58,17 @@ const fieldWrap = {
 let dirHandle: FileSystemDirectoryHandle | null = null;
 
 // What the form is doing. Data folders have a permanent random id; logins are
-// pointer files in _logins/ (see session.ts), so these modes only ever touch
-// one side: 'update' replaces files, 'reset' and 'migrate' replace the login.
+// pointer files in _logins/ (see session.ts). 'update' replaces a client's
+// files without touching the login; 'reset' replaces the login only.
 type Mode =
   | { kind: 'create' }
   | { kind: 'update'; folder: string }
-  | { kind: 'reset'; folder: string }
-  | { kind: 'migrate'; folder: string };
+  | { kind: 'reset'; folder: string };
 let mode: Mode = { kind: 'create' };
 
-const LEGACY_PIN = /^\d{4}$/;
-const OLD_KEY_FOLDER = /^[0-9a-f]{64}$/;
 const USERNAME_RE = /^[a-z0-9][a-z0-9._-]{2,31}$/;
-const MIN_PASSWORD = 10;
 
-function setAddStatus(message: string, tone?: 'error' | 'success') {
-  addStatus.textContent = message;
-  if (tone) addStatus.dataset.tone = tone;
-  else delete addStatus.dataset.tone;
-}
+const setAddStatus = (message: string, tone?: 'error' | 'success') => setStatus(addStatus, message, tone);
 
 // Best-effort: unzip the client's build into <client folder>/preview/ so the dashboard
 // can offer a live view. Silently skips (returns false) if the zip doesn't
@@ -133,10 +117,7 @@ async function extractPreview(clientDir: FileSystemDirectoryHandle, zipFile: Fil
       dir = await dir.getDirectoryHandle(part, { create: true });
     }
 
-    const fileHandle = await dir.getFileHandle(fileName, { create: true });
-    const writable = await fileHandle.createWritable();
-    await writable.write(entries[path]);
-    await writable.close();
+    await writeFile(dir, fileName, entries[path] as Uint8Array<ArrayBuffer>);   // fflate never returns shared buffers
   }
 
   return true;
@@ -172,36 +153,20 @@ async function writeFile(dir: FileSystemDirectoryHandle, name: string, data: Fil
   await writable.close();
 }
 
-async function copyDir(from: FileSystemDirectoryHandle, to: FileSystemDirectoryHandle) {
-  for await (const entry of from.values()) {
-    if (entry.kind === 'file') {
-      await writeFile(to, entry.name, await (entry as FileSystemFileHandle).getFile());
-    } else {
-      await copyDir(entry as FileSystemDirectoryHandle, await to.getDirectoryHandle(entry.name, { create: true }));
-    }
-  }
-}
-
-type ClientEntry = {
-  folder: string;
-  info: ClientInfo;
-  hasPreview: boolean;
-  logins: string[]; // keys of the pointer files that open this folder
-};
-
-function newFolderId(): string {
-  return [...crypto.getRandomValues(new Uint8Array(16))].map(b => b.toString(16).padStart(2, '0')).join('');
-}
+const writeInfo = (dir: FileSystemDirectoryHandle, info: ClientInfo) => writeFile(dir, 'info.json', JSON.stringify(info, null, 2));
 
 async function loginsDir(): Promise<FileSystemDirectoryHandle> {
   return dirHandle!.getDirectoryHandle(LOGINS_DIR, { create: true });
 }
 
+async function writePointer(key: string, folder: string) {
+  await writeFile(await loginsDir(), `${key}.json`, JSON.stringify({ id: folder }));
+}
+
 // key -> folder id, for every pointer file.
 async function readPointers(): Promise<Map<string, string>> {
   const map = new Map<string, string>();
-  const dir = await loginsDir();
-  for await (const entry of dir.values()) {
+  for await (const entry of (await loginsDir()).values()) {
     if (entry.kind !== 'file' || !entry.name.endsWith('.json')) continue;
     try {
       const data = JSON.parse(await (await (entry as FileSystemFileHandle).getFile()).text());
@@ -213,9 +178,19 @@ async function readPointers(): Promise<Map<string, string>> {
   return map;
 }
 
+// Removes every login that opens `folder`, except `keep`.
+async function deletePointersFor(folder: string, keep?: string) {
+  const dir = await loginsDir();
+  for (const [key, id] of await readPointers()) {
+    if (id === folder && key !== keep) await dir.removeEntry(`${key}.json`);
+  }
+}
+
+type ClientEntry = { folder: string; info: ClientInfo; hasPreview: boolean; hasLogin: boolean };
+
 async function listClients(): Promise<ClientEntry[]> {
   if (!dirHandle) return [];
-  const pointers = await readPointers();
+  const loginFolders = new Set((await readPointers()).values());
   const clients: ClientEntry[] = [];
   for await (const entry of dirHandle.values()) {
     if (entry.kind !== 'directory' || entry.name === LOGINS_DIR || entry.name.startsWith('.')) continue;
@@ -223,67 +198,32 @@ async function listClients(): Promise<ClientEntry[]> {
     const info = await readInfo(clientDir);
     if (!info) continue;
     const hasPreview = await clientDir.getDirectoryHandle('preview').then(() => true).catch(() => false);
-    const logins = [...pointers].filter(([, id]) => id === entry.name).map(([key]) => key);
-    clients.push({ folder: entry.name, info, hasPreview, logins });
+    clients.push({ folder: entry.name, info, hasPreview, hasLogin: loginFolders.has(entry.name) });
   }
   return clients;
 }
 
-function describe(c: ClientEntry): string {
-  const who = c.info.name ?? 'client';
-  return LEGACY_PIN.test(c.folder) ? `${who} (code ${c.folder})` : `${who} (${c.info.username ?? 'no username'})`;
-}
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-// Before logins were split into pointer files, a client's data folder was
-// named after their login key. Move each one to a random id and point the
-// same key at it, so passwords keep working and folder names stop being logins.
-async function upgradeOldLayout(): Promise<number> {
-  if (!dirHandle) return 0;
-  const pointers = await readPointers();
-  const logins = await loginsDir();
-  let upgraded = 0;
-  for await (const entry of dirHandle.values()) {
-    if (entry.kind !== 'directory' || !OLD_KEY_FOLDER.test(entry.name) || pointers.has(entry.name)) continue;
-    const oldDir = entry as FileSystemDirectoryHandle;
-    if (!(await readInfo(oldDir))) continue;
-    const id = newFolderId();
-    await copyDir(oldDir, await dirHandle.getDirectoryHandle(id, { create: true }));
-    await writeFile(logins, `${entry.name}.json`, JSON.stringify({ id }));
-    await dirHandle.removeEntry(entry.name, { recursive: true });
-    upgraded++;
-  }
-  return upgraded;
-}
+const describe = (info: ClientInfo) => `${info.name ?? 'client'} (${info.username ?? 'no username'})`;
 
 async function refreshClientList() {
   const clients = await listClients();
 
   clientListEl.innerHTML = clients.length
     ? clients.map(c => {
-        const legacy = LEGACY_PIN.test(c.folder);
-        const login = legacy
-          ? `${escapeHtml(c.folder)}<span class="admin-client-legacy">old code</span>`
-          : escapeHtml(c.info.username ?? '—');
         const changed = c.info.passwordChangedAt
           ? `<span class="admin-client-changed">Password changed by client · ${escapeHtml(formatDate(c.info.passwordChangedAt))}</span>`
           : '';
-        const noLogin = !legacy && !c.logins.length ? '<span class="admin-client-changed">No login: use Reset password</span>' : '';
-        const actions = legacy
-          ? `<button type="button" class="admin-remove-btn" data-action="migrate" data-folder="${escapeHtml(c.folder)}">Set login</button>`
-          : `<button type="button" class="admin-remove-btn" data-action="update" data-folder="${escapeHtml(c.folder)}">Update file</button>
-             <button type="button" class="admin-remove-btn" data-action="reset" data-folder="${escapeHtml(c.folder)}">Reset password</button>`;
+        const noLogin = c.hasLogin ? '' : '<span class="admin-client-changed">No login: use Reset password</span>';
+        const folder = escapeHtml(c.folder);
         return `
           <div class="admin-client-row">
-            <span class="admin-client-pin">${login}</span>
+            <span class="admin-client-login">${escapeHtml(c.info.username ?? '—')}</span>
             <span class="admin-client-name">${escapeHtml(c.info.name ?? '—')}${changed}${noLogin}</span>
             <span class="admin-client-file">${escapeHtml(c.info.file)}${c.hasPreview ? ' · preview' : ''}</span>
             <span class="admin-client-actions">
-              ${actions}
-              <button type="button" class="admin-remove-btn" data-action="remove" data-folder="${escapeHtml(c.folder)}">Remove</button>
+              <button type="button" class="admin-remove-btn" data-action="update" data-folder="${folder}">Update file</button>
+              <button type="button" class="admin-remove-btn" data-action="reset" data-folder="${folder}">Reset password</button>
+              <button type="button" class="admin-remove-btn" data-action="remove" data-folder="${folder}">Remove</button>
             </span>
           </div>
         `;
@@ -295,24 +235,16 @@ async function refreshClientList() {
     const action = btn.dataset.action!;
     btn.addEventListener('click', () => {
       if (action === 'remove') removeClient(folder);
-      else setMode({ kind: action as 'update' | 'reset' | 'migrate', folder });
+      else setMode({ kind: action as 'update' | 'reset', folder });
     });
   });
-}
-
-async function deletePointersFor(folder: string, except?: string) {
-  const dir = await loginsDir();
-  for (const [key, id] of await readPointers()) {
-    if (id === folder && key !== except) await dir.removeEntry(`${key}.json`).catch(() => {});
-  }
 }
 
 async function removeClient(folder: string) {
   if (!dirHandle) return;
 
-  const clientDir = await dirHandle.getDirectoryHandle(folder).catch(() => null);
-  const info = clientDir ? await readInfo(clientDir) : null;
-  const label = info ? describe({ folder, info, hasPreview: false, logins: [] }) : folder;
+  const info = await readInfo(await dirHandle.getDirectoryHandle(folder));
+  const label = info ? describe(info) : folder;
 
   if (!confirm(`Remove ${label}? This deletes their login, zip, info, and preview from this folder. You'll still need to push the change to the server.`)) {
     return;
@@ -321,7 +253,7 @@ async function removeClient(folder: string) {
   try {
     await deletePointersFor(folder);
     await dirHandle.removeEntry(folder, { recursive: true });
-    if ('folder' in mode && mode.folder === folder) setMode({ kind: 'create' });
+    if (mode.kind !== 'create' && mode.folder === folder) await setMode({ kind: 'create' });
     setAddStatus(`Removed ${label}.`, 'success');
     await refreshClientList();
   } catch (err) {
@@ -333,12 +265,11 @@ const SUBMIT_LABELS: Record<Mode['kind'], string> = {
   create: 'Save client',
   update: 'Update file',
   reset: 'Set new password',
-  migrate: 'Move to login',
 };
 
 async function setMode(next: Mode) {
   mode = next;
-  const info = 'folder' in next && dirHandle
+  const info = next.kind !== 'create' && dirHandle
     ? await readInfo(await dirHandle.getDirectoryHandle(next.folder))
     : null;
   const who = info?.name ?? 'this client';
@@ -349,31 +280,23 @@ async function setMode(next: Mode) {
   fieldWrap.file.hidden = next.kind === 'reset';
   addUsernameInput.readOnly = next.kind === 'reset';
   cancelModeBtn.hidden = next.kind === 'create';
-  migrateNote.hidden = next.kind === 'create';
+  modeNote.hidden = next.kind === 'create';
   addSubmitLabel.textContent = SUBMIT_LABELS[next.kind];
   setAddStatus('');
 
-  if (next.kind === 'create') {
-    addForm.reset();
-    addPasswordInput.value = generatePassword();
-    return;
-  }
+  addForm.reset();
+  addPasswordInput.value = generatePassword();
+  if (next.kind === 'create') return;
 
   addNameInput.value = info?.name ?? '';
-  addFileInput.value = '';
   if (next.kind === 'update') {
-    migrateNote.textContent = `Replacing the file for ${who}. Their login doesn't change.`;
-  } else if (next.kind === 'reset') {
-    addUsernameInput.value = info?.username ?? '';
-    addPasswordInput.value = generatePassword();
-    migrateNote.textContent = `New password for ${who}. Their old password stops working once you push. Their files and preview link don't change.`;
+    modeNote.textContent = `Replacing the file for ${who}. Their login doesn't change.`;
   } else {
-    addUsernameInput.value = '';
-    addPasswordInput.value = generatePassword();
-    migrateNote.textContent = `Moving ${who} (code ${next.folder}) to a username and password. Their files come along, so the zip is optional. The old code stops working once you push.`;
+    addUsernameInput.value = info?.username ?? '';
+    modeNote.textContent = `New password for ${who}. Their old password stops working once you push. Their files and preview link don't change.`;
   }
   addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  (next.kind === 'update' ? addFileInput : next.kind === 'reset' ? addPasswordInput : addUsernameInput).focus({ preventScroll: true });
+  (next.kind === 'update' ? addFileInput : addPasswordInput).focus({ preventScroll: true });
 }
 
 async function setDirHandle(handle: FileSystemDirectoryHandle) {
@@ -381,14 +304,6 @@ async function setDirHandle(handle: FileSystemDirectoryHandle) {
   folderNameEl.textContent = handle.name;
   addSubmitBtn.disabled = false;
   addSubmitLabel.textContent = SUBMIT_LABELS[mode.kind];
-  try {
-    const upgraded = await upgradeOldLayout();
-    if (upgraded) {
-      setAddStatus(`Upgraded ${upgraded} client${upgraded === 1 ? '' : 's'} to the new folder layout. Their passwords are unchanged, but live-preview links now use a new address. Push to apply.`, 'success');
-    }
-  } catch (err) {
-    setAddStatus(err instanceof Error ? `Couldn't upgrade old client folders: ${err.message}` : "Couldn't upgrade old client folders.", 'error');
-  }
   await refreshClientList();
 }
 
@@ -424,11 +339,12 @@ addForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!dirHandle) return;
 
+  const current = mode;
   const username = normalizeUsername(addUsernameInput.value);
   const password = addPasswordInput.value;
   const name = addNameInput.value.trim();
   const file = addFileInput.files?.[0];
-  const needsLogin = mode.kind !== 'update';
+  const needsLogin = current.kind !== 'update';
 
   if (needsLogin && !USERNAME_RE.test(username)) {
     setAddStatus('Username must be 3–32 characters: lowercase letters, numbers, dots, dashes or underscores.', 'error');
@@ -438,7 +354,7 @@ addForm.addEventListener('submit', async (e) => {
     setAddStatus(`Password must be at least ${MIN_PASSWORD} characters. Use Generate for a strong one.`, 'error');
     return;
   }
-  if (!file && (mode.kind === 'create' || mode.kind === 'update')) {
+  if (!file && current.kind !== 'reset') {
     setAddStatus('Choose a zip file.', 'error');
     return;
   }
@@ -448,56 +364,37 @@ addForm.addEventListener('submit', async (e) => {
   setAddStatus('');
 
   try {
-    const clients = await listClients();
-    const logins = await loginsDir();
-    const current = mode;
-
     // Usernames must stay unique: the same username with two passwords
     // would silently be two separate accounts.
-    if (needsLogin) {
-      const clash = clients.find(c => c.info.username === username && !('folder' in current && c.folder === current.folder));
+    if (current.kind === 'create') {
+      const clash = (await listClients()).find(c => c.info.username === username);
       if (clash) {
-        setAddStatus(`The username "${username}" is already used by ${describe(clash)}. Use that client's Update file or Reset password instead.`, 'error');
+        setAddStatus(`The username "${username}" is already used by ${describe(clash.info)}. Use that client's Update file or Reset password instead.`, 'error');
         return;
       }
     }
-    const key = needsLogin ? await deriveClientKey(username, password) : '';
 
-    let folder: string;
     let hasPreview: boolean | null = null;
 
     if (current.kind === 'create') {
-      folder = newFolderId();
+      const folder = toHex(crypto.getRandomValues(new Uint8Array(16)));
       const clientDir = await dirHandle.getDirectoryHandle(folder, { create: true });
       hasPreview = await writeDeliverable(clientDir, file!);
-      await writeFile(clientDir, 'info.json', JSON.stringify({ name: name || null, username, file: file!.name, uploadedAt: new Date().toISOString() } satisfies ClientInfo, null, 2));
-      await writeFile(logins, `${key}.json`, JSON.stringify({ id: folder }));
+      await writeInfo(clientDir, { name: name || null, username, file: file!.name, uploadedAt: new Date().toISOString() });
+      await writePointer(await deriveClientKey(username, password), folder);
     } else if (current.kind === 'update') {
-      folder = current.folder;
-      const clientDir = await dirHandle.getDirectoryHandle(folder);
+      const clientDir = await dirHandle.getDirectoryHandle(current.folder);
       const info = (await readInfo(clientDir))!;
       hasPreview = await writeDeliverable(clientDir, file!, info.file);
-      await writeFile(clientDir, 'info.json', JSON.stringify({ ...info, name: name || null, file: file!.name, uploadedAt: new Date().toISOString() }, null, 2));
-    } else if (current.kind === 'reset') {
-      folder = current.folder;
-      const clientDir = await dirHandle.getDirectoryHandle(folder);
-      const { passwordChangedAt: _cleared, ...info } = (await readInfo(clientDir))!;
-      await writeFile(clientDir, 'info.json', JSON.stringify({ ...info, username }, null, 2));
-      await writeFile(logins, `${key}.json`, JSON.stringify({ id: folder }));
-      await deletePointersFor(folder, key);
+      await writeInfo(clientDir, { ...info, name: name || null, file: file!.name, uploadedAt: new Date().toISOString() });
     } else {
-      // migrate: copy the old 4-digit-code folder into a fresh random id.
-      folder = newFolderId();
-      const oldDir = await dirHandle.getDirectoryHandle(current.folder);
-      const oldInfo = await readInfo(oldDir);
-      const clientDir = await dirHandle.getDirectoryHandle(folder, { create: true });
-      await copyDir(oldDir, clientDir);
-      if (file) hasPreview = await writeDeliverable(clientDir, file, oldInfo?.file);
-      await writeFile(clientDir, 'info.json', JSON.stringify({
-        name: name || null, username, file: file?.name ?? oldInfo?.file ?? '', uploadedAt: file ? new Date().toISOString() : oldInfo?.uploadedAt ?? null,
-      } satisfies ClientInfo, null, 2));
-      await writeFile(logins, `${key}.json`, JSON.stringify({ id: folder }));
-      await dirHandle.removeEntry(current.folder, { recursive: true });
+      const clientDir = await dirHandle.getDirectoryHandle(current.folder);
+      const info = (await readInfo(clientDir))!;
+      delete info.passwordChangedAt;
+      await writeInfo(clientDir, { ...info, username });
+      const key = await deriveClientKey(username, password);
+      await writePointer(key, current.folder);
+      await deletePointersFor(current.folder, key);
     }
 
     const previewNote = hasPreview === null ? ''

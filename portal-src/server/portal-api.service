@@ -1,20 +1,16 @@
-# systemd unit for the client portal API. Install on the server with:
-#   sudo cp /srv/www/manndev/portal-src/server/portal-api.service /etc/systemd/system/
-#   sudo systemctl daemon-reload && sudo systemctl enable --now portal-api
+# systemd unit for the client portal API. Install steps: portal-src/SETUP.md §4.
 [Unit]
 Description=Mann Dev client portal API (password changes)
 After=network.target
 
 [Service]
 User=lmann
-Environment=CLIENT_FILES=/srv/www/manndev/client-files
 ExecStart=/usr/bin/python3 /srv/www/manndev/portal-src/server/portal_api.py
 Restart=on-failure
 RestartSec=3
 NoNewPrivileges=true
 ProtectSystem=strict
 ReadWritePaths=/srv/www/manndev/client-files
-PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target

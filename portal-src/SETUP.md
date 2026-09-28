@@ -1,8 +1,6 @@
 # Client Portal — Setup
 
-No Supabase, no database. Each client signs in with a username and password, and can change their password from the dashboard. Everything is static files, except one tiny standard-library Python service that handles password changes (see §4).
-
-(This replaces the old Supabase-backed portal and its companion `admin-src`/`admin-api`/`admin` apps, which managed a `client_projects` table and live-preview zip uploads — both retired since nothing here reads that data anymore.)
+The portal lives at **https://portal.manndev.com/**. Each client signs in with a username and password and can change the password from the dashboard. Everything is static files, except one tiny standard-library Python service that handles password changes (§4).
 
 ## How it works
 
@@ -20,11 +18,7 @@ Why the split: a password change only swaps the pointer, so the data folder and 
 
 The server never stores a password, only derived keys, so **passwords can't be recovered**. If a client forgets theirs, use **Reset password** in the admin page. This is a static "secret path" pattern rather than a full auth server (the static files have no rate limiting), but with generated passwords (12 characters, ~70 bits) and the deliberately slow hash, guessing a login isn't practical.
 
-Older layouts, handled automatically: 4-digit folders are clients from the original code system (admin page: **Set login**), and 64-character folders are from the first username/password version, where the data folder was named after the key. The admin page upgrades those to a random id plus a pointer as soon as you open the folder, keeping their passwords; the login page and the API also still accept them in the meantime.
-
-The nginx location block for `/client-files/` needs `try_files $uri $uri/ =404;` (not just `try_files $uri =404;`) — the `$uri/` clause is what lets a `preview/` directory request resolve to its `index.html` instead of 404ing.
-
-`client-files/` is gitignored at the repo root — this repo (`julienmann/manndev`) is public on GitHub, so client deliverables and their folder keys never touch git. It's managed locally and pushed to the server directly.
+`client-files/` is gitignored (this repo is public) and synced with `scripts/clients.sh`.
 
 ## 1. Manage clients with the admin page
 
@@ -50,10 +44,8 @@ Usernames must be unique; the form refuses one that's already taken.
 
 ## 2. Deploy
 
-The production server only runs `git pull` for the portal app itself — the portal's compiled JS/CSS still goes through the normal flow:
-
 ```bash
-./scripts/build-portal.sh   # rebuilds portal-src and refreshes the top-level portal/ folder
+./scripts/build-portal.sh   # builds portal-src into portal/
 git add portal-src portal
 git commit -m "Update client portal"
 git push
@@ -69,9 +61,9 @@ Then on the server: `git pull`.
 
 Both `pull` and `push` mirror exactly (`rsync --delete`). When the API changes a password it stamps `client-files/.changed-at`; `push` compares the server's stamp with the one you last pulled and refuses if they differ, so pushing a stale copy can't undo a client's change (or delete their new login).
 
-**Permissions note:** the File System Access API (used by `admin.html`) can create files/folders too restrictive for nginx's worker user to read (e.g. `700`/`600`), which makes even a correct login silently fail the same way an invalid one does. The obvious fix — `rsync --chmod=D755,F644` — doesn't work on macOS's stock rsync (it's `openrsync`, a BSD reimplementation that accepts the flag but silently no-ops it; the GNU-style `D755,F644` syntax is rejected outright as "invalid argument"). Instead, a cron job on the server (`crontab -l` as `lmann`) re-chmods `client-files/` to `755`/`644` every 5 minutes, scoped only to that one directory. So a sync with wrong permissions self-heals within a few minutes rather than needing a special rsync invocation. If you need it fixed immediately rather than waiting: `ssh lmann@lionelmann.com "find /srv/www/manndev/client-files -mindepth 1 -type d -exec chmod 755 {} \; ; find /srv/www/manndev/client-files -mindepth 1 -type f -exec chmod 644 {} \;"`.
+**Permissions:** the admin page can create files nginx can't read (`700`/`600`), which makes a correct login fail like a wrong one. A cron job on the server (`crontab -l` as `lmann`) re-chmods `client-files/` to `755`/`644` every 5 minutes. To fix it immediately: `ssh lmann@lionelmann.com "find /srv/www/manndev/client-files -mindepth 1 -type d -exec chmod 755 {} \; ; find /srv/www/manndev/client-files -mindepth 1 -type f -exec chmod 644 {} \;"`.
 
-The portal lives at **https://portal.manndev.com/**. It's built with `base: '/'` in `vite.config.ts`, and still fetches `/client-files/…` and `/img/…` by absolute path, so the subdomain's nginx block serves the built `portal/` folder at `/` and the repo root's `client-files/` and `img/` folders alongside it:
+The portal is built with `base: '/'` in `vite.config.ts` and fetches `/client-files/…` and `/img/…` by absolute path, so the subdomain's nginx block serves the built `portal/` folder at `/` and the repo root's `client-files/` and `img/` folders alongside it:
 
 ```nginx
 server {

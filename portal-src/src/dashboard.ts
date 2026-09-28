@@ -1,4 +1,4 @@
-import { SESSION_KEY, fetchClientInfo, deriveClientKey, escapeHtml, type ClientInfo } from './session';
+import { SESSION_KEY, MIN_PASSWORD, fetchClientInfo, deriveClientKey, escapeHtml, formatDate, setStatus, type ClientInfo } from './session';
 
 const CTA_ARROW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
 const CTA_UNDERLINE = '<div class="cta-underline-wrap"><div class="cta-underline"></div></div>';
@@ -6,11 +6,6 @@ const CTA_UNDERLINE = '<div class="cta-underline-wrap"><div class="cta-underline
 const main = document.querySelector<HTMLElement>('#main')!;
 const accountName = document.querySelector<HTMLSpanElement>('#account-name')!;
 const logoutBtn = document.querySelector<HTMLButtonElement>('#logout-btn')!;
-
-function formatDate(iso: string | null): string {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
 
 function renderError() {
   main.innerHTML = `
@@ -63,19 +58,14 @@ function renderFiles(folder: string, info: ClientInfo, previewAvailable: boolean
 }
 
 
-const MIN_PASSWORD = 10;
-
 const pwDialog = document.querySelector<HTMLDialogElement>('#pw-dialog')!;
 const pwOpenBtn = document.querySelector<HTMLButtonElement>('#pw-open-btn')!;
-let passwordFormBound = false;
 
 // The "Change password" button in the top bar opens the form in a dialog.
 function bindPasswordForm(username: string) {
   document.querySelector<HTMLElement>('#pw-username')!.textContent = username;
   document.querySelector<HTMLInputElement>('#pw-username-field')!.value = username;
   pwOpenBtn.hidden = false;
-  if (passwordFormBound) return;
-  passwordFormBound = true;
 
   const form = document.querySelector<HTMLFormElement>('#pw-form')!;
   const current = document.querySelector<HTMLInputElement>('#pw-current')!;
@@ -85,10 +75,7 @@ function bindPasswordForm(username: string) {
   const label = document.querySelector<HTMLSpanElement>('#pw-submit-label')!;
   const status = document.querySelector<HTMLParagraphElement>('#pw-status')!;
 
-  const say = (msg: string, tone?: 'error' | 'success') => {
-    status.textContent = msg;
-    if (tone) status.dataset.tone = tone; else delete status.dataset.tone;
-  };
+  const say = (msg: string, tone?: 'error' | 'success') => setStatus(status, msg, tone);
 
   let closeTimer: number | undefined;
   pwOpenBtn.addEventListener('click', () => {

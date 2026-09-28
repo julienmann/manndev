@@ -1,0 +1,9 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Mann Dev",
+    "documentationUrl": "https://manndev.com/llms.txt",
+    "logoUrl": "https://manndev.com/img/logo.png"
+  },
+  "entries": []
+}

@@ -1,7 +1,5 @@
-# Per-client deliverable zips + access-code manifests — uploaded directly
-# to the server, not tracked in git:
-# managed locally via portal-src/admin.html and rsynced to the server,
-# never committed (this repo is public).
+# Client deliverables and logins: public repo, so never committed.
+# Synced to the server with scripts/clients.sh.
 client-files/
 
 .DS_Store
