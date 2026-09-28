@@ -74,7 +74,7 @@ body{
   line-height:1.7;
   overflow-x:hidden;
 }
-::selection{background:var(--accent);color:#1e2530;}
+::selection{background:var(--accent);color:var(--bg);}
 a{color:inherit;text-decoration:none;}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
 a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none;}
@@ -393,7 +393,9 @@ body::after{
 .care-list-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;font-weight:600;color:var(--accent);margin-bottom:.75rem;}
 .care-list-item{font-size:.9rem;color:var(--mid);}
 .care-list-cta{margin-top:1.5rem;font-size:.82rem;}
+.principle-tall .principle-icon{margin-bottom:2rem;}
 .principle-card.principle-care{
+  grid-column:1 / -1;
   background:linear-gradient(135deg, rgba(242,201,76,.07), var(--surface) 60%);
   border:1px solid var(--rule-accent);
 }
@@ -440,7 +442,7 @@ body::after{
   text-transform:uppercase;
   font-weight:700;
   background:var(--accent);
-  color:#1e2530;
+  color:var(--bg);
   padding:.25rem .7rem;
   margin-left:.75rem;
   vertical-align:middle;
@@ -494,7 +496,7 @@ body::after{
   letter-spacing:.12em;
   font-weight:700;
   background:var(--accent);
-  color:#1e2530;
+  color:var(--bg);
   padding:.15rem .45rem;
   margin-left:.5rem;
   vertical-align:middle;
@@ -718,6 +720,7 @@ body::after{
   color:var(--accent);
   margin-bottom:.4rem;
 }
+.contact-val .status-dot{display:inline-block;margin-right:.5rem;}
 .contact-val{
   font-size:1rem;
   color:var(--fg);
@@ -890,13 +893,16 @@ option{background:var(--bg);}
 /* bigger tap areas on touch screens without changing the layout: an invisible
    hit box around each small text link (the links are visually ~17-27px tall) */
 @media(pointer:coarse){
-  nav ul li a,.footer-nav a{position:relative;}
-  nav ul li a::before,.footer-nav a::before,.link-cta::before,.service-cta::before,.form-submit::before{
+  nav ul li a,.footer-nav a,.finder-link,.h-logo,.footer-logo{position:relative;}
+  nav ul li a::before,.footer-nav a::before,.link-cta::before,.service-cta::before,.form-submit::before,.finder-link::before{
     content:'';position:absolute;inset:-14px -8px;
   }
+  .h-logo::before,.footer-logo::before{content:'';position:absolute;inset:-12px -6px;}
+  .finder-link::before{inset:-16px -8px;}   /* 12px-tall text buttons need a little more */
 }
 
 /* ── FOOTER ── */
+footer .divider-inner{margin-bottom:3rem;}
 footer{
   max-width:var(--container);
   margin:0 auto;
@@ -1176,7 +1182,7 @@ footer{
 
       <!-- Tall card: Inclusivity and Accessibility -->
       <div class="principle-card principle-tall">
-        <div class="principle-icon" style="margin-bottom:2rem;">
+        <div class="principle-icon">
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="26" cy="12" r="5"/>
             <path d="M26 17v14"/>
@@ -1227,7 +1233,7 @@ footer{
       </div>
 
       <!-- Full-width: Care & Hosting -->
-      <div class="principle-card principle-care" style="grid-column:1 / -1;">
+      <div class="principle-card principle-care">
         <div class="care-split">
           <div>
             <h3 class="principle-h3">
@@ -1447,7 +1453,7 @@ footer{
         <div class="contact-item">
           <div class="contact-label">Availability</div>
           <div class="contact-val">
-            <span class="status-dot" style="display:inline-block;margin-right:.5rem;" aria-hidden="true"></span>
+            <span class="status-dot" aria-hidden="true"></span>
             Currently taking on new projects
           </div>
         </div>
@@ -1551,7 +1557,7 @@ footer{
 
 <!-- FOOTER -->
 <footer>
-  <div class="divider-inner" style="margin-bottom:3rem;"></div>
+  <div class="divider-inner"></div>
   <div class="footer-inner">
     <a href="https://manndev.com/" class="footer-logo" aria-label="Mann Dev Home">
       <img src="/img/logo.png" alt="" width="298" height="59">
@@ -2085,7 +2091,7 @@ function handleSubmit(e) {
     stepEl.textContent = 'Question ' + (step + 1) + ' of ' + QS.length;
     barEl.style.transform = 'scaleX(' + (step / QS.length) + ')';
     paint(
-      '<h4 class="quiz-q" tabindex="-1">' + esc(Q.q) + '</h4>' +
+      '<h3 class="quiz-q" tabindex="-1">' + esc(Q.q) + '</h3>' +
       (Q.hint ? '<p class="quiz-hint">' + esc(Q.hint) + '</p>' : '') +
       '<fieldset class="quiz-opts"><legend class="sr-only">' + esc(Q.q) + '</legend>' +
       Q.opts.map((o, i) =>
@@ -2130,7 +2136,7 @@ function handleSubmit(e) {
     barEl.style.transform = 'scaleX(1)';
     paint(
       '<p class="quiz-result-kicker">Based on your answers</p>' +
-      '<h4 class="quiz-tier" tabindex="-1">' + esc(T.name) + '</h4>' +
+      '<h3 class="quiz-tier" tabindex="-1">' + esc(T.name) + '</h3>' +
       '<p class="quiz-tier-tag">' + esc(T.tag) + '</p>' +
       '<p class="quiz-tier-time">' + esc(T.time) + '</p>' +
       '<div class="quiz-cols"><div class="quiz-why"><h4>Why this fits</h4><ul>' +
