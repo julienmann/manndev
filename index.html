@@ -245,9 +245,6 @@ body::after{
   animation:pulse 2s ease-in-out infinite;
 }
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
-.status-location{
-  font-family:var(--body);font-size:.8rem;color:var(--mid);
-}
 
 /* ── ABOUT ── */
 .about-grid{
@@ -332,7 +329,6 @@ body::after{
   gap:1rem;
   border:1px solid rgba(240,242,244,.06);
   transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-  will-change:transform;
 }
 .process-card:hover{
   transform:scale(1.025);
@@ -395,7 +391,14 @@ body::after{
   border-radius:var(--card-radius);
   padding:2.5rem;
   border:1px solid rgba(240,242,244,.06);
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
 }
+.principle-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 44px rgba(0,0,0,.3);
+  border-color:rgba(242,201,76,.2);
+}
+.principle-card.principle-care:hover{border-color:rgba(242,201,76,.4);}
 .care-split{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;}
 .care-list{display:flex;flex-direction:column;gap:.5rem;padding-left:2rem;border-left:1px solid var(--rule-accent);}
 .principle-card.principle-care{
@@ -411,7 +414,11 @@ body::after{
 .principle-icon{
   color:var(--accent);
   opacity:.8;
+  transition:opacity .3s ease;
 }
+.principle-icon svg{display:block;transition:transform .35s cubic-bezier(.2,.8,.2,1);}
+.principle-card:hover .principle-icon{opacity:1;}
+.principle-card:hover .principle-icon svg{transform:translateY(-3px) scale(1.06);}
 .principle-h3{
   font:600 1.3rem/1.2 var(--display);
   color:var(--fg);
@@ -433,7 +440,9 @@ body::after{
   border:1px solid var(--rule-accent);
   padding:.3rem .8rem;
   color:var(--accent);
+  transition:background-color .3s ease, border-color .3s ease;
 }
+.principle-card:hover .principle-tag{background:rgba(242,201,76,.08);border-color:rgba(242,201,76,.45);}
 .care-badge{
   display:inline-block;
   font-family:var(--body);
@@ -1043,7 +1052,6 @@ footer{
         <span class="status-dot" aria-hidden="true"></span>
         Available for new projects
       </span>
-      <span class="status-location">Montréal, QC &mdash; Remote worldwide</span>
     </div>
   </div>
 </section>
@@ -1150,7 +1158,7 @@ footer{
 
       <!-- Tall card: Inclusivity and Accessibility -->
       <div class="principle-card principle-tall">
-        <div style="color:var(--accent);margin-bottom:2rem;opacity:.8;">
+        <div class="principle-icon" style="margin-bottom:2rem;">
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="26" cy="12" r="5"/>
             <path d="M26 17v14"/>
@@ -1237,7 +1245,7 @@ footer{
   <div class="container">
     <p class="about-h6 fade-up">Services</p>
     <h2 class="services-h2 fade-up">What we build</h2>
-    <p class="services-sub fade-up">Project work is scoped per brief. Care &amp; Hosting runs on a flat monthly rate — ask for details.</p>
+    <p class="services-sub fade-up">Project work is scoped per brief.</p>
 
     <div class="tabs-bar" role="tablist" aria-label="Services" style="position:relative;">
       <button class="tab-btn active" id="tabbtn-landing" data-tab="landing" role="tab" aria-selected="true" aria-controls="tab-landing">Landing Page</button>
@@ -1743,6 +1751,7 @@ if (!reduced) {
     {
       autoAlpha: 1, y: 0, scale: 1,
       duration: 0.6, stagger: 0.1, ease: 'power3.out',
+      clearProps: 'transform,translate,rotate,scale',   // let the CSS :hover transform apply afterwards
       scrollTrigger: { trigger: '.process-grid', start: 'top 82%', once: true }
     }
   );
@@ -1767,6 +1776,7 @@ if (!reduced) {
     {
       autoAlpha: 1, y: 0, scale: 1,
       duration: 0.65, stagger: 0.12, ease: 'power3.out',
+      clearProps: 'transform,translate,rotate,scale',   // let the CSS :hover transform apply afterwards
       scrollTrigger: { trigger: '.principles-grid', start: 'top 80%', once: true }
     }
   );
