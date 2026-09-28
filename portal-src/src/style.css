@@ -30,6 +30,11 @@ button{font-family:inherit;}
 .portal-wordmark img{
   display:block;height:28px;width:auto;
 }
+/* Logo alone, matching the main site header: 36px tall, with logo.png's
+   transparent side padding pulled back so the ink sits on the gutter. */
+.portal-wordmark--solo img{
+  height:36px;margin:0 calc(36px * -23 / 106) 0 calc(36px * -24 / 106);
+}
 .portal-wordmark span{
   display:block;font-size:.7rem;font-weight:300;letter-spacing:.06em;
   opacity:.5;text-transform:uppercase;
@@ -113,6 +118,10 @@ button{font-family:inherit;}
   text-transform:uppercase;color:var(--accent);margin-bottom:.8rem;
 }
 .dash-greeting-title{font:500 clamp(1.8rem,5vw,2.4rem)/1.15 var(--display);color:var(--fg);}
+.dash-account{margin-top:3.2rem;padding-top:2.4rem;border-top:1px solid var(--rule);max-width:440px;}
+.dash-account-title{font:500 1.4rem/1.2 var(--display);color:var(--fg);margin-bottom:.6rem;}
+.dash-account .dash-note{margin-bottom:2rem;}
+.dash-account .dash-note strong{color:var(--fg);font-weight:500;}
 .dash-note{font-size:.95rem;color:var(--mid);line-height:1.8;max-width:48ch;}
 
 /* delivery (file download) card */

@@ -42,6 +42,8 @@
     <section class="admin-section">
       <h2 class="admin-heading">Working folder</h2>
       <p class="admin-note">Pick the <code>client-files</code> folder in your local checkout of this repo. Chrome/Edge only.</p>
+      <p class="admin-note">Clients can change their own password on the server, so <strong>pull before you edit</strong>, then push when you're done:</p>
+      <pre class="admin-code">./scripts/clients.sh pull</pre>
       <div class="admin-row">
         <button type="button" class="link-cta" id="pick-folder-btn">
           Choose folder
@@ -62,22 +64,22 @@
       <p class="admin-note">The client signs in with this username and password. Passwords aren't stored anywhere (the folder name is derived from them), so copy the password before saving: there's no way to look it up later.</p>
       <form id="add-form" novalidate>
         <p class="admin-note admin-migrate-note" id="migrate-note" hidden></p>
-        <div class="field">
+        <div class="field" id="f-username">
           <label class="field-label" for="add-username">Username</label>
           <input type="text" id="add-username" name="username" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="acme" required>
         </div>
-        <div class="field">
+        <div class="field" id="f-password">
           <label class="field-label" for="add-password">Password</label>
           <div class="admin-row">
             <input type="text" id="add-password" name="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required>
             <button type="button" class="admin-remove-btn" id="gen-password-btn">Generate</button>
           </div>
         </div>
-        <div class="field">
+        <div class="field" id="f-name">
           <label class="field-label" for="add-name">Client / business name</label>
           <input type="text" id="add-name" name="name" placeholder="Acme Corp">
         </div>
-        <div class="field">
+        <div class="field" id="f-file">
           <label class="field-label" for="add-file">Zip file</label>
           <input type="file" id="add-file" name="file" accept=".zip" required>
         </div>
@@ -86,15 +88,15 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
         </button>
+        <button type="button" class="admin-remove-btn admin-cancel-btn" id="cancel-mode-btn" hidden>Cancel</button>
         <p class="login-status" id="add-status" role="status" aria-live="polite"></p>
       </form>
     </section>
 
     <section class="admin-section">
       <h2 class="admin-heading">Deploy</h2>
-      <p class="admin-note">After adding clients, push the folder to the server (never committed to git). A cron job on the server fixes permissions automatically every 5 minutes, so you don't need a <code>--chmod</code> flag here (macOS's built-in rsync doesn't support it anyway):</p>
-      <pre class="admin-code">rsync -av client-files/ lmann@lionelmann.com:/srv/www/manndev/client-files/</pre>
-      <p class="admin-note">Removed or moved a client? Plain rsync never deletes on the server. Add <code>--delete</code> to mirror your local folder exactly (it removes anything on the server that isn't in your local <code>client-files/</code>).</p>
+      <p class="admin-note">After editing clients, push the folder to the server (never committed to git). The script refuses to push if a client changed their password since your last pull, so you can't undo their change by accident.</p>
+      <pre class="admin-code">./scripts/clients.sh push</pre>
     </section>
   </main>
 

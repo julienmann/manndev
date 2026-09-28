@@ -38,3 +38,6 @@ input[type="file"]{
 .admin-client-actions{display:flex;gap:1.1rem;}
 .admin-client-legacy{font-size:.62rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-left:.5rem;}
 .admin-migrate-note{color:var(--accent);}
+.admin-client-changed{display:block;margin-top:.25rem;font-size:.72rem;color:var(--accent);}
+.admin-cancel-btn{margin-left:1.6rem;}
+.admin-client-row{flex-wrap:wrap;}

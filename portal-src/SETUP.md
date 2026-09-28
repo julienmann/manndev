@@ -1,20 +1,26 @@
 # Client Portal — Setup
 
-No Supabase, no database, no backend. Each client signs in with a username and password. The pair maps to a folder containing one zip file, served as a plain static file.
+No Supabase, no database. Each client signs in with a username and password, and can change their password from the dashboard. Everything is static files, except one tiny standard-library Python service that handles password changes (see §4).
 
 (This replaces the old Supabase-backed portal and its companion `admin-src`/`admin-api`/`admin` apps, which managed a `client_projects` table and live-preview zip uploads — both retired since nothing here reads that data anymore.)
 
 ## How it works
 
-- `client-files/<key>/info.json` — `{ "name": "...", "username": "...", "file": "<zip filename>", "uploadedAt": "..." }`
-- `client-files/<key>/<zip filename>` — the deliverable itself
-- `client-files/<key>/preview/` — optional: the zip's contents unzipped, if it looked like a static site (has an `index.html`). The dashboard shows a "View live preview" link when this folder exists, in addition to the download.
+Two kinds of files, kept apart on purpose:
 
-`<key>` is a PBKDF2-SHA256 hash (150,000 iterations, salt `manndev-portal:v1:<lowercased username>`) of the client's password, as 64 hex characters. The login page derives it in the browser and does `fetch('/client-files/<key>/info.json')`. A 200 means the username and password are right; the dashboard reads that same file to show the client's name and a download link. Any other pair derives a different key and gets a 404. The folder isn't a directory listing, so there's no way to enumerate clients.
+- **Data folder**, one per client, named with a permanent random id (32 hex characters):
+  - `client-files/<id>/info.json`: `{ "name": "...", "username": "...", "file": "<zip filename>", "uploadedAt": "...", "passwordChangedAt": "..." }` (the last field only after the client changes their own password)
+  - `client-files/<id>/<zip filename>`: the deliverable itself
+  - `client-files/<id>/preview/`: optional, the zip's contents unzipped if it looked like a static site (has an `index.html`). The dashboard shows a "View live preview" link when it exists.
+- **Login pointer**, one per client: `client-files/_logins/<key>.json` → `{ "id": "<id>" }`.
 
-The server never stores a password, only the derived folder name, so **passwords can't be recovered**. To change one, remove the client in the admin page and add them again with a new password. This is still a static "secret path" pattern rather than server-side authentication (there's no rate limiting and no lockout), but with the admin page's generated passwords (12 characters, ~70 bits) and the deliberately slow hash, guessing a login isn't practical, unlike the old 4-digit codes (10,000 combinations).
+`<key>` is a PBKDF2-SHA256 hash (150,000 iterations, salt `manndev-portal:v1:<lowercased username>`) of the client's password, as 64 hex characters. The login page derives it in the browser, fetches the pointer, then fetches `/client-files/<id>/info.json`. A wrong username or password derives a different key and gets a 404. Neither folder is a directory listing, so clients can't be enumerated.
 
-Folders named with 4 digits are clients from the old code system. The admin page marks them "old code"; **Set login** moves one onto a username and password, bringing its files along. The old code stops working once the change is pushed.
+Why the split: a password change only swaps the pointer, so the data folder and any live-preview link you've shared (which contains the `<id>`) never change, and a preview link never doubles as a login.
+
+The server never stores a password, only derived keys, so **passwords can't be recovered**. If a client forgets theirs, use **Reset password** in the admin page. This is a static "secret path" pattern rather than a full auth server (the static files have no rate limiting), but with generated passwords (12 characters, ~70 bits) and the deliberately slow hash, guessing a login isn't practical.
+
+Older layouts, handled automatically: 4-digit folders are clients from the original code system (admin page: **Set login**), and 64-character folders are from the first username/password version, where the data folder was named after the key. The admin page upgrades those to a random id plus a pointer as soon as you open the folder, keeping their passwords; the login page and the API also still accept them in the meantime.
 
 The nginx location block for `/client-files/` needs `try_files $uri $uri/ =404;` (not just `try_files $uri =404;`) — the `$uri/` clause is what lets a `preview/` directory request resolve to its `index.html` instead of 404ing.
 
@@ -26,9 +32,21 @@ The nginx location block for `/client-files/` needs `try_files $uri $uri/ =404;`
 
 For local iteration: `cd portal-src && npm install && npm run dev`, then open `http://localhost:5173/admin.html`.
 
-1. **Choose folder** → pick (or create) a `client-files/` folder in your local checkout of this repo. It's remembered for next time.
-2. Fill in a username, a password (one is generated for you; copy it before saving), the client's name, and their zip file → **Save client**. This writes `info.json` + the zip into `client-files/<key>/`, and — if the zip has an `index.html` at its root (or in a single wrapping folder) — also unzips it into `client-files/<key>/preview/` for the live-preview link. `__MACOSX/` cruft and dotfiles are stripped automatically. If no `index.html` is found, the file is still saved, just without a preview.
-3. The "Existing clients" list shows everything currently in the folder: username, name, file, and whether each has a preview. Usernames must be unique; the form refuses one that's already taken.
+**Pull first.** Clients can change their password on the server, so your local copy goes stale. Always start with:
+
+```bash
+./scripts/clients.sh pull
+```
+
+1. **Choose folder** → pick the `client-files/` folder in your local checkout of this repo. It's remembered for next time.
+2. **New client:** fill in a username, a password (one is generated for you; copy it before saving), the client's name, and their zip file → **Save client**. `__MACOSX/` cruft and dotfiles are stripped, and a live preview is unpacked if the zip has an `index.html` at its root (or in a single wrapping folder).
+3. **Existing clients** each have:
+   - **Update file**: replace the zip (and preview). The login is untouched.
+   - **Reset password**: new password for the same username; the old one stops working after you push.
+   - **Remove**: deletes the client's data folder and login.
+   - A **"Password changed by client"** note with the date, when they've changed it themselves (you'll only see it after a pull).
+
+Usernames must be unique; the form refuses one that's already taken.
 
 ## 2. Deploy
 
@@ -43,11 +61,13 @@ git push
 
 Then on the server: `git pull`.
 
-`client-files/` is separate — it never goes through git. Push it straight to the server with rsync whenever you add or update a client:
+`client-files/` is separate — it never goes through git. Push it to the server after editing clients:
 
 ```bash
-rsync -av client-files/ lmann@lionelmann.com:/srv/www/manndev/client-files/
+./scripts/clients.sh push
 ```
+
+Both `pull` and `push` mirror exactly (`rsync --delete`). When the API changes a password it stamps `client-files/.changed-at`; `push` compares the server's stamp with the one you last pulled and refuses if they differ, so pushing a stale copy can't undo a client's change (or delete their new login).
 
 **Permissions note:** the File System Access API (used by `admin.html`) can create files/folders too restrictive for nginx's worker user to read (e.g. `700`/`600`), which makes even a correct login silently fail the same way an invalid one does. The obvious fix — `rsync --chmod=D755,F644` — doesn't work on macOS's stock rsync (it's `openrsync`, a BSD reimplementation that accepts the flag but silently no-ops it; the GNU-style `D755,F644` syntax is rejected outright as "invalid argument"). Instead, a cron job on the server (`crontab -l` as `lmann`) re-chmods `client-files/` to `755`/`644` every 5 minutes, scoped only to that one directory. So a sync with wrong permissions self-heals within a few minutes rather than needing a special rsync invocation. If you need it fixed immediately rather than waiting: `ssh lmann@lionelmann.com "find /srv/www/manndev/client-files -mindepth 1 -type d -exec chmod 755 {} \; ; find /srv/www/manndev/client-files -mindepth 1 -type f -exec chmod 644 {} \;"`.
 
@@ -64,6 +84,11 @@ server {
     }
     location /img/          { try_files $uri =404; }
     location /client-files/ { try_files $uri $uri/ =404; }   # $uri/ needed for preview/ dirs
+    location /api/ {                                          # password changes, see §4
+        proxy_pass http://127.0.0.1:8787;
+        proxy_set_header X-Real-IP $remote_addr;
+        client_max_body_size 4k;
+    }
 
     # listen 443 ssl + certificate lines are added by certbot
 }
@@ -83,6 +108,19 @@ DNS: an `A` record (or `CNAME` to `manndev.com`) for `portal` pointing at the sa
 
 ## 3. Give the client their login
 
-Send the username and password separately if you can (e.g. username by email, password by text). They go to https://portal.manndev.com/, sign in, and get their files. Updating their file later is re-running the admin flow with the same username and password; it overwrites (with a confirmation prompt).
+Send the username and password separately if you can (e.g. username by email, password by text). They go to https://portal.manndev.com/, sign in, and get their files. They can change the password from the dashboard ("Change password") at any time.
 
-When you remove or migrate a client, the old folder is deleted locally, but plain `rsync -av` never deletes on the server. Either delete it there too, or sync with `--delete` (which makes the server's `client-files/` an exact mirror of your local one).
+## 4. Password-change service
+
+`portal-src/server/portal_api.py` (Python 3 standard library only) listens on `127.0.0.1:8787` and exposes one endpoint, `POST /api/change-password` with `{ "oldKey", "newKey" }`. The dashboard derives both keys in the browser from the username plus the current and new passwords. The service checks that the old key's pointer exists, writes the new pointer, deletes the old one, stamps `passwordChangedAt` in the client's `info.json` and updates `client-files/.changed-at`. It never sees a password. Failed attempts are limited to 10 per IP per 15 minutes.
+
+Install once on the server (after `git pull`):
+
+```bash
+sudo cp /srv/www/manndev/portal-src/server/portal-api.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now portal-api
+sudo systemctl status portal-api
+```
+
+It runs as `lmann` (the owner of `client-files/`) and may only write inside `client-files/`. After a code change: `sudo systemctl restart portal-api`. Logs: `journalctl -u portal-api`.
