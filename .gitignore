@@ -3,3 +3,6 @@
 client-files/
 
 .DS_Store
+
+# Client quotes (client address and pricing): uploaded to the server by hand.
+/also-0926-0001/
