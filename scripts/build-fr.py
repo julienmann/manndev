@@ -89,6 +89,7 @@ s = replace(s, '<meta property="og:locale" content="en_CA">\n<meta property="og:
 s = replace(s, '<a href="https://manndev.com/" class=', '<a href="https://manndev.com/fr/" class=', count=2)
 s = replace(s, '<a href="/fr/" class="nav-lang" id="lang-toggle" data-lang="fr" hreflang="fr" lang="fr" aria-label="Français">FR</a>',
             '<a href="/" class="nav-lang" id="lang-toggle" data-lang="en" hreflang="en" lang="en" aria-label="English">EN</a>')
+s = replace(s, '/img/process-film', '/img/process-film-fr', count=3)   # poster, webm, mp4 (scripts/render-film.mjs fr)
 s = replace(s, 'name="language" id="language-field" value="English"', 'name="language" id="language-field" value="Français"')
 s = re.sub(r' data-i18n(?:-label)?="[^"]*"', '', s)
 
