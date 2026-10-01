@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZEZB4R3CP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2ZEZB4R3CP');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Onboarding · Mann Dev</title>
+<meta name="description" content="Tell us about your project so we can scope it properly.">
+<!-- Sent to clients directly, so kept out of search results and the sitemap. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://manndev.com/onboarding/">
+<meta name="author" content="Julien Mann">
+<meta name="theme-color" content="#1e2530">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mann Dev">
+<meta property="og:title" content="Project Onboarding · Mann Dev">
+<meta property="og:description" content="Tell us about your project so we can scope it properly.">
+<meta property="og:url" content="https://manndev.com/onboarding/">
+<meta property="og:image" content="https://manndev.com/img/og-image.png">
+<link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Figtree:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Figtree:wght@300;400;500;600&display=swap"></noscript>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --bg:     #1e2530;
+  --surface:#252b34;
+  --fg:     #f0f2f4;
+  --mid:    #969ba6;
+  --dim:    #636872;
+  --accent: #f2c94c;
+  --rule:   rgba(240,242,244,.09);
+  --rule-soft: rgba(240,242,244,.06);
+  --rule-accent: rgba(242,201,76,.22);
+  --display:'Lora', Georgia, serif;
+  --body:   'Figtree', system-ui, sans-serif;
+  --gutter: clamp(1.5rem, 5vw, 4rem);
+  --container: 1280px;
+  --card-radius: 28px;
+}
+
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+::selection{background:var(--accent);color:var(--bg);}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;}html{scroll-behavior:auto;}}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+/* ── GRAIN ── */
+body::after{
+  content:'';position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── HEADER ── */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:2rem var(--gutter);
+  max-width:var(--container);
+  margin:0 auto 80px;
+}
+.h-logo img,.footer-logo img{display:block;height:20px;width:auto;}
+nav ul{display:flex;align-items:center;list-style:none;gap:2rem;}
+nav ul li a,.nav-lang{
+  font-family:var(--body);font-size:.85rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.05em;
+  color:var(--fg);
+  border-bottom:2px solid var(--accent);
+  padding-bottom:2px;
+  transition:opacity .2s,border-color .2s;
+}
+nav ul li a:hover{opacity:.75;}
+.nav-lang{background:none;border-top:0;border-left:0;border-right:0;border-bottom-color:transparent;opacity:.6;cursor:pointer;}
+.nav-lang:hover{opacity:1;border-bottom-color:var(--accent);}
+.nav-lang-item{border-left:1px solid var(--rule);padding-left:1.1rem;margin-left:-.9rem;}
+
+/* ── INTRO ── */
+.ob{max-width:var(--container);margin:0 auto;padding:0 var(--gutter);}
+.kicker{
+  font-family:var(--body);font-size:.72rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.18em;color:var(--accent);
+  margin-bottom:1.5rem;
+}
+.ob-h1{
+  font:500 clamp(36px,5vw,58px)/1.1 var(--display);
+  color:var(--fg);max-width:16ch;margin-bottom:1.25rem;
+}
+.ob-h1 em{font-style:italic;color:var(--accent);}
+.ob-intro-p{font-size:1rem;color:var(--mid);max-width:560px;margin-bottom:clamp(3rem,6vw,4.5rem);}
+
+/* ── LAYOUT ── */
+.ob-grid{
+  display:grid;grid-template-columns:220px minmax(0,1fr);
+  gap:clamp(2rem,5vw,5rem);align-items:start;
+}
+.ob-card{
+  background:var(--surface);
+  border:1px solid var(--rule-soft);
+  border-radius:var(--card-radius);
+  padding:2.5rem;
+  max-width:760px;
+}
+
+/* ── STEP RAIL ── */
+.ob-rail{position:sticky;top:2rem;}
+.rail{list-style:none;display:grid;gap:.15rem;counter-reset:step;}
+.rail button{
+  display:flex;align-items:baseline;gap:.85rem;width:100%;
+  background:none;border:none;padding:.55rem 0;cursor:pointer;
+  font-family:var(--body);font-size:.92rem;color:var(--mid);text-align:left;
+  transition:color .2s;
+}
+.rail button:disabled{cursor:default;color:var(--dim);}
+.rail button:not(:disabled):hover{color:var(--fg);}
+.rail-n{font:600 .95rem/1 var(--display);min-width:1.4rem;color:inherit;}
+.rail li.is-done .rail-n{color:var(--accent);}
+.rail button[aria-current="step"]{color:var(--fg);}
+.rail button[aria-current="step"] .rail-n{color:var(--accent);}
+.rail button[aria-current="step"] .rail-t{border-bottom:2px solid var(--accent);padding-bottom:1px;}
+.ob-saved{font-size:.78rem;color:var(--mid);margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--rule);min-height:1.2em;}
+
+/* ── PROGRESS ── */
+.ob-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;}
+.step-count{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--accent);}
+.bar{height:2px;background:var(--rule);margin-bottom:2.25rem;border-radius:2px;overflow:hidden;}
+.bar span{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.25,1,.5,1);}
+
+/* ── STEP ── */
+.step-h{font:500 clamp(26px,3vw,34px)/1.15 var(--display);color:var(--fg);margin-bottom:.4rem;}
+.step-h:focus{outline:none;}
+.step-p{font-size:.95rem;color:var(--mid);margin-bottom:2.25rem;}
+.step-enter{animation:stepIn .32s cubic-bezier(.25,1,.5,1);}
+@keyframes stepIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ── FIELDS ── */
+.q{border:none;min-width:0;margin:0 0 2.5rem;padding:0;}
+.q:last-child{margin-bottom:0;}
+.q-label{
+  display:block;font:500 1.15rem/1.35 var(--display);color:var(--fg);
+  margin-bottom:.3rem;padding:0;
+}
+.req{color:var(--accent);margin-left:.2rem;}
+.q-hint{font-size:.86rem;color:var(--mid);line-height:1.5;margin-bottom:.4rem;}
+.q-err{display:none;font-size:.82rem;color:var(--accent);margin-top:.5rem;}
+.q.is-invalid .q-err{display:block;}
+
+.input,.textarea{
+  width:100%;background:transparent;border:none;border-bottom:1px solid var(--rule);
+  padding:.7rem 0 .55rem;color:var(--fg);
+  font-family:var(--body);font-size:1rem;line-height:1.55;outline:none;
+  transition:border-color .3s;border-radius:0;
+}
+.input:focus,.textarea:focus{border-bottom-color:var(--accent);}
+.q.is-invalid .input,.q.is-invalid .textarea{border-bottom-color:rgba(242,201,76,.6);}
+.textarea{resize:vertical;min-height:5.5rem;max-height:22rem;field-sizing:content;}
+.input::placeholder,.textarea::placeholder{color:var(--mid);opacity:.55;}
+
+/* short contact fields: the floating-label pattern from the contact form */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:0 2rem;}
+.fl{position:relative;margin-bottom:2.25rem;}
+.fl .input::placeholder{opacity:0;}
+.fl-label{
+  position:absolute;top:.75rem;left:0;
+  font-family:var(--body);font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+  color:var(--mid);pointer-events:none;transition:all .25s ease;
+}
+.fl .input:focus~.fl-label,.fl .input:not(:placeholder-shown)~.fl-label{top:-1rem;font-size:.7rem;color:var(--fg);}
+.fl.is-invalid .q-err{display:block;}
+
+/* choice options */
+.opts{display:grid;gap:.6rem;margin-top:1rem;}
+.opts.cols{grid-template-columns:1fr 1fr;}
+.opt{
+  position:relative;display:flex;gap:.9rem;align-items:flex-start;
+  padding:.95rem 1.1rem;border:1px solid var(--rule);border-radius:14px;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.opt:hover{border-color:rgba(240,242,244,.22);}
+.opt input{position:absolute;opacity:0;pointer-events:none;}
+.opt:has(input:checked){border-color:var(--accent);background:rgba(242,201,76,.06);}
+.opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
+.mark{
+  flex-shrink:0;width:18px;height:18px;margin-top:.2rem;border:1.5px solid var(--mid);
+  border-radius:50%;display:grid;place-items:center;transition:border-color .2s;
+}
+.opt input[type=checkbox]~.mark{border-radius:5px;}
+.opt:has(input:checked) .mark{border-color:var(--accent);}
+.opt:has(input:checked) .mark::after{content:'';width:8px;height:8px;border-radius:inherit;background:var(--accent);}
+.opt-t{display:block;font-size:.97rem;color:var(--fg);font-weight:500;line-height:1.45;}
+.opt-d{display:block;font-size:.84rem;color:var(--mid);margin-top:.15rem;line-height:1.45;}
+.other{margin-top:.75rem;}
+.other[hidden]{display:none;}
+
+/* ── NAV ── */
+.ob-nav{
+  display:flex;justify-content:space-between;align-items:center;gap:1rem 2rem;flex-wrap:wrap;
+  margin-top:3rem;padding-top:1.75rem;border-top:1px solid var(--rule);
+}
+.link-back{
+  background:none;border:none;padding:0;cursor:pointer;
+  font-family:var(--body);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;
+  color:var(--mid);transition:color .2s;position:relative;
+}
+.link-back:hover{color:var(--fg);}
+.link-back[hidden]{display:none;}
+.ob-next-wrap{display:flex;align-items:center;gap:1.5rem;margin-left:auto;flex-wrap:wrap;justify-content:flex-end;}
+.status{font-size:.85rem;color:var(--mid);}
+.status.is-error{color:var(--accent);}
+.form-submit,.link-cta{
+  font-family:var(--body);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  color:var(--accent);background:none;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.5rem;position:relative;padding:0;
+}
+.cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
+.cta-underline{height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.25,1,.5,1);}
+.form-submit:not(:disabled):hover .cta-underline,.link-cta:hover .cta-underline{transform:scaleX(1);}
+.form-submit svg,.link-cta svg{transition:transform .3s ease;flex-shrink:0;}
+.form-submit:not(:disabled):hover svg,.link-cta:hover svg{transform:translateX(3px);}
+.form-submit:disabled{opacity:.35;cursor:not-allowed;}
+
+/* ── DONE ── */
+.done-h{font:500 clamp(30px,4vw,44px)/1.12 var(--display);color:var(--fg);margin-bottom:.75rem;outline:none;}
+.done-p{color:var(--mid);max-width:480px;margin-bottom:2rem;}
+
+/* ── FOOTER ── */
+footer{max-width:var(--container);margin:96px auto 0;padding:0 var(--gutter) 3rem;}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+  padding-top:2rem;border-top:1px solid var(--rule);
+}
+.footer-copy{font-size:.82rem;color:var(--mid);}
+
+@media(pointer:coarse){
+  nav ul li a,.nav-lang,.h-logo,.link-back{position:relative;}
+  nav ul li a::before,.nav-lang::before,.form-submit::before,.link-cta::before,.link-back::before{content:'';position:absolute;inset:-14px -8px;}
+  .h-logo::before{content:'';position:absolute;inset:-12px -6px;}
+}
+
+@media(max-width:900px){
+  :root{--gutter:1.5rem;}
+  header{margin-bottom:56px;}
+  .ob-grid{grid-template-columns:1fr;}
+  .ob-rail{display:none;}
+  .ob-card{max-width:none;}
+}
+@media(max-width:600px){
+  header{margin-bottom:40px;}
+  nav ul{gap:1.1rem;}
+  nav ul li a,.nav-lang{font-size:.72rem;}
+  .ob-card{padding:1.75rem 1.25rem;border-radius:20px;}
+  .row,.opts.cols{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="h-logo" aria-label="Mann Dev Home" id="home-link">
+    <img src="/img/logo.png?v=2" alt="" width="298" height="59">
+  </a>
+  <nav aria-label="Main navigation" id="main-nav">
+    <ul>
+      <li><a href="/" id="site-link" data-t="backToSite">Back to site</a></li>
+      <li class="nav-lang-item"><button type="button" class="nav-lang" id="lang-toggle" lang="fr" aria-label="Français">FR</button></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="ob">
+  <p class="kicker" data-t="kicker">Project onboarding</p>
+  <h1 class="ob-h1" data-t="h1">Let’s <em>scope</em> your project.</h1>
+  <p class="ob-intro-p" data-t="intro">About five minutes, and the questions adjust to your project. It means our first call is spent on decisions instead of questions. Only starred questions are required.</p>
+
+  <noscript><p class="ob-intro-p">This form needs JavaScript. You can also reply to our email with your project details.</p></noscript>
+
+  <div class="ob-grid">
+    <aside class="ob-rail">
+      <ol class="rail" id="rail"></ol>
+      <p class="ob-saved" id="saved" aria-live="polite"></p>
+    </aside>
+
+    <div class="ob-card">
+      <form id="ob-form" novalidate>
+        <div class="ob-head">
+          <span class="step-count" id="step-count" aria-live="polite"></span>
+        </div>
+        <div class="bar" aria-hidden="true"><span id="bar"></span></div>
+        <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off">
+        <div id="steps"></div>
+        <div class="ob-nav">
+          <button type="button" class="link-back" id="back">&larr; <span data-t="back">Back</span></button>
+          <div class="ob-next-wrap">
+            <span class="status" id="status" aria-live="polite"></span>
+            <button type="submit" class="form-submit" id="next">
+              <span id="next-label">Next</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div id="done" hidden>
+        <p class="kicker" data-t="doneKicker">Received</p>
+        <h2 class="done-h" id="done-h" tabindex="-1"></h2>
+        <p class="done-p" data-t="doneP">Your answers are with us. We read every one personally and will be in touch within 24 hours to set up a scoping call.</p>
+        <a href="/" class="link-cta" id="done-link">
+          <span data-t="doneLink">Back to manndev.com</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-bottom">
+    <a href="/" class="footer-logo" aria-label="Mann Dev Home"><img src="/img/logo.png?v=2" alt="" width="298" height="59"></a>
+    <p class="footer-copy">&copy; 2026 Mann Dev.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+/* ──────────────────────────────────────────
+   COPY: every string is [English, French].
+   French follows Québec usage (courriel, no space before ?, nbsp before :).
+────────────────────────────────────────── */
+const UI = {
+  title:      ['Project Onboarding · Mann Dev', 'Démarrage de projet · Mann Dev'],
+  backToSite: ['Back to site', 'Retour au site'],
+  kicker:     ['Project onboarding', 'Démarrage de projet'],
+  h1:         ['Let’s <em>scope</em> your project.', 'Parlons de votre <em>projet</em>.'],
+  intro:      ['About five minutes, and the questions adjust to your project. It means our first call is spent on decisions instead of questions. Only starred questions are required.',
+               'Environ cinq minutes, et les questions s’adaptent à votre projet. Notre premier appel servira ainsi à prendre des décisions plutôt qu’à poser des questions. Seules les questions marquées d’un astérisque sont obligatoires.'],
+  stepOf:     ['Step {n} of {t}', 'Étape {n} sur {t}'],
+  back:       ['Back', 'Retour'],
+  next:       ['Next', 'Suivant'],
+  submit:     ['Send answers', 'Envoyer mes réponses'],
+  sending:    ['Sending…', 'Envoi en cours…'],
+  error:      ['Something went wrong. Your answers are saved on this device, so please try again.',
+               'Une erreur est survenue. Vos réponses sont enregistrées sur cet appareil, veuillez réessayer.'],
+  required:   ['This one is required.', 'Cette réponse est obligatoire.'],
+  emailBad:   ['That email doesn’t look right.', 'Cette adresse courriel ne semble pas valide.'],
+  fixAbove:   ['A few answers need a look.', 'Quelques réponses sont à vérifier.'],
+  saved:      ['Draft saved on this device', 'Brouillon enregistré sur cet appareil'],
+  otherPh:    ['Tell us more', 'Précisez'],
+  reqSr:      ['(required)', '(obligatoire)'],
+  railLabel:  ['Sections', 'Sections'],
+  doneKicker: ['Received', 'Reçu'],
+  doneH:      ['Thank you, {name}.', 'Merci, {name}.'],
+  doneHAnon:  ['Thank you.', 'Merci.'],
+  doneP:      ['Your answers are with us. We read every one personally and will be in touch within 24 hours to set up a scoping call.',
+               'Vos réponses nous sont parvenues. Nous les lisons toutes personnellement et vous reviendrons d’ici 24 heures pour planifier un appel de cadrage.'],
+  doneLink:   ['Back to manndev.com', 'Retour à manndev.com'],
+  home:       ['Mann Dev Home', 'Accueil Mann Dev'],
+  mainNav:    ['Main navigation', 'Navigation principale'],
+};
+
+const NOT_SURE = ['Not sure', 'Je ne sais pas'];
+const NOT_SURE_YET = ['Not sure yet', 'Je ne sais pas encore'];
+const OTHER = ['Something else', 'Autre chose'];
+
+/* The project type picked in step 1 drives the rest: `when` hides a step or
+   field, `req` can depend on answers, `lBy` swaps a label per type.
+   Until a type is picked, the form assumes "not sure" (the full website path). */
+const is = (...types) => d => types.includes(d.type);
+const SITE = ['new', 'redesign', 'landing', 'unsure'];   // website builds
+const BUILD = [...SITE, 'app'];                          // anything we design and build
+
+/* Field types: short (floating label, contact details), text, textarea, radio, checkbox.
+   Option values are stable keys; the email always gets the English label. */
+const STEPS = [
+  {
+    id: 'basics', t: ['The basics', 'Les bases'], p: ['Who you are, and what you need.', 'Qui vous êtes, et ce dont vous avez besoin.'],
+    fields: [
+      { row: [
+        { name: 'name', type: 'short', req: true, auto: 'name', l: ['Full name', 'Nom complet'] },
+        { name: 'email', type: 'short', input: 'email', req: true, auto: 'email', l: ['Email', 'Courriel'] },
+      ] },
+      { row: [
+        { name: 'business', type: 'short', req: true, auto: 'organization', l: ['Business or organization', 'Entreprise ou organisme'] },
+        { name: 'phone', type: 'short', input: 'tel', auto: 'tel', l: ['Phone', 'Téléphone'] },
+      ] },
+      { name: 'type', type: 'radio', req: true, l: ['What do you need?', 'De quoi avez-vous besoin?'], opts: [
+        { v: 'new', l: ['A new website', 'Un nouveau site web'], d: ['We don’t have one yet.', 'Nous n’en avons pas encore.'] },
+        { v: 'redesign', l: ['A redesign or rebuild', 'Une refonte'], d: ['We have a site, but it isn’t working for us.', 'Nous avons un site, mais il ne fait pas le travail.'] },
+        { v: 'landing', l: ['A landing page', 'Une page d’atterrissage'], d: ['One focused page for a launch, campaign or offer.', 'Une seule page ciblée pour un lancement, une campagne ou une offre.'] },
+        { v: 'app', l: ['A web app or custom tool', 'Une application web ou un outil sur mesure'], d: ['Logins, dashboards, data, workflows.', 'Comptes, tableaux de bord, données, flux de travail.'] },
+        { v: 'ai', l: ['AI automation', 'Automatisation IA'], d: ['Take a repetitive task off your team’s plate.', 'Libérer votre équipe d’une tâche répétitive.'] },
+        { v: 'care', l: ['Care & hosting', 'Entretien et hébergement'], d: ['Look after a site you already have.', 'Prendre soin d’un site que vous avez déjà.'] },
+        { v: 'unsure', l: NOT_SURE_YET, d: ['Help us figure it out.', 'Aidez-nous à y voir clair.'] },
+      ] },
+    ],
+  },
+  {
+    id: 'project', t: ['Your project', 'Votre projet'], p: ['The context behind it.', 'Le contexte derrière le projet.'],
+    fields: [
+      { name: 'about', type: 'textarea', req: true, l: ['What does your business do, and who are your customers?', 'Que fait votre entreprise, et qui sont vos clients?'], h: ['A few sentences is plenty.', 'Quelques phrases suffisent.'] },
+      { name: 'website', type: 'text', mode: 'url', auto: 'url', when: is('redesign', 'care', 'landing', 'unsure'), req: is('redesign', 'care'),
+        l: ['Your current website', 'Votre site actuel'],
+        lBy: { landing: ['Your current website, if any', 'Votre site actuel, s’il y a lieu'], unsure: ['Your current website, if any', 'Votre site actuel, s’il y a lieu'] } },
+      { name: 'platform', type: 'text', when: is('redesign', 'care'), l: ['What is it built on?', 'Sur quelle plateforme est-il construit?'], h: ['WordPress, Squarespace, Wix, Shopify, custom code… or not sure.', 'WordPress, Squarespace, Wix, Shopify, code sur mesure… ou je ne sais pas.'] },
+      { name: 'issues', type: 'textarea', when: is('redesign'), l: ['What isn’t working about it?', 'Qu’est-ce qui ne fonctionne pas?'] },
+      { name: 'needs', type: 'textarea', when: is('care'), req: true, l: ['What does the site need right now?', 'De quoi le site a-t-il besoin en ce moment?'], h: ['Fixes, updates, speed, new hosting, new features…', 'Correctifs, mises à jour, vitesse, nouvel hébergement, nouvelles fonctionnalités…'] },
+      { name: 'why', type: 'textarea', when: is('new', 'landing', 'app', 'unsure'), l: ['What prompted this project?', 'Qu’est-ce qui déclenche ce projet?'] },
+      { name: 'goals', type: 'checkbox', cols: true, when: is(...SITE), l: ['What should the site do for you?', 'Que doit accomplir le site pour vous?'], h: ['Pick all that apply.', 'Choisissez tout ce qui s’applique.'], opts: [
+        { v: 'leads', l: ['Bring in leads and enquiries', 'Générer des demandes'] },
+        { v: 'sell', l: ['Sell products online', 'Vendre en ligne'] },
+        { v: 'book', l: ['Take bookings or appointments', 'Prendre des réservations ou des rendez-vous'] },
+        { v: 'trust', l: ['Build credibility', 'Bâtir votre crédibilité'] },
+        { v: 'inform', l: ['Inform and support customers', 'Informer et soutenir la clientèle'] },
+        { v: 'other', l: OTHER, other: true },
+      ] },
+      { name: 'task', type: 'textarea', when: is('ai'), req: true, l: ['What task would you like to automate?', 'Quelle tâche aimeriez-vous automatiser?'], h: ['Quotes, intake, scheduling, reporting, sorting emails…', 'Soumissions, accueil des clients, horaires, rapports, tri des courriels…'] },
+      { name: 'today', type: 'textarea', when: is('ai'), l: ['How is it done today, and how often?', 'Comment est-elle faite aujourd’hui, et à quelle fréquence?'], h: ['Who does it, and roughly how long it takes.', 'Qui s’en charge, et combien de temps ça prend environ.'] },
+      { name: 'tools', type: 'text', when: is('ai'), l: ['Which tools are involved?', 'Quels outils sont en jeu?'], h: ['Email, spreadsheets, CRM, accounting software…', 'Courriel, tableurs, CRM, logiciel comptable…'] },
+    ],
+  },
+  {
+    id: 'scope', when: is(...BUILD), t: ['Scope', 'Portée'], p: ['The size and shape of the build.', 'La taille et la forme du projet.'],
+    fields: [
+      { name: 'pages', type: 'radio', cols: true, when: is('new', 'redesign', 'unsure'), l: ['Roughly how many pages?', 'Combien de pages, environ?'], h: ['Home, About, Services and Contact would be four.', 'Accueil, À propos, Services et Contact, ça fait quatre.'], opts: [
+        { v: '2-5', l: ['Up to 5', 'Jusqu’à 5'] },
+        { v: '6-15', l: ['6 to 15', 'De 6 à 15'] },
+        { v: '16+', l: ['More than 15', 'Plus de 15'] },
+        { v: 'unsure', l: NOT_SURE },
+      ] },
+      { name: 'features', type: 'checkbox', cols: true, when: is('new', 'redesign', 'app', 'unsure'), l: ['Which features will you need?', 'De quelles fonctionnalités aurez-vous besoin?'], h: ['Pick all that apply. Skip anything you’re unsure about.', 'Choisissez tout ce qui s’applique. Laissez de côté ce dont vous n’êtes pas certain.'], opts: [
+        { v: 'form', l: ['Contact or quote form', 'Formulaire de contact ou de soumission'] },
+        { v: 'booking', l: ['Online booking', 'Réservation en ligne'] },
+        { v: 'shop', l: ['Online store or payments', 'Boutique en ligne ou paiements'] },
+        { v: 'blog', l: ['Blog or news', 'Blogue ou nouvelles'] },
+        { v: 'cms', l: ['Edit content yourself', 'Modifier le contenu vous-même'] },
+        { v: 'accounts', l: ['Customer accounts or login', 'Comptes clients ou connexion'] },
+        { v: 'newsletter', l: ['Newsletter signup', 'Inscription à l’infolettre'] },
+        { v: 'other', l: OTHER, other: true },
+      ] },
+      { name: 'integrations', type: 'textarea', when: is('app'), l: ['What does it need to connect to?', 'À quoi doit-il se connecter?'], h: ['CRM, accounting, spreadsheets, existing databases, Google Workspace…', 'CRM, comptabilité, tableurs, bases de données existantes, Google Workspace…'] },
+      { name: 'languages', type: 'radio', cols: true, l: ['Which languages?', 'Dans quelles langues?'], h: ['Doing business in Québec? French generally has to be part of it.', 'Vous faites affaire au Québec? Le français doit généralement en faire partie.'], opts: [
+        { v: 'en', l: ['English', 'Anglais'] },
+        { v: 'fr', l: ['French', 'Français'] },
+        { v: 'both', l: ['English and French', 'Anglais et français'] },
+        { v: 'more', l: ['More than two', 'Plus de deux'], other: true },
+      ] },
+      { name: 'migrate', type: 'textarea', when: is('redesign'), l: ['Anything from your current site that has to carry over?', 'Quelque chose de votre site actuel doit-il être conservé?'], h: ['Pages, blog posts, products, search rankings you don’t want to lose.', 'Pages, articles de blogue, produits, positionnement dans Google à ne pas perdre.'] },
+      { name: 'domain', type: 'radio', when: is('new', 'landing', 'app', 'unsure'), l: ['Do you own a domain name?', 'Possédez-vous un nom de domaine?'], opts: [
+        { v: 'yes', l: ['Yes', 'Oui'] },
+        { v: 'no', l: ['No, we need one', 'Non, il nous en faut un'] },
+        { v: 'unsure', l: NOT_SURE },
+      ] },
+    ],
+  },
+  {
+    id: 'brand', when: is(...BUILD), t: ['Brand & content', 'Image et contenu'], p: ['What already exists, and what needs making.', 'Ce qui existe déjà, et ce qui reste à créer.'],
+    fields: [
+      { name: 'branding', type: 'radio', l: ['Where is your branding at?', 'Où en est votre image de marque?'], opts: [
+        { v: 'full', l: ['Logo and brand guidelines', 'Logo et normes graphiques'] },
+        { v: 'logo', l: ['A logo, but no real guidelines', 'Un logo, mais pas vraiment de normes'] },
+        { v: 'none', l: ['Nothing yet, we need branding too', 'Rien encore, il nous faut aussi une image de marque'] },
+      ] },
+      { name: 'copy', type: 'radio', when: is(...SITE), l: ['Who’s writing the words?', 'Qui rédige les textes?'], opts: [
+        { v: 'ready', l: ['Our text is written and ready', 'Nos textes sont rédigés et prêts'] },
+        { v: 'some', l: ['We have some, it needs work', 'Nous en avons, mais ils sont à retravailler'] },
+        { v: 'help', l: ['We need help writing it', 'Nous avons besoin d’aide pour la rédaction'] },
+      ] },
+      { name: 'photos', type: 'radio', when: is(...SITE), l: ['What about photos?', 'Et les photos?'], opts: [
+        { v: 'pro', l: ['We have professional photos', 'Nous avons des photos professionnelles'] },
+        { v: 'mixed', l: ['Some, of mixed quality', 'Quelques-unes, de qualité variable'] },
+        { v: 'need', l: ['We’ll need stock or a shoot', 'Il faudra des photos de banque ou une séance photo'] },
+      ] },
+      { name: 'likes', type: 'textarea', l: ['Sites you like, and anything you want to avoid', 'Des sites que vous aimez, et ce que vous voulez éviter'], h: ['Any industry. A few links with a line on what caught your eye.', 'Tous secteurs confondus. Quelques liens, avec une ligne sur ce qui vous a plu.'] },
+    ],
+  },
+  {
+    id: 'timing', t: ['Timeline & budget', 'Échéancier et budget'], p: ['So we can recommend a scope that fits.', 'Pour vous proposer une portée qui vous convient.'],
+    lBy: { care: ['Timing', 'Échéancier'] }, pBy: { care: ['So we know when to start.', 'Pour savoir quand commencer.'] },
+    fields: [
+      { name: 'timeline', type: 'radio', req: true, cols: true, l: ['When would you like to launch?', 'Quand aimeriez-vous lancer le projet?'],
+        lBy: { care: ['When would you like to start?', 'Quand aimeriez-vous commencer?'], ai: ['When would you like to start?', 'Quand aimeriez-vous commencer?'] }, opts: [
+        { v: 'weeks', l: ['In the next few weeks', 'Dans les prochaines semaines'] },
+        { v: '1-2m', l: ['In 1 to 2 months', 'D’ici 1 à 2 mois'] },
+        { v: '2m+', l: ['In 2+ months', 'Dans plus de 2 mois'] },
+        { v: 'flex', l: ['We’re flexible', 'Nous sommes flexibles'] },
+      ] },
+      { name: 'deadline', type: 'text', when: d => ['weeks', '1-2m'].includes(d.timeline), l: ['What’s driving the date?', 'Qu’est-ce qui motive cette date?'], h: ['A launch, an event, a season, a lease ending…', 'Un lancement, un événement, une saison, une fin de bail…'] },
+      { name: 'budget', type: 'radio', req: true, cols: true, when: d => d.type !== 'care', l: ['What budget range are you working with?', 'Avec quelle fourchette budgétaire travaillez-vous?'], h: ['In Canadian dollars, before tax. A range helps us suggest the right scope, and it stays between us.', 'En dollars canadiens, avant taxes. Une fourchette nous aide à proposer la bonne portée, et elle reste entre nous.'], opts: [
+        { v: 'lt3k', l: ['Under $3,000', 'Moins de 3 000 $'] },
+        { v: '3-6k', l: ['$3,000 to $6,000', 'De 3 000 $ à 6 000 $'] },
+        { v: '6-12k', l: ['$6,000 to $12,000', 'De 6 000 $ à 12 000 $'] },
+        { v: '12-25k', l: ['$12,000 to $25,000', 'De 12 000 $ à 25 000 $'] },
+        { v: '25k+', l: ['$25,000 or more', '25 000 $ ou plus'] },
+        { v: 'unsure', l: ['Not sure, we’d like guidance', 'Je ne sais pas, j’aimerais être conseillé'] },
+      ] },
+      { name: 'care', type: 'radio', when: is(...BUILD), l: ['After launch, would you like us to look after it?', 'Après le lancement, aimeriez-vous que nous en prenions soin?'], h: ['Hosting, monitoring, fixes and updates, on one flat monthly rate.', 'Hébergement, surveillance, correctifs et mises à jour, à un tarif mensuel fixe.'], opts: [
+        { v: 'yes', l: ['Yes', 'Oui'] },
+        { v: 'maybe', l: ['Maybe, tell us more', 'Peut-être, dites-nous-en plus'] },
+        { v: 'no', l: ['No, we’ll manage it', 'Non, nous nous en occuperons'] },
+      ] },
+      { name: 'source', type: 'radio', cols: true, l: ['How did you hear about us?', 'Comment avez-vous entendu parler de nous?'], opts: [
+        { v: 'referral', l: ['A referral', 'Une recommandation'] },
+        { v: 'search', l: ['A web search', 'Une recherche en ligne'] },
+        { v: 'social', l: ['Social media', 'Les réseaux sociaux'] },
+        { v: 'other', l: ['Somewhere else', 'Ailleurs'], other: true },
+      ] },
+      { name: 'notes', type: 'textarea', l: ['Anything else we should know?', 'Autre chose que nous devrions savoir?'] },
+    ],
+  },
+];
+
+/* ──────────────────────────────────────────
+   STATE
+────────────────────────────────────────── */
+const DRAFT_KEY = 'onboarding-draft';
+const form    = document.getElementById('ob-form');
+const stepsEl = document.getElementById('steps');
+const railEl  = document.getElementById('rail');
+const countEl = document.getElementById('step-count');
+const barEl   = document.getElementById('bar');
+const backBtn = document.getElementById('back');
+const nextBtn = document.getElementById('next');
+const nextLb  = document.getElementById('next-label');
+const status  = document.getElementById('status');
+const savedEl = document.getElementById('saved');
+
+let L = pickLang();
+let cur = 0, seen = new Set([0]);   // indexes into STEPS (hidden steps keep their index)
+
+function pickLang() {
+  const q = new URLSearchParams(location.search).get('lang');
+  if (q === 'fr' || q === 'en') return q === 'fr' ? 1 : 0;
+  try { const s = localStorage.getItem('lang'); if (s) return s === 'fr' ? 1 : 0; } catch (e) {}
+  return /^fr\b/i.test((navigator.languages && navigator.languages[0]) || navigator.language || '') ? 1 : 0;
+}
+const tr = pair => pair[L];
+const ui = (k, vars) => tr(UI[k]).replace(/\{(\w+)\}/g, (_, v) => vars[v]);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const flat = fields => fields.flatMap(f => f.row || [f]);
+
+/* answers, with the type defaulting to "unsure" so the step count is sane before it's picked */
+function ctx() { const d = collect(); d.type = d.type || 'unsure'; return d; }
+const shown = (x, d) => !x.when || x.when(d);
+const isReq = (f, d) => typeof f.req === 'function' ? f.req(d) : !!f.req;
+const labelOf = (x, d) => (x.lBy && x.lBy[d.type]) || x.l || x.t;
+const visSteps = d => STEPS.map((s, i) => i).filter(i => shown(STEPS[i], d));
+const visFields = (i, d) => flat(STEPS[i].fields).filter(f => shown(f, d));
+
+/* ──────────────────────────────────────────
+   RENDER
+────────────────────────────────────────── */
+function reqMark(f) {
+  return f.req ? `<span class="req-wrap"><span class="req" aria-hidden="true">⁠*</span><span class="sr-only"> ${ui('reqSr')}</span></span>` : '';
+}
+
+function fieldHTML(f) {
+  const id = 'f-' + f.name, hint = f.h ? `<p class="q-hint" id="${id}-h">${tr(f.h)}</p>` : '';
+  const err = `<p class="q-err" id="${id}-e"></p>`;
+  const desc = `aria-describedby="${f.h ? id + '-h ' : ''}${id}-e"`;
+  const text = `<span class="q-text">${tr(f.l)}</span>${reqMark(f)}`;
+  const attrs = `${f.auto ? `autocomplete="${f.auto}"` : ''} ${f.mode ? `inputmode="${f.mode}"` : ''}`;
+
+  if (f.type === 'short') {
+    return `<div class="fl" data-q="${f.name}">
+      <input class="input" type="${f.input || 'text'}" id="${id}" name="${f.name}" placeholder="x" ${attrs} aria-describedby="${id}-e">
+      <label class="fl-label" for="${id}">${text}</label>${err}
+    </div>`;
+  }
+  if (f.type === 'text' || f.type === 'textarea') {
+    const ctl = f.type === 'text'
+      ? `<input class="input" type="text" id="${id}" name="${f.name}" ${attrs} ${desc}>`
+      : `<textarea class="textarea" id="${id}" name="${f.name}" rows="3" ${desc}></textarea>`;
+    return `<div class="q" data-q="${f.name}">
+      <label class="q-label" for="${id}">${text}</label>${hint}${ctl}${err}
+    </div>`;
+  }
+  /* radio / checkbox */
+  const opts = f.opts.map(o => `
+    <label class="opt">
+      <input type="${f.type}" name="${f.name}" value="${esc(o.v)}"${o.other ? ` data-other="${f.name}"` : ''}>
+      <span class="mark" aria-hidden="true"></span>
+      <span><span class="opt-t">${tr(o.l)}</span>${o.d ? `<span class="opt-d">${tr(o.d)}</span>` : ''}</span>
+    </label>`).join('');
+  const other = f.opts.some(o => o.other)
+    ? `<input class="input other" type="text" name="${f.name}_other" placeholder="${esc(ui('otherPh'))}" aria-label="${esc(tr(f.l) + ': ' + ui('otherPh'))}" hidden>`
+    : '';
+  return `<fieldset class="q" data-q="${f.name}" ${desc}>
+    <legend class="q-label">${text}</legend>${hint}
+    <div class="opts${f.cols ? ' cols' : ''}">${opts}</div>${other}${err}
+  </fieldset>`;
+}
+
+function render() {
+  document.documentElement.lang = L ? 'fr' : 'en';
+  document.title = ui('title');
+  document.querySelectorAll('[data-t]').forEach(el => { el.innerHTML = ui(el.dataset.t); });
+  document.getElementById('home-link').setAttribute('aria-label', ui('home'));
+  document.getElementById('main-nav').setAttribute('aria-label', ui('mainNav'));
+  const href = L ? '/fr/' : '/';
+  ['home-link', 'site-link', 'done-link'].forEach(id => document.getElementById(id).setAttribute('href', href));
+  const tog = document.getElementById('lang-toggle');
+  tog.textContent = L ? 'EN' : 'FR';
+  tog.lang = L ? 'en' : 'fr';
+  tog.setAttribute('aria-label', L ? 'English' : 'Français');
+  railEl.setAttribute('aria-label', ui('railLabel'));
+
+  stepsEl.innerHTML = STEPS.map((s, i) => `
+    <section class="step" data-step="${i}" aria-labelledby="step-h-${i}" hidden>
+      <h2 class="step-h" id="step-h-${i}" tabindex="-1">${tr(s.t)}</h2>
+      <p class="step-p">${tr(s.p)}</p>
+      ${s.fields.map(f => f.row ? `<div class="row">${f.row.map(fieldHTML).join('')}</div>` : fieldHTML(f)).join('')}
+    </section>`).join('');
+}
+
+/* show/hide fields, swap labels and required marks to match the current answers */
+function adapt() {
+  const d = ctx();
+  STEPS.forEach((s, i) => {
+    const sec = stepsEl.querySelector(`[data-step="${i}"]`);
+    sec.querySelector('.step-h').textContent = tr(labelOf(s, d));
+    sec.querySelector('.step-p').textContent = tr((s.pBy && s.pBy[d.type]) || s.p);
+    flat(s.fields).forEach(f => {
+      const wrap = form.querySelector(`[data-q="${f.name}"]`);
+      const on = shown(f, d);
+      wrap.hidden = !on;
+      if (!on) wrap.classList.remove('is-invalid');
+      if (f.lBy) wrap.querySelector('.q-text').textContent = tr(labelOf(f, d));
+      const mark = wrap.querySelector('.req-wrap');
+      if (mark) mark.hidden = !isReq(f, d);
+    });
+  });
+  syncOther();
+  return d;
+}
+
+function show(i, focus) {
+  const d = adapt();
+  const vis = visSteps(d);
+  if (!vis.includes(i)) i = vis.filter(j => j < i).pop() ?? vis[0];
+  cur = i;
+  seen.add(i);
+  const pos = vis.indexOf(i);
+  stepsEl.querySelectorAll('.step').forEach(s => {
+    const on = +s.dataset.step === i;
+    s.hidden = !on;
+    if (on && focus) { s.classList.remove('step-enter'); void s.offsetWidth; s.classList.add('step-enter'); }
+  });
+  countEl.textContent = ui('stepOf', { n: pos + 1, t: vis.length });
+  barEl.style.transform = `scaleX(${(pos + 1) / vis.length})`;
+  backBtn.hidden = pos === 0;
+  nextLb.textContent = ui(pos === vis.length - 1 ? 'submit' : 'next');
+  status.textContent = '';
+  status.classList.remove('is-error');
+  renderRail(d, vis);
+
+  if (focus) {
+    const card = form.closest('.ob-card');
+    if (card.getBoundingClientRect().top < 0) card.scrollIntoView({ block: 'start' });
+    document.getElementById('step-h-' + i).focus({ preventScroll: true });
+  }
+  save();
+}
+
+function renderRail(d, vis) {
+  railEl.innerHTML = vis.map((j, n) => `
+    <li class="${j !== cur && seen.has(j) && valid(j, false) ? 'is-done' : ''}">
+      <button type="button" data-go="${j}" ${seen.has(j) ? '' : 'disabled'} ${j === cur ? 'aria-current="step"' : ''}>
+        <span class="rail-n">${n + 1}</span><span class="rail-t">${tr(labelOf(STEPS[j], d))}</span>
+      </button>
+    </li>`).join('');
+}
+
+/* ──────────────────────────────────────────
+   VALIDATION (visible fields only)
+────────────────────────────────────────── */
+function valid(i, mark) {
+  const d = ctx();
+  if (!shown(STEPS[i], d)) return true;
+  let firstBad = null;
+  visFields(i, d).forEach(f => {
+    const wrap = form.querySelector(`[data-q="${f.name}"]`);
+    const ctl = form.elements[f.name];
+    const group = ctl instanceof RadioNodeList ? [...ctl] : [ctl];
+    let msg = '';
+    if (isReq(f, d) && !String(ctl.value || '').trim()) msg = ui('required');
+    else if (ctl.type === 'email' && ctl.value && !ctl.checkValidity()) msg = ui('emailBad');
+    if (msg && !firstBad) firstBad = group[0];
+    if (!mark) return;
+    wrap.classList.toggle('is-invalid', !!msg);
+    wrap.querySelector('.q-err').textContent = msg;
+    group.forEach(x => x.setAttribute('aria-invalid', msg ? 'true' : 'false'));
+  });
+  if (mark && firstBad) { firstBad.focus(); status.textContent = ui('fixAbove'); status.classList.add('is-error'); }
+  return !firstBad;
+}
+
+form.addEventListener('input', e => {
+  /* clear an error as soon as it's answered */
+  const wrap = e.target.closest('[data-q]');
+  if (wrap && wrap.classList.contains('is-invalid')) {
+    wrap.classList.remove('is-invalid');
+    if (!form.querySelector('.is-invalid')) { status.textContent = ''; status.classList.remove('is-error'); }
+  }
+  save();
+});
+/* choices can change which questions and steps apply */
+form.addEventListener('change', e => {
+  if (e.target.type === 'radio' || e.target.type === 'checkbox') {
+    const d = adapt();
+    const vis = visSteps(d);
+    countEl.textContent = ui('stepOf', { n: vis.indexOf(cur) + 1, t: vis.length });
+    barEl.style.transform = `scaleX(${(vis.indexOf(cur) + 1) / vis.length})`;
+    nextLb.textContent = ui(vis.indexOf(cur) === vis.length - 1 ? 'submit' : 'next');
+    renderRail(d, vis);
+  }
+});
+
+/* "Something else" options reveal a short text field */
+function syncOther() {
+  form.querySelectorAll('input.other').forEach(inp => {
+    const name = inp.name.replace(/_other$/, '');
+    inp.hidden = ![...form.querySelectorAll(`[data-other="${name}"]`)].some(x => x.checked);
+  });
+}
+
+/* ──────────────────────────────────────────
+   DRAFT (this browser only)
+────────────────────────────────────────── */
+function collect() {
+  const d = {};
+  for (const el of form.elements) {
+    if (!el.name || el.name === 'botcheck') continue;
+    if (el.type === 'checkbox') { (d[el.name] = d[el.name] || []); if (el.checked) d[el.name].push(el.value); }
+    else if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; }
+    else d[el.name] = el.value;
+  }
+  return d;
+}
+function restore(d) {
+  for (const el of form.elements) {
+    if (!el.name || !(el.name in d)) continue;
+    const v = d[el.name];
+    if (el.type === 'checkbox') el.checked = Array.isArray(v) && v.includes(el.value);
+    else if (el.type === 'radio') el.checked = v === el.value;
+    else el.value = v;
+  }
+}
+let saveTimer;
+function save() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ v: collect(), cur, seen: [...seen] }));
+      savedEl.textContent = ui('saved');
+    } catch (e) {}
+  }, 300);
+}
+function load() {
+  try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { return null; }
+}
+
+/* ──────────────────────────────────────────
+   NAVIGATION
+────────────────────────────────────────── */
+const step = dir => { const vis = visSteps(ctx()); return vis[vis.indexOf(cur) + dir]; };
+backBtn.addEventListener('click', () => show(step(-1), true));
+railEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-go]');
+  if (b && !b.disabled) show(+b.dataset.go, true);
+});
+document.getElementById('lang-toggle').addEventListener('click', () => {
+  const d = collect();
+  L = L ? 0 : 1;
+  try { localStorage.setItem('lang', L ? 'fr' : 'en'); } catch (e) {}
+  const u = new URL(location.href); u.searchParams.set('lang', L ? 'fr' : 'en'); history.replaceState(null, '', u);
+  render(); restore(d); show(cur, false);
+  if (typeof gtag === 'function') gtag('event', 'language_switch', { language: L ? 'fr' : 'en' });
+});
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  if (!valid(cur, true)) return;
+  const nxt = step(1);
+  if (nxt !== undefined) { show(nxt, true); return; }
+  /* last step: every earlier visible step must pass too */
+  for (const i of visSteps(ctx())) {
+    if (!valid(i, false)) { show(i, false); valid(i, true); return; }
+  }
+  send();
+});
+
+/* ──────────────────────────────────────────
+   SUBMIT: one readable email with only the questions this client saw,
+   English labels prefixed with their section number
+────────────────────────────────────────── */
+function payload(d) {
+  const out = {};
+  const en = p => p[0];
+  visSteps(d).forEach((i, n) => {
+    visFields(i, d).forEach(f => {
+      let v = d[f.name];
+      if (f.opts) {
+        const vals = [].concat(v || []);
+        v = vals.map(x => en(f.opts.find(o => o.v === x).l)).join(', ');
+        if (d[f.name + '_other'] && f.opts.some(o => o.other && vals.includes(o.v))) v += ` (${d[f.name + '_other']})`;
+      }
+      out[`${n + 1}. ${en(labelOf(f, d))}`] = String(v || '').trim() || '-';
+    });
+  });
+  return out;
+}
+
+function send() {
+  const d = ctx();
+  const body = Object.assign({
+    access_key: '3da1f7ac-99e9-49bd-8aa1-c3b621510613',
+    subject: `Project onboarding: ${d.business || d.name}`,
+    from_name: d.name,
+    email: d.email,
+    botcheck: form.elements.botcheck.checked ? 'on' : '',
+    'Form language': L ? 'Français' : 'English',
+  }, payload(d));
+
+  status.classList.remove('is-error');
+  status.textContent = ui('sending');
+  nextBtn.disabled = true;
+
+  fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(body),
+  })
+    .then(r => r.json())
+    .then(j => {
+      if (!j.success) throw new Error(j.message);
+      clearTimeout(saveTimer);
+      try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+      if (typeof gtag === 'function') gtag('event', 'onboarding_submit', { project_type: d.type, budget: d.budget });
+      const first = (d.name || '').trim().split(/\s+/)[0];
+      form.hidden = true;
+      document.querySelector('.ob-rail').style.visibility = 'hidden';
+      const done = document.getElementById('done');
+      done.hidden = false;
+      const h = document.getElementById('done-h');
+      h.textContent = first ? ui('doneH', { name: first }) : ui('doneHAnon');
+      h.focus();
+    })
+    .catch(() => {
+      status.textContent = ui('error');
+      status.classList.add('is-error');
+      nextBtn.disabled = false;
+    });
+}
+
+/* ──────────────────────────────────────────
+   BOOT
+────────────────────────────────────────── */
+render();
+const draft = load();
+if (draft && draft.v) {
+  restore(draft.v);
+  seen = new Set([0, ...(draft.seen || [])].filter(i => i < STEPS.length));
+  show(Math.min(draft.cur || 0, STEPS.length - 1), false);
+} else {
+  show(0, false);
+}
+})();
+</script>
+</body>
+</html>
