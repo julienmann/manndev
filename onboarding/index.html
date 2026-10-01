@@ -506,11 +506,11 @@ const STEPS = [
       ] },
       { name: 'deadline', type: 'text', when: d => ['weeks', '1-2m'].includes(d.timeline), l: ['What’s driving the date?', 'Qu’est-ce qui motive cette date?'], h: ['A launch, an event, a season, a lease ending…', 'Un lancement, un événement, une saison, une fin de bail…'] },
       { name: 'budget', type: 'radio', req: true, cols: true, when: d => d.type !== 'care', l: ['What budget range are you working with?', 'Avec quelle fourchette budgétaire travaillez-vous?'], h: ['In Canadian dollars, before tax. A range helps us suggest the right scope, and it stays between us.', 'En dollars canadiens, avant taxes. Une fourchette nous aide à proposer la bonne portée, et elle reste entre nous.'], opts: [
-        { v: 'lt3k', l: ['Under $3,000', 'Moins de 3 000 $'] },
-        { v: '3-6k', l: ['$3,000 to $6,000', 'De 3 000 $ à 6 000 $'] },
-        { v: '6-12k', l: ['$6,000 to $12,000', 'De 6 000 $ à 12 000 $'] },
-        { v: '12-25k', l: ['$12,000 to $25,000', 'De 12 000 $ à 25 000 $'] },
-        { v: '25k+', l: ['$25,000 or more', '25 000 $ ou plus'] },
+        { v: 'lt2k', l: ['Under $2,000', 'Moins de 2 000 $'] },
+        { v: '2-5k', l: ['$2,000 to $5,000', 'De 2 000 $ à 5 000 $'] },
+        { v: '5-10k', l: ['$5,000 to $10,000', 'De 5 000 $ à 10 000 $'] },
+        { v: '10-15k', l: ['$10,000 to $15,000', 'De 10 000 $ à 15 000 $'] },
+        { v: '15k+', l: ['$15,000 or more', '15 000 $ ou plus'] },
         { v: 'unsure', l: ['Not sure, we’d like guidance', 'Je ne sais pas, j’aimerais être conseillé'] },
       ] },
       { name: 'care', type: 'radio', when: is(...BUILD), l: ['After launch, would you like us to look after it?', 'Après le lancement, aimeriez-vous que nous en prenions soin?'], h: ['Hosting, monitoring, fixes and updates, on one flat monthly rate.', 'Hébergement, surveillance, correctifs et mises à jour, à un tarif mensuel fixe.'], opts: [
