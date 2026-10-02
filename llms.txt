@@ -13,7 +13,7 @@ Mann Dev is a web design and development studio founded by Julien Mann, based in
 
 ## Contact
 
-- [Start a project](https://manndev.com/#contact): Contact form for new enquiries, answered personally within 24 hours.
+- [Start a project](https://manndev.com/contact/): Contact form for new enquiries, answered personally within 24 hours.
 - Email: julien@manndev.com
 - [LinkedIn](https://www.linkedin.com/in/julien-mann-b153aa404/): Professional profile.
 
