@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /blog-src/
 
 Sitemap: https://manndev.com/sitemap.xml

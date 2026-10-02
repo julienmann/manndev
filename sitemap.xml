@@ -36,4 +36,36 @@
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- blog:start (scripts/build-blog.py) -->
+  <url>
+    <loc>https://manndev.com/blog/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://manndev.com/blog/core-web-vitals-explained/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://manndev.com/blog/custom-website-vs-website-builder/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://manndev.com/blog/local-seo-for-small-business-websites/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://manndev.com/blog/website-accessibility-checklist/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- blog:end -->
 </urlset>

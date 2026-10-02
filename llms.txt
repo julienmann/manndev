@@ -17,6 +17,17 @@ Mann Dev is a web design and development studio founded by Julien Mann, based in
 - Email: julien@manndev.com
 - [LinkedIn](https://www.linkedin.com/in/julien-mann-b153aa404/): Professional profile.
 
+<!-- blog:start (scripts/build-blog.py) -->
+## Insights
+
+- [Insights](https://manndev.com/blog/): Guides on web design, performance, accessibility and SEO for small business owners.
+- [Core Web Vitals, explained for business owners](https://manndev.com/blog/core-web-vitals-explained/): LCP, INP and CLS in plain language: what Google's three Core Web Vitals measure, what a good score looks like, how to check your own site in five minutes, and what usually fixes a bad one.
+- [Custom website or website builder? An honest comparison](https://manndev.com/blog/custom-website-vs-website-builder/): Wix, Squarespace and Shopify are real options for a small business. Here is what a custom-built site gives you that a builder doesn't, what it costs you, and how to tell which one you need.
+- [Local SEO for small business websites: the basics that move the needle](https://manndev.com/blog/local-seo-for-small-business-websites/): How local customers find businesses on Google, and the handful of things that actually help you show up: your Google Business Profile, consistent details, real service pages, reviews, and a site that's fast and bilingual where it needs to be.
+- [Website accessibility for small businesses: a practical WCAG 2.2 checklist](https://manndev.com/blog/website-accessibility-checklist/): What WCAG 2.2 AA means in plain language, why it matters for a small business website, and a twelve-point checklist you can run on your own site this afternoon.
+
+<!-- blog:end -->
+
 ## Optional
 
 - [Version française](https://manndev.com/fr/): The same page in French.
