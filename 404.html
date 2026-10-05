@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZEZB4R3CP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2ZEZB4R3CP');
+  gtag('event', 'page_not_found', { page_path: location.pathname, referrer: document.referrer });
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page not found · Mann Dev</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1e2530">
+<link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Figtree:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Figtree:wght@400;500;600&display=swap"></noscript>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --bg:     #1e2530;
+  --fg:     #f0f2f4;
+  --mid:    #969ba6;
+  --accent: #f2c94c;
+  --rule:   rgba(240,242,244,.09);
+  --display:'Lora', Georgia, serif;
+  --body:   'Figtree', system-ui, sans-serif;
+  --gutter: clamp(1.5rem, 5vw, 4rem);
+  --container: 1280px;
+}
+
+html{overflow-x:hidden;}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.7;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
+::selection{background:var(--accent);color:var(--bg);}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+a:focus:not(:focus-visible){outline:none;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.001ms!important;}}
+
+/* ── GRAIN ── */
+body::after{
+  content:'';position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.container{max-width:var(--container);margin:0 auto;padding:0 var(--gutter);width:100%;}
+
+/* ── HEADER ── */
+header{
+  padding:2rem var(--gutter);
+  max-width:var(--container);
+  margin:0 auto;width:100%;
+}
+.h-logo{display:inline-block;}
+.h-logo img{display:block;height:20px;width:auto;}
+
+/* ── NOT FOUND ── */
+main{flex:1;display:flex;align-items:center;padding-top:4rem;padding-bottom:6rem;}
+.nf-code{
+  font:500 clamp(96px,18vw,200px)/1 var(--display);
+  color:var(--accent);
+  opacity:.9;
+  margin-bottom:1.5rem;
+}
+.kicker{
+  font-family:var(--body);font-size:.72rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.18em;color:var(--accent);
+  margin-bottom:1rem;
+}
+.nf-h1{
+  font:500 clamp(32px,4.5vw,52px)/1.12 var(--display);
+  color:var(--fg);
+  margin-bottom:.75rem;
+}
+.nf-h1 em{font-style:italic;}
+.nf-p{font-size:1rem;color:var(--mid);max-width:480px;margin-bottom:2.5rem;}
+.nf-actions{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+
+.link-cta{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--body);font-size:.9rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);
+  position:relative;
+}
+.link-cta svg{transition:transform .3s ease;flex-shrink:0;}
+.link-cta:hover svg{transform:translateX(3px);}
+.link-cta .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
+.cta-underline{
+  height:100%;background:var(--accent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .3s cubic-bezier(.25,1,.5,1);
+}
+.link-cta:hover .cta-underline{transform:scaleX(1);}
+.link-cta.btn-outline{border:1px solid var(--accent);padding:.9rem 1.5rem;transition:background-color .25s ease;}
+.link-cta.btn-outline:hover{background:rgba(242,201,76,.08);}
+.btn-outline .cta-underline-wrap{display:none;}
+
+.nf-alt{margin-top:4rem;padding-top:1.5rem;border-top:1px solid var(--rule);font-size:.9rem;color:var(--mid);max-width:480px;}
+.nf-alt a{color:var(--fg);border-bottom:1px solid var(--accent);}
+
+/* only one language shows once JS knows which; both show without JS */
+html.is-fr [lang="en"].nf-block,html.is-en [lang="fr"].nf-block{display:none;}
+html.is-fr .nf-alt-en,html.is-en .nf-alt-fr{display:none;}
+
+@media(pointer:coarse){
+  .link-cta{position:relative;}
+  .link-cta::before{content:'';position:absolute;inset:-14px -8px;}
+}
+@media(max-width:600px){
+  main{padding-top:2rem;}
+  .nf-actions{flex-direction:column;align-items:flex-start;gap:1.5rem;}
+}
+</style>
+<script>
+  /* French page paths and French-first browsers get the French copy */
+  (function () {
+    var fr = /^\/fr(\/|$)/.test(location.pathname);
+    if (!fr) {
+      try {
+        var l = localStorage.getItem('lang');
+        fr = l === 'fr' || (!l && /^fr\b/i.test((navigator.languages && navigator.languages[0]) || navigator.language || ''));
+      } catch (e) {}
+    }
+    var root = document.documentElement;
+    root.classList.add(fr ? 'is-fr' : 'is-en');
+    if (fr) { root.lang = 'fr-CA'; document.title = 'Page introuvable · Mann Dev'; }
+  })();
+</script>
+</head>
+<body>
+
+<header>
+  <a href="/" class="h-logo" aria-label="Mann Dev Home">
+    <img src="/img/logo.png?v=2" alt="" width="298" height="59">
+  </a>
+</header>
+
+<main class="container">
+  <div>
+    <p class="nf-code" aria-hidden="true">404</p>
+
+    <div class="nf-block" lang="en">
+      <p class="kicker">Page not found</p>
+      <h1 class="nf-h1">This page has <em>moved on</em>.</h1>
+      <p class="nf-p">The link may be old, or the address may have a typo. Everything else is still here.</p>
+      <div class="nf-actions">
+        <a href="/" class="link-cta btn-outline">
+          <span>Back to home</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/contact/" class="link-cta">
+          <span>Start a project</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="nf-block" lang="fr">
+      <p class="kicker">Page introuvable</p>
+      <h1 class="nf-h1">Cette page <em>n’existe plus</em>.</h1>
+      <p class="nf-p">Le lien est peut-être ancien, ou l’adresse contient une coquille. Tout le reste est toujours là.</p>
+      <div class="nf-actions">
+        <a href="/fr/" class="link-cta btn-outline">
+          <span>Retour à l’accueil</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/fr/contact/" class="link-cta">
+          <span>Démarrer un projet</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+        </a>
+      </div>
+    </div>
+
+    <p class="nf-alt nf-alt-en" lang="fr">Vous cherchiez la version française ? <a href="/fr/">Accueil en français</a></p>
+    <p class="nf-alt nf-alt-fr" lang="en">Looking for the English site? <a href="/">English home</a></p>
+  </div>
+</main>
+
+</body>
+</html>

@@ -183,6 +183,9 @@ option{background:var(--bg);}
 .form-submit svg{transition:transform .3s ease;flex-shrink:0;}
 .form-submit:not(:disabled):hover svg{transform:translateX(3px);}
 .form-submit:disabled{opacity:.35;cursor:not-allowed;}
+.form-submit.btn-outline{border:1px solid var(--accent);padding:.9rem 1.5rem;transition:background-color .25s ease;}
+.form-submit.btn-outline:not(:disabled):hover{background:rgba(242,201,76,.08);}
+.btn-outline .cta-underline-wrap{display:none;}
 .submit-note{font-size:.85rem;color:var(--mid);}
 
 /* ── FOOTER ── */
@@ -257,7 +260,7 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
 <main class="container">
   <p class="kicker rise" data-i18n="contact.kicker">Let's Talk</p>
   <h1 class="contact-h1 rise rise-2" data-i18n="cta.start">Start a project</h1>
-  <p class="contact-intro rise rise-3" data-i18n="contact.intro">Tell us what you're building. All enquiries answered personally, usually within 24 hours.</p>
+  <p class="contact-intro rise rise-3" data-i18n="contact.intro">Fill out the form below to start. Tell us what you're building; every enquiry is answered personally, usually within 24 hours.</p>
   <div class="contact-grid rise rise-4">
     <div class="contact-details">
       <div class="contact-item">
@@ -315,7 +318,7 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
         <span class="char-count" id="char-count">300</span>
       </div>
       <div class="submit-row">
-        <button class="form-submit" type="submit">
+        <button class="form-submit btn-outline" type="submit">
           <span data-i18n="form.send">Send Enquiry</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
@@ -381,6 +384,7 @@ document.getElementById('contact-form').addEventListener('submit', e => {
   .then(j => {
     status.textContent = j.success ? MSG.sent : MSG.error;
     if (j.success) {
+      if (typeof gtag === 'function') gtag('event', 'generate_lead', { form_id: 'contact-form', page_path: location.pathname });
       e.target.reset();
       charCount.textContent = '300';
     }

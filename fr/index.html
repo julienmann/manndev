@@ -118,7 +118,6 @@ a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none;}
   transition:transform .3s cubic-bezier(.25,1,.5,1);
 }
 .link-cta:hover .cta-underline,
-.service-cta:hover .cta-underline,
 .form-submit:not(:disabled):hover .cta-underline{transform:scaleX(1);}
 .link-cta svg{
   transition:transform .3s ease;
@@ -467,230 +466,28 @@ body::after{
   color:var(--mid);
   margin-bottom:2.5rem;
 }
-.tabs-bar{
-  position:relative;
-  display:flex;
-  gap:0;
-  border-bottom:1px solid var(--rule);
-  margin-bottom:0;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-}
-.tab-btn{
-  font-family:var(--body);
-  font-size:.82rem;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  font-weight:500;
-  padding:1rem 1.75rem;
-  cursor:pointer;
-  border:none;
-  border-bottom:2px solid transparent;
-  margin-bottom:-1px;
-  color:var(--mid);
-  background:none;
-  white-space:nowrap;
-  transition:color .25s, border-color .25s;
-  position:relative;
-}
-.tab-btn:hover{color:var(--fg);}
-.tab-btn.active{
-  color:var(--fg);
-}
-.tab-mrr-badge{
-  display:inline-block;
-  font-size:.7rem;
-  letter-spacing:.12em;
-  font-weight:700;
-  background:var(--accent);
-  color:var(--bg);
-  padding:.15rem .45rem;
-  margin-left:.5rem;
-  vertical-align:middle;
-  position:relative;
-  top:-.05em;
-}
-.tab-indicator{
-  position:absolute;
-  bottom:-1px;
-  left:0;
-  width:1px;   /* scaled to the active tab's width by GSAP (transform only) */
-  height:2px;
-  background:var(--accent);
-  pointer-events:none;
-  transform-origin:left;
-  transition:none;
-}
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-
-.service-card{
-  background:var(--surface);
-  border-radius:var(--card-radius);
-  margin-top:1.5rem;
-  overflow:hidden;
-}
-.service-card-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:baseline;
-  padding:2.5rem 2.5rem 1.5rem;
-  border-bottom:1px solid var(--rule);
-  flex-wrap:wrap;
-  gap:1rem;
-}
-.service-title-wrap{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap;}
-.service-h3{
-  font:600 clamp(1.8rem,3vw,2.8rem)/1 var(--display);
-  color:var(--fg);
-}
-.service-badge{
-  font-family:var(--body);
-  font-size:.7rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  font-weight:600;
-  color:var(--accent);
-  border:1px solid var(--rule-accent);
-  padding:.3rem .75rem;
-  flex-shrink:0;
-}
-.service-cta{
-  display:inline-flex;
-  align-items:center;
-  gap:.5rem;
-  font-family:var(--body);
-  font-size:.82rem;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  font-weight:500;
-  color:var(--accent);
-  position:relative;
-  flex-shrink:0;
-}
-.service-cta .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
-.service-body{
+.services-sub strong{color:var(--fg);font-weight:600;}
+.svc-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3,1fr);
+  gap:3rem 2.5rem;
+  margin-bottom:3rem;
 }
-.service-desc-col{
-  padding:2rem 2.5rem;
-  border-right:1px solid var(--rule);
-  display:flex;
-  flex-direction:column;
+.svc-group{border-top:1px solid var(--rule);padding-top:1.5rem;}
+.svc-num{
+  font-family:var(--body);font-size:.7rem;font-weight:600;
+  letter-spacing:.2em;color:var(--accent);margin-bottom:.75rem;
 }
-.service-desc{
-  font-size:.95rem;
-  color:var(--mid);
-  line-height:1.9;
+.svc-h3{font:600 1.5rem/1.15 var(--display);color:var(--fg);margin-bottom:1rem;}
+.svc-note{font-size:.85rem;color:var(--mid);margin:-.5rem 0 1rem;}
+.svc-list{list-style:none;padding:0;margin:0;}
+.svc-list li{
+  display:flex;align-items:flex-start;gap:.75rem;
+  padding:.5rem 0;border-bottom:1px solid var(--rule-soft);
+  font-size:.9rem;color:var(--mid);
 }
-.service-desc+.service-desc{margin-top:1rem;font-size:.85rem;}
-.service-visual{
-  flex:1;
-  margin-top:2rem;
-  min-height:180px;
-  display:flex;
-  flex-direction:column;
-  border:1px solid var(--rule);
-  border-radius:10px;
-  overflow:hidden;
-  background:rgba(255,255,255,.02);
-}
-.sv-dots{
-  display:flex;
-  gap:.4rem;
-  padding:.6rem .8rem;
-  border-bottom:1px solid var(--rule);
-  flex-shrink:0;
-}
-.sv-dots span{width:7px;height:7px;border-radius:50%;background:var(--rule);}
-.sv-hero{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:.6rem;
-  padding:2rem 1.5rem;
-}
-.sv-line{height:8px;border-radius:4px;background:var(--rule);}
-.sv-line-lg{width:65%;height:12px;background:rgba(240,242,244,.16);}
-.sv-line-sm{width:42%;}
-.sv-btn{margin-top:.6rem;width:110px;height:26px;border-radius:6px;background:var(--accent);opacity:.85;}
-.sv-site{flex:1;display:flex;}
-.sv-nav{
-  width:30%;
-  border-right:1px solid var(--rule);
-  padding:1.2rem .9rem;
-  display:flex;
-  flex-direction:column;
-  gap:.7rem;
-}
-.sv-nav-item{height:7px;border-radius:4px;background:var(--rule);width:80%;}
-.sv-nav-item-active{background:var(--accent);opacity:.85;width:60%;}
-.sv-content{
-  flex:1;
-  padding:1.4rem 1.5rem;
-  display:flex;
-  flex-direction:column;
-  gap:.6rem;
-  justify-content:center;
-}
-.sv-content .sv-line-lg{width:80%;}
-.sv-content .sv-line-sm{width:55%;}
-.sv-grid{display:flex;gap:.5rem;margin-top:.6rem;}
-.sv-grid span{flex:1;height:34px;border-radius:5px;background:var(--rule);}
-.sv-flow{
-  flex:1;
-  display:flex;
-  align-items:center;
-  padding:1.4rem 1.8rem;
-}
-.sv-node{
-  flex-shrink:0;
-  width:34px;
-  height:34px;
-  border-radius:8px;
-  border:1px solid var(--rule);
-  background:rgba(255,255,255,.03);
-}
-.sv-node-active{border-color:var(--accent);background:rgba(242,201,76,.15);}
-.sv-flow-line{flex:1;height:1px;background:var(--rule);}
-.service-inc-col{
-  padding:2rem 2.5rem;
-}
-.service-inc-label{
-  font-family:var(--body);
-  font-size:.7rem;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  font-weight:600;
-  color:var(--mid);
-  margin-bottom:1.2rem;
-  display:block;
-}
-.inc-item{
-  display:flex;
-  align-items:flex-start;
-  gap:.75rem;
-  padding:.55rem 0;
-  border-bottom:1px solid var(--rule);
-  font-size:.9rem;
-  color:var(--mid);
-}
-.inc-item:last-child{border-bottom:none;}
-.inc-item::before{content:'→';color:var(--accent);flex-shrink:0;line-height:1.6;}
-.stack-tag{
-  font-family:var(--body);
-  font-size:.7rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  font-weight:500;
-  border:1px solid var(--rule);
-  padding:.3rem .75rem;
-  color:var(--mid);
-  border-radius:3px;
-}
+.svc-list li:last-child{border-bottom:none;}
+.svc-list li::before{content:'→';color:var(--accent);flex-shrink:0;line-height:1.6;}
 
 /* ── CONTACT ── */
 .contact-h2{
@@ -801,6 +598,15 @@ option{background:var(--bg);}
 
 .form-submit:disabled{opacity:.35;cursor:not-allowed;}
 
+/* ── OUTLINED BUTTON (primary CTAs) ── */
+.link-cta.btn-outline,.form-submit.btn-outline{
+  border:1px solid var(--accent);
+  padding:.9rem 1.5rem;
+  transition:background-color .25s ease;
+}
+.link-cta.btn-outline:hover,.form-submit.btn-outline:not(:disabled):hover{background:rgba(242,201,76,.08);}
+.btn-outline .cta-underline-wrap{display:none;}
+
 /* card hover lifts: pointer devices only, so a tap on a phone doesn't leave a card stuck "hovered" */
 @media(hover:hover){
   .process-card:hover{
@@ -830,7 +636,7 @@ option{background:var(--bg);}
    hit box around each small text link (the links are visually ~17-27px tall) */
 @media(pointer:coarse){
   nav ul li a,.footer-nav a,.h-logo,.footer-logo{position:relative;}
-  nav ul li a::before,.footer-nav a::before,.link-cta::before,.service-cta::before,.form-submit::before{
+  nav ul li a::before,.footer-nav a::before,.link-cta::before,.form-submit::before{
     content:'';position:absolute;inset:-14px -8px;
   }
   .h-logo::before,.footer-logo::before{content:'';position:absolute;inset:-12px -6px;}
@@ -900,9 +706,7 @@ footer{
   .principles-grid{grid-template-columns:1fr;}
   .principle-tall{grid-row:span 1;}
   .principle-inner-row{grid-template-columns:1fr;}
-  .service-body{grid-template-columns:1fr;}
-  .service-desc-col{border-right:none;border-bottom:1px solid var(--rule);}
-  .service-visual{min-height:140px;flex:none;}
+  .svc-grid{grid-template-columns:repeat(2,1fr);}
   .contact-grid{grid-template-columns:1fr;}
   .form-row{grid-template-columns:1fr;}
   .footer-inner{flex-direction:column;align-items:flex-start;}
@@ -917,10 +721,7 @@ footer{
   .nav-hide-mobile{display:none;}
   .hero-h1{font-size:clamp(34px,9vw,52px);}
   .hero-mark{height:auto;width:84vw;right:50%;top:42%;transform:translate(50%,-50%);opacity:.045;}
-  .tabs-bar{gap:0;}
-  .tab-btn{padding:.8rem 1rem;font-size:.72rem;}
-  .service-card-top{flex-direction:column;}
-  .service-body{grid-template-columns:1fr;}
+  .svc-grid{grid-template-columns:1fr;gap:2.5rem;}
   .submit-row{flex-direction:column;align-items:flex-start;}
   .footer-bottom{flex-direction:column;align-items:flex-start;}
 }
@@ -1003,7 +804,7 @@ footer{
     <p class="hero-meta fade-up">Conception et développement web</p>
     <h1 class="hero-h1 fade-up"><span>Le bon travail mérite</span><br><span>d’être</span> <em><span>trouvé</span><svg class="hero-scribble" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M3 13 C 38 7, 84 4, 124 7 S 180 15, 197 8"/></svg></em>.</h1>
     <p class="hero-sub fade-up">Des sites et des applications web pour les entreprises prêtes à être prises au sérieux en ligne. Faits pour durer.</p>
-    <a href="#contact" class="link-cta fade-up">
+    <a href="#contact" class="link-cta btn-outline fade-up">
       <span>Démarrer un projet</span>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
@@ -1201,175 +1002,75 @@ footer{
 <section id="services">
   <div class="container">
     <p class="about-h6 fade-up">Services</p>
-    <h2 class="services-h2 fade-up"><span>Ce que nous créons</span></h2>
-    <p class="services-sub fade-up">Chaque projet est évalué selon son mandat.</p>
+    <h2 class="services-h2 fade-up"><span>Des sites Web qui attirent des clients.</span></h2>
+    <p class="services-sub fade-up">Sites Web sur mesure à partir de <strong>400 $</strong>. Forfaits d’entretien à partir de <strong>50 $/mois</strong>, composés des services ci-dessous.</p>
 
-    <div class="tabs-bar" role="tablist" aria-label="Services">
-      <button class="tab-btn active" id="tabbtn-landing" data-tab="landing" role="tab" aria-selected="true" aria-controls="tab-landing">Page d’atterrissage</button>
-      <button class="tab-btn" id="tabbtn-website" data-tab="website" role="tab" aria-selected="false" aria-controls="tab-website">Site web complet</button>
-      <button class="tab-btn" id="tabbtn-maintenance" data-tab="maintenance" role="tab" aria-selected="false" aria-controls="tab-maintenance"><span>Entretien et hébergement</span> <span class="tab-mrr-badge" aria-label="Forfait mensuel">Mensuel</span></button>
-      <button class="tab-btn" id="tabbtn-webapp" data-tab="webapp" role="tab" aria-selected="false" aria-controls="tab-webapp">Automatisation IA</button>
-      <div class="tab-indicator" aria-hidden="true"></div>
-    </div>
-
-    <!-- Landing Page -->
-    <div class="tab-panel active" id="tab-landing" role="tabpanel" aria-labelledby="tabbtn-landing" tabindex="0">
-      <div class="service-card">
-        <div class="service-card-top">
-          <h3 class="service-h3">Page d’atterrissage</h3>
-          <a href="#contact" class="service-cta">
-            <span>Obtenir une soumission</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-          </a>
-        </div>
-        <div class="service-body">
-          <div class="service-desc-col">
-            <p class="service-desc">Une seule page ciblée, conçue pour convertir. Idéale pour un lancement de produit, une campagne ou une entreprise qui a besoin rapidement d’une présence web solide. Nous nous occupons du design et du développement. Vous n’avez qu’à nous dire ce qu’elle doit accomplir.</p>
-            <div class="service-visual" aria-hidden="true">
-              <div class="sv-dots"><span></span><span></span><span></span></div>
-              <div class="sv-hero">
-                <div class="sv-line sv-line-lg"></div>
-                <div class="sv-line sv-line-sm"></div>
-                <div class="sv-btn"></div>
-              </div>
-            </div>
-          </div>
-          <div class="service-inc-col">
-            <span class="service-inc-label">Ce qui est inclus</span>
-            <div class="inc-item">Appel stratégique et orientation des textes</div>
-            <div class="inc-item">Design sur mesure, sans gabarit</div>
-            <div class="inc-item">Entièrement adaptatif, pensé d’abord pour mobile</div>
-            <div class="inc-item">Formulaire de contact ou appel à l’action intégré</div>
-            <div class="inc-item">Optimisée pour la performance et le référencement</div>
-            <div class="inc-item">Déployée et en ligne en quelques jours</div>
-            <div class="inc-item">Premier mois d’entretien et d’hébergement inclus</div>
-          </div>
-        </div>
+    <div class="svc-grid">
+      <div class="svc-group">
+        <p class="svc-num">01</p>
+        <h3 class="svc-h3">Hébergement et sécurité</h3>
+        <ul class="svc-list">
+          <li>Hébergement, domaine et SSL</li>
+          <li>Configuration du courriel d’entreprise</li>
+          <li>CDN Cloudflare pour un chargement rapide</li>
+          <li>Surveillance de disponibilité aux 5 minutes</li>
+          <li>Sauvegardes automatiques</li>
+          <li>Mises à jour de sécurité régulières</li>
+          <li>Bandeau de témoins et politique de confidentialité conformes à la Loi 25</li>
+        </ul>
+      </div>
+      <div class="svc-group">
+        <p class="svc-num">02</p>
+        <h3 class="svc-h3">Mises à jour et soutien</h3>
+        <ul class="svc-list">
+          <li>Mises à jour de contenu mensuelles (le temps non utilisé est reporté)</li>
+          <li>Entretien du contenu bilingue FR/EN</li>
+          <li>Soutien par courriel</li>
+          <li>Correctifs urgents le jour même, avec ligne directe</li>
+          <li>Appel stratégique trimestriel</li>
+        </ul>
+      </div>
+      <div class="svc-group">
+        <p class="svc-num">03</p>
+        <h3 class="svc-h3">Recherche et visibilité</h3>
+        <ul class="svc-list">
+          <li>Configuration SEO</li>
+          <li>SEO local et optimisation Google Maps</li>
+          <li>Gestion de la fiche Google Business</li>
+          <li>Optimisation pour la recherche IA (ChatGPT, Google IA)</li>
+          <li>Rapport mensuel et sommaire analytique</li>
+        </ul>
+      </div>
+      <div class="svc-group">
+        <p class="svc-num">04</p>
+        <h3 class="svc-h3">Avis et automatisation</h3>
+        <ul class="svc-list">
+          <li>Clavardage IA bilingue pour FAQ, heures et menus</li>
+          <li>Réservation en ligne avec rappels par texto et courriel</li>
+          <li>Demandes d’avis automatiques</li>
+          <li>Réponses aux avis rédigées par IA</li>
+          <li>Surveillance des avis et alertes</li>
+        </ul>
+      </div>
+      <div class="svc-group">
+        <p class="svc-num">05</p>
+        <h3 class="svc-h3">Options</h3>
+        <p class="svc-note">Des extras à ajouter à n’importe quel forfait.</p>
+        <ul class="svc-list">
+          <li>Heures de mise à jour supplémentaires</li>
+          <li>Pages supplémentaires</li>
+          <li>Séance photo (demi-journée)</li>
+          <li>Rafraîchissement du logo et de l’image de marque</li>
+          <li>Gestion Google Ads</li>
+          <li>Publications sur les réseaux sociaux</li>
+        </ul>
       </div>
     </div>
 
-    <!-- Full Website -->
-    <div class="tab-panel" id="tab-website" role="tabpanel" aria-labelledby="tabbtn-website" tabindex="0">
-      <div class="service-card">
-        <div class="service-card-top">
-          <h3 class="service-h3">Site web complet</h3>
-          <a href="#contact" class="service-cta">
-            <span>Obtenir une soumission</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-          </a>
-        </div>
-        <div class="service-body">
-          <div class="service-desc-col">
-            <p class="service-desc">Un site de plusieurs pages avec tout ce dont votre entreprise a besoin&nbsp;: à propos, services, portfolio, blogue, contact. Construit proprement et rapidement, à partir de zéro. Nous menons le design et le développement ensemble pour que rien ne se perde entre les deux.</p>
-            <div class="service-visual" aria-hidden="true">
-              <div class="sv-dots"><span></span><span></span><span></span></div>
-              <div class="sv-site">
-                <div class="sv-nav">
-                  <div class="sv-nav-item sv-nav-item-active"></div>
-                  <div class="sv-nav-item"></div>
-                  <div class="sv-nav-item"></div>
-                  <div class="sv-nav-item"></div>
-                </div>
-                <div class="sv-content">
-                  <div class="sv-line sv-line-lg"></div>
-                  <div class="sv-line sv-line-sm"></div>
-                  <div class="sv-grid">
-                    <span></span><span></span><span></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="service-inc-col">
-            <span class="service-inc-label">Ce qui est inclus</span>
-            <div class="inc-item">Appel de découverte et définition de la portée</div>
-            <div class="inc-item">Arborescence et maquettes fonctionnelles</div>
-            <div class="inc-item">Système de design sur mesure</div>
-            <div class="inc-item">Intégration adaptative complète, toutes les pages</div>
-            <div class="inc-item">Intégration d’un CMS au besoin</div>
-            <div class="inc-item">Analytique, référencement et déploiement</div>
-            <div class="inc-item">30 jours de soutien après le lancement</div>
-            <div class="inc-item">Premier mois d’entretien et d’hébergement inclus</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Care & Hosting -->
-    <div class="tab-panel" id="tab-maintenance" role="tabpanel" aria-labelledby="tabbtn-maintenance" tabindex="0">
-      <div class="service-card">
-        <div class="service-card-top">
-          <div class="service-title-wrap">
-            <h3 class="service-h3">Entretien et hébergement</h3>
-            <span class="service-badge">Tarif mensuel fixe</span>
-          </div>
-          <a href="#contact" class="service-cta">
-            <span>Choisir mon forfait</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-          </a>
-        </div>
-        <div class="service-body">
-          <div class="service-desc-col">
-            <p class="service-desc">Un site qui tombe en panne, qui brise sans avertir ou qui est lent vous fait perdre de vraies affaires. L’entretien et l’hébergement l’évitent&nbsp;: hébergement géré sur un CDN mondial, vérifications automatiques de disponibilité aux 5 minutes et un développeur disponible pour les corrections, les mises à jour et les nouvelles fonctionnalités, au besoin. Un seul tarif mensuel fixe. Aucune surprise.</p>
-            <p class="service-desc">Pour les sites que nous avons créés comme pour les autres. Si vous avez hérité d’un site qui tient avec du ruban adhésif, nous le stabiliserons et le garderons en santé, mois après mois.</p>
-          </div>
-          <div class="service-inc-col">
-            <span class="service-inc-label">Chaque mois, dans chaque forfait</span>
-            <div class="inc-item">Hébergement géré sur un CDN mondial</div>
-            <div class="inc-item">Surveillance de disponibilité aux 5 minutes</div>
-            <div class="inc-item">Correctifs de sécurité et de dépendances</div>
-            <div class="inc-item">Mises à jour du contenu et des textes</div>
-            <div class="inc-item">Correction de bogues, réponse prioritaire en 24&nbsp;h</div>
-            <div class="inc-item">Vérification mensuelle de la performance et du référencement</div>
-            <div class="inc-item">Nouvelles fonctionnalités sur demande</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- AI Automation -->
-    <div class="tab-panel" id="tab-webapp" role="tabpanel" aria-labelledby="tabbtn-webapp" tabindex="0">
-      <div class="service-card">
-        <div class="service-card-top">
-          <h3 class="service-h3">Automatisation IA</h3>
-          <a href="#contact" class="service-cta">
-            <span>Obtenir une soumission</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-          </a>
-        </div>
-        <div class="service-body">
-          <div class="service-desc-col">
-            <p class="service-desc">Des flux de travail et des automatisations propulsés par l’IA, intégrés à vos outils existants ou sous forme de systèmes autonomes. Agents conversationnels, traitement de documents, qualification de prospects, assistants internes. Conçus sur mesure pour vos processus&nbsp;: pas un plugiciel, pas un gabarit.</p>
-            <div class="service-visual" aria-hidden="true">
-              <div class="sv-dots"><span></span><span></span><span></span></div>
-              <div class="sv-flow">
-                <div class="sv-node"></div>
-                <div class="sv-flow-line"></div>
-                <div class="sv-node"></div>
-                <div class="sv-flow-line"></div>
-                <div class="sv-node sv-node-active"></div>
-                <div class="sv-flow-line"></div>
-                <div class="sv-node"></div>
-              </div>
-            </div>
-          </div>
-          <div class="service-inc-col">
-            <span class="service-inc-label">Ce qui est inclus</span>
-            <div class="inc-item">Appel de découverte et cartographie des processus</div>
-            <div class="inc-item">Modèle d’IA sur mesure ou intégration d’API</div>
-            <div class="inc-item">Logique d’automatisation et chaîne de traitement</div>
-            <div class="inc-item">Connexion à vos outils existants</div>
-            <div class="inc-item">Tests et ajustements successifs</div>
-            <div class="inc-item">Remise avec documentation</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <a href="#contact" class="link-cta btn-outline svc-cta fade-up">
+      <span>Démarrer un projet</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
   </div>
 </section>
 
@@ -1380,7 +1081,7 @@ footer{
   <div class="container">
     <p class="about-h6 fade-up">Parlons-en</p>
     <h2 class="contact-h2 fade-up"><span>Démarrer un projet</span></h2>
-    <p class="contact-intro fade-up">Parlez-nous de votre projet. Chaque demande reçoit une réponse personnelle, habituellement en moins de 24 heures.</p>
+    <p class="contact-intro fade-up">Remplissez le formulaire ci-dessous pour commencer. Parlez-nous de votre projet; chaque demande reçoit une réponse personnelle, habituellement en moins de 24 heures.</p>
     <div class="contact-grid fade-up">
       <div class="contact-details">
         <div class="contact-item">
@@ -1438,7 +1139,7 @@ footer{
           <span class="char-count" id="char-count">300</span>
         </div>
         <div class="submit-row">
-          <button class="form-submit" type="submit">
+          <button class="form-submit btn-outline" type="submit">
             <span>Envoyer la demande</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
@@ -1751,83 +1452,21 @@ if (!reduced) {
   });
 }
 
-/* ──────────────────────────────────────────
-   TABS
-────────────────────────────────────────── */
-const tabsBar = document.querySelector('.tabs-bar');
-const tabIndicator = tabsBar.querySelector('.tab-indicator');
-
-function positionIndicator(btn, animate) {
-  const bRect = btn.getBoundingClientRect();
-  const rRect = tabsBar.getBoundingClientRect();
-  const left  = bRect.left - rRect.left;
-  const width = bRect.width;
-  animate
-    ? gsap.to(tabIndicator, { x: left, scaleX: width, duration: 0.35, ease: 'power3.out' })
-    : gsap.set(tabIndicator, { x: left, scaleX: width });
-}
-
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => {
-      b.classList.remove('active');
-      b.setAttribute('aria-selected', 'false');
-    });
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    btn.setAttribute('aria-selected', 'true');
-    positionIndicator(btn, true);
-    const panel = document.getElementById('tab-' + btn.dataset.tab);
-    panel.classList.add('active');
-
-    if (!reduced) {
-      const tl = gsap.timeline();
-      tl.fromTo(panel.querySelector('.service-card'),
-        { autoAlpha: 0, y: 16 },
-        { autoAlpha: 1, y: 0, duration: 0.38, ease: 'power2.out' }
-      );
-      tl.fromTo(panel.querySelectorAll('.inc-item'),
-        { autoAlpha: 0, x: -12 },
-        { autoAlpha: 1, x: 0, stagger: 0.045, duration: 0.3, ease: 'power2.out' },
-        '-=0.2'
-      );
-      tl.fromTo(panel.querySelectorAll('.stack-tag'),
-        { autoAlpha: 0, y: 8 },
-        { autoAlpha: 1, y: 0, stagger: 0.04, duration: 0.25, ease: 'power2.out' },
-        '-=0.15'
-      );
-    } else {
-      gsap.set(panel, { autoAlpha: 1, y: 0 });
-    }
-  });
-});
-
-const initBtn = tabsBar.querySelector('.tab-btn.active');
-if (initBtn) positionIndicator(initBtn, false);
-
 /* remember an explicit language pick so the redirect in <head> respects it */
 document.getElementById('lang-toggle').addEventListener('click', e => {
   try { localStorage.setItem('lang', e.currentTarget.dataset.lang); } catch (err) {}
   if (typeof gtag === 'function') gtag('event', 'language_switch', { language: e.currentTarget.dataset.lang });
 });
 
-/* Services section: animate first panel on scroll enter */
+/* Services section: stagger the groups in on scroll enter */
 if (!reduced) {
+  gsap.set('.svc-group', { autoAlpha: 0, y: 20 });
   ScrollTrigger.create({
-    trigger: '#services',
+    trigger: '.svc-grid',
     start: 'top 80%',
     once: true,
     onEnter() {
-      const activePanel = document.querySelector('.tab-panel.active');
-      if (!activePanel) return;
-      gsap.fromTo(activePanel.querySelector('.service-card'),
-        { autoAlpha: 0, y: 20 },
-        { autoAlpha: 1, y: 0, duration: 0.55, ease: 'power3.out' }
-      );
-      gsap.fromTo(activePanel.querySelectorAll('.inc-item'),
-        { autoAlpha: 0, x: -14 },
-        { autoAlpha: 1, x: 0, stagger: 0.05, duration: 0.35, ease: 'power2.out', delay: 0.1 }
-      );
+      gsap.to('.svc-group', { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.55, ease: 'power3.out' });
     }
   });
 }
@@ -1872,6 +1511,7 @@ function handleSubmit(e) {
       ? MSG.sent
       : MSG.error;
     if (j.success) {
+      if (typeof gtag === 'function') gtag('event', 'generate_lead', { form_id: 'contact-form', page_path: location.pathname });
       e.target.reset();
       if (charCount) charCount.textContent = '300';
     }

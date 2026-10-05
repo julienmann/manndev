@@ -125,7 +125,6 @@ a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none;}
   transition:transform .3s cubic-bezier(.25,1,.5,1);
 }
 .link-cta:hover .cta-underline,
-.service-cta:hover .cta-underline,
 .form-submit:not(:disabled):hover .cta-underline{transform:scaleX(1);}
 .link-cta svg{
   transition:transform .3s ease;
@@ -474,230 +473,28 @@ body::after{
   color:var(--mid);
   margin-bottom:2.5rem;
 }
-.tabs-bar{
-  position:relative;
-  display:flex;
-  gap:0;
-  border-bottom:1px solid var(--rule);
-  margin-bottom:0;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-}
-.tab-btn{
-  font-family:var(--body);
-  font-size:.82rem;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  font-weight:500;
-  padding:1rem 1.75rem;
-  cursor:pointer;
-  border:none;
-  border-bottom:2px solid transparent;
-  margin-bottom:-1px;
-  color:var(--mid);
-  background:none;
-  white-space:nowrap;
-  transition:color .25s, border-color .25s;
-  position:relative;
-}
-.tab-btn:hover{color:var(--fg);}
-.tab-btn.active{
-  color:var(--fg);
-}
-.tab-mrr-badge{
-  display:inline-block;
-  font-size:.7rem;
-  letter-spacing:.12em;
-  font-weight:700;
-  background:var(--accent);
-  color:var(--bg);
-  padding:.15rem .45rem;
-  margin-left:.5rem;
-  vertical-align:middle;
-  position:relative;
-  top:-.05em;
-}
-.tab-indicator{
-  position:absolute;
-  bottom:-1px;
-  left:0;
-  width:1px;   /* scaled to the active tab's width by GSAP (transform only) */
-  height:2px;
-  background:var(--accent);
-  pointer-events:none;
-  transform-origin:left;
-  transition:none;
-}
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-
-.service-card{
-  background:var(--surface);
-  border-radius:var(--card-radius);
-  margin-top:1.5rem;
-  overflow:hidden;
-}
-.service-card-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:baseline;
-  padding:2.5rem 2.5rem 1.5rem;
-  border-bottom:1px solid var(--rule);
-  flex-wrap:wrap;
-  gap:1rem;
-}
-.service-title-wrap{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap;}
-.service-h3{
-  font:600 clamp(1.8rem,3vw,2.8rem)/1 var(--display);
-  color:var(--fg);
-}
-.service-badge{
-  font-family:var(--body);
-  font-size:.7rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  font-weight:600;
-  color:var(--accent);
-  border:1px solid var(--rule-accent);
-  padding:.3rem .75rem;
-  flex-shrink:0;
-}
-.service-cta{
-  display:inline-flex;
-  align-items:center;
-  gap:.5rem;
-  font-family:var(--body);
-  font-size:.82rem;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  font-weight:500;
-  color:var(--accent);
-  position:relative;
-  flex-shrink:0;
-}
-.service-cta .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
-.service-body{
+.services-sub strong{color:var(--fg);font-weight:600;}
+.svc-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3,1fr);
+  gap:3rem 2.5rem;
+  margin-bottom:3rem;
 }
-.service-desc-col{
-  padding:2rem 2.5rem;
-  border-right:1px solid var(--rule);
-  display:flex;
-  flex-direction:column;
+.svc-group{border-top:1px solid var(--rule);padding-top:1.5rem;}
+.svc-num{
+  font-family:var(--body);font-size:.7rem;font-weight:600;
+  letter-spacing:.2em;color:var(--accent);margin-bottom:.75rem;
 }
-.service-desc{
-  font-size:.95rem;
-  color:var(--mid);
-  line-height:1.9;
+.svc-h3{font:600 1.5rem/1.15 var(--display);color:var(--fg);margin-bottom:1rem;}
+.svc-note{font-size:.85rem;color:var(--mid);margin:-.5rem 0 1rem;}
+.svc-list{list-style:none;padding:0;margin:0;}
+.svc-list li{
+  display:flex;align-items:flex-start;gap:.75rem;
+  padding:.5rem 0;border-bottom:1px solid var(--rule-soft);
+  font-size:.9rem;color:var(--mid);
 }
-.service-desc+.service-desc{margin-top:1rem;font-size:.85rem;}
-.service-visual{
-  flex:1;
-  margin-top:2rem;
-  min-height:180px;
-  display:flex;
-  flex-direction:column;
-  border:1px solid var(--rule);
-  border-radius:10px;
-  overflow:hidden;
-  background:rgba(255,255,255,.02);
-}
-.sv-dots{
-  display:flex;
-  gap:.4rem;
-  padding:.6rem .8rem;
-  border-bottom:1px solid var(--rule);
-  flex-shrink:0;
-}
-.sv-dots span{width:7px;height:7px;border-radius:50%;background:var(--rule);}
-.sv-hero{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:.6rem;
-  padding:2rem 1.5rem;
-}
-.sv-line{height:8px;border-radius:4px;background:var(--rule);}
-.sv-line-lg{width:65%;height:12px;background:rgba(240,242,244,.16);}
-.sv-line-sm{width:42%;}
-.sv-btn{margin-top:.6rem;width:110px;height:26px;border-radius:6px;background:var(--accent);opacity:.85;}
-.sv-site{flex:1;display:flex;}
-.sv-nav{
-  width:30%;
-  border-right:1px solid var(--rule);
-  padding:1.2rem .9rem;
-  display:flex;
-  flex-direction:column;
-  gap:.7rem;
-}
-.sv-nav-item{height:7px;border-radius:4px;background:var(--rule);width:80%;}
-.sv-nav-item-active{background:var(--accent);opacity:.85;width:60%;}
-.sv-content{
-  flex:1;
-  padding:1.4rem 1.5rem;
-  display:flex;
-  flex-direction:column;
-  gap:.6rem;
-  justify-content:center;
-}
-.sv-content .sv-line-lg{width:80%;}
-.sv-content .sv-line-sm{width:55%;}
-.sv-grid{display:flex;gap:.5rem;margin-top:.6rem;}
-.sv-grid span{flex:1;height:34px;border-radius:5px;background:var(--rule);}
-.sv-flow{
-  flex:1;
-  display:flex;
-  align-items:center;
-  padding:1.4rem 1.8rem;
-}
-.sv-node{
-  flex-shrink:0;
-  width:34px;
-  height:34px;
-  border-radius:8px;
-  border:1px solid var(--rule);
-  background:rgba(255,255,255,.03);
-}
-.sv-node-active{border-color:var(--accent);background:rgba(242,201,76,.15);}
-.sv-flow-line{flex:1;height:1px;background:var(--rule);}
-.service-inc-col{
-  padding:2rem 2.5rem;
-}
-.service-inc-label{
-  font-family:var(--body);
-  font-size:.7rem;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  font-weight:600;
-  color:var(--mid);
-  margin-bottom:1.2rem;
-  display:block;
-}
-.inc-item{
-  display:flex;
-  align-items:flex-start;
-  gap:.75rem;
-  padding:.55rem 0;
-  border-bottom:1px solid var(--rule);
-  font-size:.9rem;
-  color:var(--mid);
-}
-.inc-item:last-child{border-bottom:none;}
-.inc-item::before{content:'→';color:var(--accent);flex-shrink:0;line-height:1.6;}
-.stack-tag{
-  font-family:var(--body);
-  font-size:.7rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  font-weight:500;
-  border:1px solid var(--rule);
-  padding:.3rem .75rem;
-  color:var(--mid);
-  border-radius:3px;
-}
+.svc-list li:last-child{border-bottom:none;}
+.svc-list li::before{content:'→';color:var(--accent);flex-shrink:0;line-height:1.6;}
 
 /* ── CONTACT ── */
 .contact-h2{
@@ -808,6 +605,15 @@ option{background:var(--bg);}
 
 .form-submit:disabled{opacity:.35;cursor:not-allowed;}
 
+/* ── OUTLINED BUTTON (primary CTAs) ── */
+.link-cta.btn-outline,.form-submit.btn-outline{
+  border:1px solid var(--accent);
+  padding:.9rem 1.5rem;
+  transition:background-color .25s ease;
+}
+.link-cta.btn-outline:hover,.form-submit.btn-outline:not(:disabled):hover{background:rgba(242,201,76,.08);}
+.btn-outline .cta-underline-wrap{display:none;}
+
 /* card hover lifts: pointer devices only, so a tap on a phone doesn't leave a card stuck "hovered" */
 @media(hover:hover){
   .process-card:hover{
@@ -837,7 +643,7 @@ option{background:var(--bg);}
    hit box around each small text link (the links are visually ~17-27px tall) */
 @media(pointer:coarse){
   nav ul li a,.footer-nav a,.h-logo,.footer-logo{position:relative;}
-  nav ul li a::before,.footer-nav a::before,.link-cta::before,.service-cta::before,.form-submit::before{
+  nav ul li a::before,.footer-nav a::before,.link-cta::before,.form-submit::before{
     content:'';position:absolute;inset:-14px -8px;
   }
   .h-logo::before,.footer-logo::before{content:'';position:absolute;inset:-12px -6px;}
@@ -907,9 +713,7 @@ footer{
   .principles-grid{grid-template-columns:1fr;}
   .principle-tall{grid-row:span 1;}
   .principle-inner-row{grid-template-columns:1fr;}
-  .service-body{grid-template-columns:1fr;}
-  .service-desc-col{border-right:none;border-bottom:1px solid var(--rule);}
-  .service-visual{min-height:140px;flex:none;}
+  .svc-grid{grid-template-columns:repeat(2,1fr);}
   .contact-grid{grid-template-columns:1fr;}
   .form-row{grid-template-columns:1fr;}
   .footer-inner{flex-direction:column;align-items:flex-start;}
@@ -924,10 +728,7 @@ footer{
   .nav-hide-mobile{display:none;}
   .hero-h1{font-size:clamp(34px,9vw,52px);}
   .hero-mark{height:auto;width:84vw;right:50%;top:42%;transform:translate(50%,-50%);opacity:.045;}
-  .tabs-bar{gap:0;}
-  .tab-btn{padding:.8rem 1rem;font-size:.72rem;}
-  .service-card-top{flex-direction:column;}
-  .service-body{grid-template-columns:1fr;}
+  .svc-grid{grid-template-columns:1fr;gap:2.5rem;}
   .submit-row{flex-direction:column;align-items:flex-start;}
   .footer-bottom{flex-direction:column;align-items:flex-start;}
 }
@@ -1010,7 +811,7 @@ footer{
     <p class="hero-meta fade-up" data-i18n="hero.meta">Web Design &amp; Development</p>
     <h1 class="hero-h1 fade-up"><span data-i18n="hero.h1a">Good work deserves</span><br><span data-i18n="hero.h1b">to be</span> <em><span data-i18n="hero.h1c">found</span><svg class="hero-scribble" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M3 13 C 38 7, 84 4, 124 7 S 180 15, 197 8"/></svg></em>.</h1>
     <p class="hero-sub fade-up" data-i18n="hero.sub">Websites and web apps built for businesses that are ready to be taken seriously online. Built to last.</p>
-    <a href="#contact" class="link-cta fade-up">
+    <a href="#contact" class="link-cta btn-outline fade-up">
       <span data-i18n="cta.start">Start a project</span>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
@@ -1212,175 +1013,75 @@ footer{
 <section id="services">
   <div class="container">
     <p class="about-h6 fade-up">Services</p>
-    <h2 class="services-h2 fade-up"><span data-i18n="svc.h2">What we build</span></h2>
-    <p class="services-sub fade-up" data-i18n="svc.sub">Project work is scoped per brief.</p>
+    <h2 class="services-h2 fade-up"><span data-i18n="svc.h2">Websites that bring in customers.</span></h2>
+    <p class="services-sub fade-up" data-i18n="svc.sub">Custom websites from <strong>$400</strong>. Care plans from <strong>$50/mo</strong>, built from the services below.</p>
 
-    <div class="tabs-bar" role="tablist" aria-label="Services">
-      <button class="tab-btn active" id="tabbtn-landing" data-tab="landing" role="tab" aria-selected="true" aria-controls="tab-landing" data-i18n="svc.landing">Landing Page</button>
-      <button class="tab-btn" id="tabbtn-website" data-tab="website" role="tab" aria-selected="false" aria-controls="tab-website" data-i18n="svc.full">Full Website</button>
-      <button class="tab-btn" id="tabbtn-maintenance" data-tab="maintenance" role="tab" aria-selected="false" aria-controls="tab-maintenance"><span data-i18n="svc.care">Care &amp; Hosting</span> <span class="tab-mrr-badge" aria-label="Monthly plan" data-i18n="badge.monthly" data-i18n-label="a11y.monthly">Monthly</span></button>
-      <button class="tab-btn" id="tabbtn-webapp" data-tab="webapp" role="tab" aria-selected="false" aria-controls="tab-webapp" data-i18n="svc.ai">AI Automation</button>
-      <div class="tab-indicator" aria-hidden="true"></div>
-    </div>
-
-    <!-- Landing Page -->
-    <div class="tab-panel active" id="tab-landing" role="tabpanel" aria-labelledby="tabbtn-landing" tabindex="0">
-      <div class="service-card">
-        <div class="service-card-top">
-          <h3 class="service-h3" data-i18n="svc.landing">Landing Page</h3>
-          <a href="#contact" class="service-cta">
-            <span data-i18n="svc.quote">Get a quote</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-          </a>
-        </div>
-        <div class="service-body">
-          <div class="service-desc-col">
-            <p class="service-desc" data-i18n="svc.desc1">A single, focused page built to convert. Ideal for product launches, campaigns, or businesses that need a strong web presence fast. We handle the design and development. You just need to tell us what you want it to do.</p>
-            <div class="service-visual" aria-hidden="true">
-              <div class="sv-dots"><span></span><span></span><span></span></div>
-              <div class="sv-hero">
-                <div class="sv-line sv-line-lg"></div>
-                <div class="sv-line sv-line-sm"></div>
-                <div class="sv-btn"></div>
-              </div>
-            </div>
-          </div>
-          <div class="service-inc-col">
-            <span class="service-inc-label" data-i18n="svc.included">What's included</span>
-            <div class="inc-item" data-i18n="inc.strategyCall">Strategy &amp; copy direction call</div>
-            <div class="inc-item" data-i18n="inc.customDesign">Custom design, no templates</div>
-            <div class="inc-item" data-i18n="inc.responsive">Fully responsive, mobile-first build</div>
-            <div class="inc-item" data-i18n="inc.contactForm">Contact form or CTA integration</div>
-            <div class="inc-item" data-i18n="inc.perfSeo">Performance-optimised &amp; SEO-ready</div>
-            <div class="inc-item" data-i18n="inc.liveFast">Deployed &amp; live within a few days</div>
-            <div class="inc-item" data-i18n="inc.firstMonth">First month of Care &amp; Hosting included</div>
-          </div>
-        </div>
+    <div class="svc-grid">
+      <div class="svc-group">
+        <p class="svc-num">01</p>
+        <h3 class="svc-h3" data-i18n="svc.g1">Hosting &amp; Security</h3>
+        <ul class="svc-list">
+          <li data-i18n="svc.g1.i1">Hosting, domain &amp; SSL</li>
+          <li data-i18n="svc.g1.i2">Business email setup</li>
+          <li data-i18n="svc.g1.i3">Cloudflare CDN for fast loading</li>
+          <li data-i18n="svc.g1.i4">Uptime monitoring every 5 minutes</li>
+          <li data-i18n="svc.g1.i5">Automated backups</li>
+          <li data-i18n="svc.g1.i6">Regular security updates</li>
+          <li data-i18n="svc.g1.i7">Law 25 cookie banner &amp; privacy policy</li>
+        </ul>
+      </div>
+      <div class="svc-group">
+        <p class="svc-num">02</p>
+        <h3 class="svc-h3" data-i18n="svc.g2">Updates &amp; Support</h3>
+        <ul class="svc-list">
+          <li data-i18n="svc.g2.i1">Monthly content updates (unused time rolls over)</li>
+          <li data-i18n="svc.g2.i2">Bilingual FR/EN content upkeep</li>
+          <li data-i18n="svc.g2.i3">Email support</li>
+          <li data-i18n="svc.g2.i4">Emergency &amp; same-day fixes, with a direct line</li>
+          <li data-i18n="svc.g2.i5">Quarterly strategy call</li>
+        </ul>
+      </div>
+      <div class="svc-group">
+        <p class="svc-num">03</p>
+        <h3 class="svc-h3" data-i18n="svc.g3">Search &amp; Visibility</h3>
+        <ul class="svc-list">
+          <li data-i18n="svc.g3.i1">SEO setup</li>
+          <li data-i18n="svc.g3.i2">Local SEO &amp; Google Maps optimization</li>
+          <li data-i18n="svc.g3.i3">Google Business Profile management</li>
+          <li data-i18n="svc.g3.i4">AI search optimization (ChatGPT, Google AI)</li>
+          <li data-i18n="svc.g3.i5">Monthly report &amp; analytics summary</li>
+        </ul>
+      </div>
+      <div class="svc-group">
+        <p class="svc-num">04</p>
+        <h3 class="svc-h3" data-i18n="svc.g4">Reviews &amp; Automation</h3>
+        <ul class="svc-list">
+          <li data-i18n="svc.g4.i1">Bilingual AI chatbot for FAQs, hours and menus</li>
+          <li data-i18n="svc.g4.i2">Online booking with SMS &amp; email reminders</li>
+          <li data-i18n="svc.g4.i3">Automatic review requests</li>
+          <li data-i18n="svc.g4.i4">AI-drafted replies to reviews</li>
+          <li data-i18n="svc.g4.i5">Review monitoring &amp; alerts</li>
+        </ul>
+      </div>
+      <div class="svc-group">
+        <p class="svc-num">05</p>
+        <h3 class="svc-h3" data-i18n="svc.g5">Add-ons</h3>
+        <p class="svc-note" data-i18n="svc.g5.note">Extras you can add to any plan.</p>
+        <ul class="svc-list">
+          <li data-i18n="svc.g5.i1">Extra update hours</li>
+          <li data-i18n="svc.g5.i2">Additional pages</li>
+          <li data-i18n="svc.g5.i3">Photo shoot (half day)</li>
+          <li data-i18n="svc.g5.i4">Logo &amp; brand refresh</li>
+          <li data-i18n="svc.g5.i5">Google Ads management</li>
+          <li data-i18n="svc.g5.i6">Social media posts</li>
+        </ul>
       </div>
     </div>
 
-    <!-- Full Website -->
-    <div class="tab-panel" id="tab-website" role="tabpanel" aria-labelledby="tabbtn-website" tabindex="0">
-      <div class="service-card">
-        <div class="service-card-top">
-          <h3 class="service-h3" data-i18n="svc.full">Full Website</h3>
-          <a href="#contact" class="service-cta">
-            <span data-i18n="svc.quote">Get a quote</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-          </a>
-        </div>
-        <div class="service-body">
-          <div class="service-desc-col">
-            <p class="service-desc" data-i18n="svc.desc2">A multi-page site with everything your business needs: about, services, portfolio, blog, contact. Built clean and fast from scratch. We work through design and development together so nothing gets lost between the two.</p>
-            <div class="service-visual" aria-hidden="true">
-              <div class="sv-dots"><span></span><span></span><span></span></div>
-              <div class="sv-site">
-                <div class="sv-nav">
-                  <div class="sv-nav-item sv-nav-item-active"></div>
-                  <div class="sv-nav-item"></div>
-                  <div class="sv-nav-item"></div>
-                  <div class="sv-nav-item"></div>
-                </div>
-                <div class="sv-content">
-                  <div class="sv-line sv-line-lg"></div>
-                  <div class="sv-line sv-line-sm"></div>
-                  <div class="sv-grid">
-                    <span></span><span></span><span></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="service-inc-col">
-            <span class="service-inc-label" data-i18n="svc.included">What's included</span>
-            <div class="inc-item" data-i18n="inc.scopeCall">Discovery &amp; scope call</div>
-            <div class="inc-item" data-i18n="inc.sitemap">Sitemap &amp; wireframes</div>
-            <div class="inc-item" data-i18n="inc.designSystem">Custom design system</div>
-            <div class="inc-item" data-i18n="inc.allPages">Full responsive build, all pages</div>
-            <div class="inc-item" data-i18n="inc.cms">CMS integration if needed</div>
-            <div class="inc-item" data-i18n="inc.analytics">Analytics, SEO, &amp; deployment</div>
-            <div class="inc-item" data-i18n="inc.support30">30 days post-launch support</div>
-            <div class="inc-item" data-i18n="inc.firstMonth">First month of Care &amp; Hosting included</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Care & Hosting -->
-    <div class="tab-panel" id="tab-maintenance" role="tabpanel" aria-labelledby="tabbtn-maintenance" tabindex="0">
-      <div class="service-card">
-        <div class="service-card-top">
-          <div class="service-title-wrap">
-            <h3 class="service-h3" data-i18n="svc.care">Care &amp; Hosting</h3>
-            <span class="service-badge" data-i18n="svc.flat">Flat monthly rate</span>
-          </div>
-          <a href="#contact" class="service-cta">
-            <span data-i18n="svc.getPlan">Get your plan</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-          </a>
-        </div>
-        <div class="service-body">
-          <div class="service-desc-col">
-            <p class="service-desc" data-i18n="svc.desc3">A site that goes down, breaks silently, or runs slow costs you real business. Care &amp; Hosting keeps that from happening: managed hosting on a global CDN, automated uptime checks every 5 minutes, and a developer available for fixes, updates, and new features whenever you need one. One flat monthly rate. No surprises.</p>
-            <p class="service-desc" data-i18n="svc.desc4">Works for sites we built and sites we didn't. If you inherited something held together with duct tape, we'll stabilise it and keep it healthy month to month.</p>
-          </div>
-          <div class="service-inc-col">
-            <span class="service-inc-label" data-i18n="care.everyMonth">Every month, every plan</span>
-            <div class="inc-item" data-i18n="inc.hosting">Managed hosting on a global CDN</div>
-            <div class="inc-item" data-i18n="inc.uptime">Uptime monitoring every 5 minutes</div>
-            <div class="inc-item" data-i18n="inc.patches">Security &amp; dependency patches</div>
-            <div class="inc-item" data-i18n="inc.content">Content &amp; copy updates</div>
-            <div class="inc-item" data-i18n="inc.bugfixes">Bug fixes, priority response 24 hrs</div>
-            <div class="inc-item" data-i18n="inc.monthlyCheck">Monthly performance &amp; SEO check</div>
-            <div class="inc-item" data-i18n="inc.features">New features on request</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- AI Automation -->
-    <div class="tab-panel" id="tab-webapp" role="tabpanel" aria-labelledby="tabbtn-webapp" tabindex="0">
-      <div class="service-card">
-        <div class="service-card-top">
-          <h3 class="service-h3" data-i18n="svc.ai">AI Automation</h3>
-          <a href="#contact" class="service-cta">
-            <span data-i18n="svc.quote">Get a quote</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-          </a>
-        </div>
-        <div class="service-body">
-          <div class="service-desc-col">
-            <p class="service-desc" data-i18n="svc.desc5">AI-powered workflows and automations built into your existing tools or as standalone systems. Chatbots, document processing, lead qualification, internal assistants. Custom-built to your process, not a plugin, not a template.</p>
-            <div class="service-visual" aria-hidden="true">
-              <div class="sv-dots"><span></span><span></span><span></span></div>
-              <div class="sv-flow">
-                <div class="sv-node"></div>
-                <div class="sv-flow-line"></div>
-                <div class="sv-node"></div>
-                <div class="sv-flow-line"></div>
-                <div class="sv-node sv-node-active"></div>
-                <div class="sv-flow-line"></div>
-                <div class="sv-node"></div>
-              </div>
-            </div>
-          </div>
-          <div class="service-inc-col">
-            <span class="service-inc-label" data-i18n="svc.included">What's included</span>
-            <div class="inc-item" data-i18n="inc.workflowCall">Discovery call &amp; workflow mapping</div>
-            <div class="inc-item" data-i18n="inc.aiModel">Custom AI model or API integration</div>
-            <div class="inc-item" data-i18n="inc.pipeline">Automation logic &amp; pipeline build</div>
-            <div class="inc-item" data-i18n="inc.connectTools">Connect to your existing tools</div>
-            <div class="inc-item" data-i18n="inc.testing">Testing &amp; iterative refinement</div>
-            <div class="inc-item" data-i18n="inc.handoff">Handoff with documentation</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <a href="#contact" class="link-cta btn-outline svc-cta fade-up">
+      <span data-i18n="cta.start">Start a project</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
   </div>
 </section>
 
@@ -1391,7 +1092,7 @@ footer{
   <div class="container">
     <p class="about-h6 fade-up" data-i18n="contact.kicker">Let's Talk</p>
     <h2 class="contact-h2 fade-up"><span data-i18n="cta.start">Start a project</span></h2>
-    <p class="contact-intro fade-up" data-i18n="contact.intro">Tell us what you're building. All enquiries answered personally, usually within 24 hours.</p>
+    <p class="contact-intro fade-up" data-i18n="contact.intro">Fill out the form below to start. Tell us what you're building; every enquiry is answered personally, usually within 24 hours.</p>
     <div class="contact-grid fade-up">
       <div class="contact-details">
         <div class="contact-item">
@@ -1449,7 +1150,7 @@ footer{
           <span class="char-count" id="char-count">300</span>
         </div>
         <div class="submit-row">
-          <button class="form-submit" type="submit">
+          <button class="form-submit btn-outline" type="submit">
             <span data-i18n="form.send">Send Enquiry</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
@@ -1762,83 +1463,21 @@ if (!reduced) {
   });
 }
 
-/* ──────────────────────────────────────────
-   TABS
-────────────────────────────────────────── */
-const tabsBar = document.querySelector('.tabs-bar');
-const tabIndicator = tabsBar.querySelector('.tab-indicator');
-
-function positionIndicator(btn, animate) {
-  const bRect = btn.getBoundingClientRect();
-  const rRect = tabsBar.getBoundingClientRect();
-  const left  = bRect.left - rRect.left;
-  const width = bRect.width;
-  animate
-    ? gsap.to(tabIndicator, { x: left, scaleX: width, duration: 0.35, ease: 'power3.out' })
-    : gsap.set(tabIndicator, { x: left, scaleX: width });
-}
-
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => {
-      b.classList.remove('active');
-      b.setAttribute('aria-selected', 'false');
-    });
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    btn.setAttribute('aria-selected', 'true');
-    positionIndicator(btn, true);
-    const panel = document.getElementById('tab-' + btn.dataset.tab);
-    panel.classList.add('active');
-
-    if (!reduced) {
-      const tl = gsap.timeline();
-      tl.fromTo(panel.querySelector('.service-card'),
-        { autoAlpha: 0, y: 16 },
-        { autoAlpha: 1, y: 0, duration: 0.38, ease: 'power2.out' }
-      );
-      tl.fromTo(panel.querySelectorAll('.inc-item'),
-        { autoAlpha: 0, x: -12 },
-        { autoAlpha: 1, x: 0, stagger: 0.045, duration: 0.3, ease: 'power2.out' },
-        '-=0.2'
-      );
-      tl.fromTo(panel.querySelectorAll('.stack-tag'),
-        { autoAlpha: 0, y: 8 },
-        { autoAlpha: 1, y: 0, stagger: 0.04, duration: 0.25, ease: 'power2.out' },
-        '-=0.15'
-      );
-    } else {
-      gsap.set(panel, { autoAlpha: 1, y: 0 });
-    }
-  });
-});
-
-const initBtn = tabsBar.querySelector('.tab-btn.active');
-if (initBtn) positionIndicator(initBtn, false);
-
 /* remember an explicit language pick so the redirect in <head> respects it */
 document.getElementById('lang-toggle').addEventListener('click', e => {
   try { localStorage.setItem('lang', e.currentTarget.dataset.lang); } catch (err) {}
   if (typeof gtag === 'function') gtag('event', 'language_switch', { language: e.currentTarget.dataset.lang });
 });
 
-/* Services section: animate first panel on scroll enter */
+/* Services section: stagger the groups in on scroll enter */
 if (!reduced) {
+  gsap.set('.svc-group', { autoAlpha: 0, y: 20 });
   ScrollTrigger.create({
-    trigger: '#services',
+    trigger: '.svc-grid',
     start: 'top 80%',
     once: true,
     onEnter() {
-      const activePanel = document.querySelector('.tab-panel.active');
-      if (!activePanel) return;
-      gsap.fromTo(activePanel.querySelector('.service-card'),
-        { autoAlpha: 0, y: 20 },
-        { autoAlpha: 1, y: 0, duration: 0.55, ease: 'power3.out' }
-      );
-      gsap.fromTo(activePanel.querySelectorAll('.inc-item'),
-        { autoAlpha: 0, x: -14 },
-        { autoAlpha: 1, x: 0, stagger: 0.05, duration: 0.35, ease: 'power2.out', delay: 0.1 }
-      );
+      gsap.to('.svc-group', { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.55, ease: 'power3.out' });
     }
   });
 }
@@ -1883,6 +1522,7 @@ function handleSubmit(e) {
       ? MSG.sent
       : MSG.error;
     if (j.success) {
+      if (typeof gtag === 'function') gtag('event', 'generate_lead', { form_id: 'contact-form', page_path: location.pathname });
       e.target.reset();
       if (charCount) charCount.textContent = '300';
     }

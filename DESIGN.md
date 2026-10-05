@@ -121,7 +121,7 @@ This system rejects what PRODUCT.md names as anti-references: "generic SaaS land
 - One lamplight gold accent, used on no more than a hairline, a word, or a small tag at a time
 - Lora serif for headlines, card titles and numerals; Figtree sans for body, labels and UI
 - Generously rounded forms (28px cards, 20px panels, 14px choices)
-- No filled buttons: every action is a gold text link with a drawn underline and a nudging arrow
+- No filled buttons: primary CTAs ("Start a project", form submit) are gold outlined buttons; every other action is a gold text link with a drawn underline and a nudging arrow
 - Layered depth: grain and the hero mark at rest, lift and gold edges on intent
 
 ## 2. Colors: The Harbour Palette
@@ -190,7 +190,12 @@ Layered. Depth exists at rest, and one more step appears on intent. At rest: a f
 
 ## 5. Components
 
-### Text Links (the only buttons)
+### Outlined Buttons (primary CTAs only)
+- **Use:** The hero, services and form-submit "Start a project" actions. Everything else stays a text link.
+- **Shape:** Text-link styling (`.link-cta` / `.form-submit`) plus `.btn-outline`: 1px gold border, `.9rem 1.5rem` padding, square corners, no underline.
+- **Hover:** Background tints to 8% gold (`rgba(242,201,76,.08)`); the arrow still nudges 3px right. Never a solid fill.
+
+### Text Links
 - **Shape:** No chrome. Gold uppercase label text with an arrow.
 - **Hover:** A 2px gold underline draws in from the left (`scaleX` 0→1, 0.3s, `cubic-bezier(.25,1,.5,1)`); the arrow nudges 3px right.
 - **Touch:** An invisible 14px hit box extends every small link to at least 44px on coarse pointers, without changing layout.
@@ -244,7 +249,7 @@ Small panels with a traffic-light dot row over an abstract wireframe (nav rail, 
 - **Don't** build anything resembling "generic SaaS landing pages (bright gradients, hero-metric blocks, stock illustrations)".
 - **Don't** drift toward "bloated agency sites with layers of process jargon and team photos".
 - **Don't** ship "anything that reads as templated". "No templates" is a core claim the design must visually back up.
-- **Don't** add a filled button anywhere; gold fills are for the "Monthly" badges only.
+- **Don't** add a filled button anywhere; gold fills are for the "Monthly" badges only. Primary CTAs are outlined, not filled.
 - **Don't** use `dim` (`#636872`) for information: it fails contrast.
 - **Don't** use gradient text, glass cards, or coloured side stripes thicker than 1px.
 - **Don't** use em dashes in copy.
