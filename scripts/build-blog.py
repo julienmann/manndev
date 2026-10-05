@@ -311,7 +311,7 @@ def build_hub():
       <p class="kicker rise">Insights</p>
       <h1 class="hub-h1 rise rise-2">Web design, explained <em>plainly</em>.</h1>
     </div>
-    <p class="hub-intro rise rise-3">Practical guides on <strong>web design, performance, accessibility and SEO</strong> for small business owners. Written by the developer who builds the sites, so you can make better decisions about yours.</p>
+    <p class="hub-intro rise rise-3">Practical guides on <strong>web design, performance, accessibility and SEO</strong> for small business owners.</p>
   </div>
 
   <div class="topics rise rise-4" role="group" aria-label="Filter guides by topic" hidden>
