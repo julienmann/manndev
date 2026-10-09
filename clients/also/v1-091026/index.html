@@ -102,30 +102,26 @@ section.block{padding:clamp(88px,10vw,150px) 0}
 .more{font:500 14px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;display:inline-flex;gap:10px;align-items:center;min-height:44px;border-bottom:1px solid var(--line);transition:border-color .2s}
 .more:hover{border-color:#fff}
 
-/* Trailers row */
-.rail-wrap{position:relative}
-.rail{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(280px,31%,460px);gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:none}
-.rail::-webkit-scrollbar{display:none}
-.trailer{scroll-snap-align:start;display:block}
-.trailer .frame{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--bg-2)}
-.trailer img{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease),filter .5s}
-.trailer .frame::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(11,17,23,.7),transparent 60%)}
-.play{position:absolute;z-index:2;left:20px;bottom:18px;width:52px;height:52px;border:1px solid rgba(255,255,255,.6);border-radius:50%;display:grid;place-items:center;transition:background .3s,border-color .3s}
-.play svg{width:14px;height:14px;margin-left:3px}
-.dur{position:absolute;z-index:2;right:18px;bottom:22px;font:500 13px/1 var(--display);letter-spacing:.14em}
-.trailer:hover img{transform:scale(1.04)}
-.trailer:hover .play{background:#fff;color:var(--bg);border-color:#fff}
-.trailer h3{font:500 18px/1.2 var(--display);letter-spacing:.14em;text-transform:uppercase;margin-top:18px}
-.trailer p{font-size:14px;color:var(--muted);margin-top:4px}
-.rail-ctrl{display:flex;gap:8px}
-.rail-ctrl button{width:48px;height:48px;border:1px solid var(--line);display:grid;place-items:center;transition:border-color .2s,background .2s}
-.rail-ctrl button:hover{border-color:#fff}
-.rail-ctrl svg{width:14px;height:14px}
+/* Featured (En vedette) */
+.feature{position:relative;aspect-ratio:16/9;max-height:82vh;width:100%;overflow:hidden;background:#000 url(assets/video/mrbig-bande-annonce-poster.webp) center/cover}
+.feature video{display:block;width:100%;height:100%;object-fit:cover}
+.feature::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,17,23,.85) 0,rgba(11,17,23,.35) 40%,transparent 65%),linear-gradient(90deg,rgba(11,17,23,.45),transparent 50%),linear-gradient(0deg,rgba(11,17,23,.4),transparent 25%);pointer-events:none}
+.feature-copy{position:absolute;z-index:2;left:40px;top:36px;right:200px}
+.feature-copy .label{color:rgba(242,243,244,.75)}
+.feature-copy h2{font:300 clamp(48px,7vw,112px)/.9 var(--display);text-transform:uppercase;letter-spacing:.01em;margin:14px 0 18px}
+.feature-link{position:absolute;z-index:2;top:28px;right:40px;border-color:rgba(255,255,255,.35)}
+.feature-link:hover{border-color:#fff}
+.sound{position:absolute;z-index:3;right:40px;bottom:36px;display:inline-flex;align-items:center;gap:12px;min-height:48px;padding:0 18px 0 14px;border:1px solid rgba(255,255,255,.45);background:rgba(11,17,23,.35);backdrop-filter:blur(8px);font:500 13px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;transition:background .25s,border-color .25s,color .25s}
+.sound:hover{border-color:#fff;background:rgba(255,255,255,.12)}
+.sound svg{width:18px;height:18px}
+.sound .on{display:none}
+.sound[aria-pressed=true] .on{display:block}
+.sound[aria-pressed=true] .off{display:none}
 
 /* About */
 .about{text-align:center;border-block:1px solid var(--line);background:var(--bg-2)}
 .about .inner{max-width:880px;margin:0 auto}
-.about h2{font:300 clamp(36px,4.4vw,64px)/1.02 var(--display);text-transform:uppercase;letter-spacing:.01em;margin:22px 0 28px}
+.about h2{font:300 clamp(26px,2.8vw,42px)/1.2 var(--display);text-transform:uppercase;letter-spacing:.01em;margin:22px 0 0}
 .about p{color:var(--muted);font-size:18px;max-width:640px;margin:0 auto}
 .partners{display:flex;justify-content:center;flex-wrap:wrap;gap:20px clamp(20px,3.4vw,52px);margin-top:72px;padding-top:40px;border-top:1px solid var(--line)}
 .partners span{font:500 16px/1 var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
@@ -135,6 +131,9 @@ section.block{padding:clamp(88px,10vw,150px) 0}
 .card{display:block}
 .card .poster{position:relative;aspect-ratio:2/3;overflow:hidden;background:var(--bg-2)}
 .card img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease),filter .5s}
+.card .poster.placeholder{display:grid;place-items:center;border:1px solid var(--line);background:radial-gradient(120% 80% at 50% 0,#1a2631,var(--bg) 70%)}
+.ph-title{font:300 clamp(26px,2.6vw,38px)/1 var(--display);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);text-align:center;padding:0 16px;transition:transform 1s var(--ease)}
+.card:hover .ph-title{transform:scale(1.05)}
 .card .poster::after{content:"";position:absolute;inset:0;background:rgba(11,17,23,.72);opacity:0;transition:opacity .45s}
 .card .over{position:absolute;inset:auto 22px 22px;z-index:2;font-size:14px;color:#d5dade;opacity:0;transform:translateY(10px);transition:all .45s var(--ease)}
 .card .over b{display:block;font:500 13px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;color:#fff;margin-top:14px}
@@ -216,8 +215,6 @@ footer small{grid-column:1/-1;border-top:1px solid var(--line);padding-top:24px;
   .tabs button{padding:20px 8px 24px 0;font-size:11px;letter-spacing:.12em}
   .tabs button small{display:none}
   .tabs button i{right:8px}
-  .rail{grid-auto-columns:82%}
-  .rail-ctrl{display:none}
   .grid{grid-template-columns:1fr 1fr;gap:36px 12px}
   .card h3{font-size:18px}
   .card .over{display:none}
@@ -225,6 +222,12 @@ footer small{grid-column:1/-1;border-top:1px solid var(--line);padding-top:24px;
   .team{grid-template-columns:1fr}
   .team{gap:48px}
   .contact-body{grid-template-columns:1fr;gap:48px}
+  .feature{aspect-ratio:4/5}
+  .feature-copy{left:20px;right:20px;top:24px}
+  .feature-link{top:auto;bottom:24px;right:auto;left:20px;font-size:13px}
+  .feature-copy h2{font-size:clamp(44px,13vw,72px);margin:10px 0 12px}
+  .sound{right:20px;bottom:24px;min-height:44px;padding:0 12px}
+  .sound span{display:none}
   footer .wrap{grid-template-columns:1fr;justify-items:start}
   footer ul{justify-content:flex-start}
 }
@@ -265,7 +268,7 @@ header .brand span{transition:opacity .6s ease}
     <nav aria-label="Principal" style="display:contents">
       <ul class="left">
         <li><a href="#productions">Productions</a></li>
-        <li><a href="#trailers">Bandes-annonces</a></li>
+        <li><a href="#vedette">En vedette</a></li>
         <li><a href="#studio">Studio</a></li>
       </ul>
       <a class="brand" href="#top" aria-label="ALSO Productions, accueil">
@@ -280,7 +283,7 @@ header .brand span{transition:opacity .6s ease}
     <span></span>
     <ul class="mobile-menu" id="mobile-menu">
       <li><a href="#productions">Productions</a></li>
-      <li><a href="#trailers">Bandes-annonces</a></li>
+      <li><a href="#vedette">En vedette</a></li>
       <li><a href="#studio">Studio</a></li>
       <li><a href="#contact">Contact</a></li>
       <li><a href="#" lang="en" hreflang="en">English</a></li>
@@ -354,37 +357,35 @@ header .brand span{transition:opacity .6s ease}
 
   <section class="block about" aria-labelledby="about-title">
     <div class="wrap inner">
-      <p class="label reveal">À propos d’ALSO</p>
-      <h2 id="about-title" class="reveal">Des drames québécois inspirés de faits réels.</h2>
-      <p class="reveal">ALSO est une jeune compagnie de créateurs œuvrant dans le milieu de la production télévisuelle, cinématographique et théâtrale. Sa ligne éditoriale se distingue par son audace, sa créativité et son originalité.</p>
+      <p class="label reveal">À propos</p>
+      <h2 id="about-title" class="reveal">ALSO est une jeune compagnie de créateurs œuvrant dans le milieu de la production télévisuelle, cinématographique et théâtrale. Sa ligne éditoriale se distingue par son audace, sa créativité et son originalité.</h2>
       <div class="partners reveal" aria-label="Diffuseurs">
         <span>Crave</span><span>illico+</span><span>Radio-Canada</span><span>Noovo</span><span>Québecor</span>
       </div>
     </div>
   </section>
 
-  <section class="block" id="trailers" aria-labelledby="tr-title">
+  <section class="block" id="vedette" aria-labelledby="ve-title" style="padding:clamp(48px,6vw,96px) 0">
     <div class="wrap">
-      <div class="head reveal">
-        <div>
-          <p class="label">Regarder</p>
-          <h2 id="tr-title">Bandes-annonces récentes</h2>
+      <div class="feature reveal">
+        <video muted loop playsinline preload="none" poster="assets/video/mrbig-bande-annonce-poster.webp"
+          data-src-sm="assets/video/mrbig-bande-annonce-540.mp4" data-src-lg="assets/video/mrbig-bande-annonce-720.mp4"
+          aria-label="Bande-annonce de Mr. Big"></video>
+        <button class="sound" type="button" aria-pressed="false" aria-label="Activer le son">
+          <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>
+          <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+          <span>Son</span>
+        </button>
+        <div class="feature-copy">
+          <p class="label">En vedette</p>
+          <h2 id="ve-title">Mr. Big</h2>
         </div>
-        <div class="rail-ctrl">
-          <button data-dir="-1" aria-label="Bandes-annonces précédentes"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13 7H1M6 2L1 7l5 5"/></svg></button>
-          <button data-dir="1" aria-label="Bandes-annonces suivantes"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 7h12M8 2l5 5-5 5"/></svg></button>
-        </div>
-      </div>
-      <div class="rail reveal">
-        <a class="trailer" href="#"><div class="frame"><img src="assets/img/mrbig2.webp" alt="" width="346" height="641" loading="lazy" style="object-position:center 30%"><span class="play" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5z"/></svg></span><span class="dur">0:00</span></div><h3>Mr. Big · Saison 2</h3><p>Bande-annonce officielle</p></a>
-        <a class="trailer" href="#"><div class="frame"><img src="assets/img/megantic_v2.webp" alt="" width="346" height="640" loading="lazy" style="object-position:center 35%"><span class="play" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5z"/></svg></span><span class="dur">0:00</span></div><h3>Mégantic</h3><p>Bande-annonce officielle</p></a>
-        <a class="trailer" href="#"><div class="frame"><img src="assets/img/disobey.webp" alt="" width="480" height="720" loading="lazy" style="object-position:center 62%"><span class="play" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5z"/></svg></span><span class="dur">0:00</span></div><h3>Désobéir</h3><p>Bande-annonce officielle</p></a>
-        <a class="trailer" href="#"><div class="frame"><img src="assets/img/wom.webp" alt="" width="540" height="793" loading="lazy" style="object-position:center 20%"><span class="play" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5z"/></svg></span><span class="dur">0:00</span></div><h3>Sortez-moi de moi</h3><p>Bande-annonce officielle</p></a>
+        <a class="more feature-link" href="#productions">Découvrir la série →</a>
       </div>
     </div>
   </section>
 
-  <section class="block" id="productions" aria-labelledby="prod-title">
+  <section class="block" id="productions" aria-labelledby="prod-title" style="padding-top:0">
     <div class="wrap">
       <div class="head reveal">
         <div>
@@ -441,6 +442,22 @@ header .brand span{transition:opacity .6s ease}
           </div>
           <h3>Sortez-moi de moi</h3>
           <p class="meta"><span>Série</span><span>Crave</span></p>
+        </a>
+        <a class="card reveal" href="#">
+          <div class="poster">
+            <img src="assets/img/familyaffair.webp" alt="Visuel de Un lien familial" width="500" height="281" loading="lazy" decoding="async" style="object-position:78% 50%">
+            <p class="over">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod.<b>Voir la série</b></p>
+          </div>
+          <h3>Un lien familial</h3>
+          <p class="meta"><span>Minisérie</span><span>Radio-Canada</span></p>
+        </a>
+        <a class="card reveal" href="#">
+          <div class="poster placeholder">
+            <span class="ph-title" aria-hidden="true">Les Invisibles</span>
+            <p class="over">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod.<b>Voir la série</b></p>
+          </div>
+          <h3>Les Invisibles</h3>
+          <p class="meta"><span>Série</span><span>TVA</span></p>
         </a>
       </div>
     </div>
@@ -595,10 +612,28 @@ if(!document.documentElement.classList.contains('intro-on'))schedule();
 })();
 
 
-// Trailer rail
-const rail=document.querySelector('.rail');
-document.querySelectorAll('.rail-ctrl button').forEach(b=>b.addEventListener('click',()=>rail.scrollBy({left:b.dataset.dir*rail.clientWidth*.66,behavior:'smooth'})));
-
+// Featured video: loads only when near the viewport, autoplays muted, pauses off-screen
+(function(){
+  const box=document.querySelector('.feature'),video=box.querySelector('video'),btn=box.querySelector('.sound');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let loaded=false;
+  function load(){
+    if(loaded)return;loaded=true;
+    video.src=matchMedia('(max-width: 860px)').matches?video.dataset.srcSm:video.dataset.srcLg;
+    video.preload='auto';
+  }
+  new IntersectionObserver(([e])=>{
+    if(e.isIntersecting){load();if(!reduce||!video.muted)video.play().catch(()=>{})}
+    else video.pause();
+  },{rootMargin:'200px 0px'}).observe(box);
+  btn.addEventListener('click',()=>{
+    load();
+    video.muted=!video.muted;
+    btn.setAttribute('aria-pressed',!video.muted);
+    btn.setAttribute('aria-label',video.muted?'Activer le son':'Couper le son');
+    if(video.paused)video.play().catch(()=>{});
+  });
+})();
 
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});
 document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4)*80+'ms';io.observe(el)});
