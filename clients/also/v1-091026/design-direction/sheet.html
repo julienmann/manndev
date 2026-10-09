@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ALSO Productions — Website design direction</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@page{size:297mm 210mm;margin:0}
+:root{--bg:#0b1117;--bg2:#111a22;--text:#f2f3f4;--muted:#8e98a2;--line:rgba(255,255,255,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font:400 10pt/1.5 "Barlow",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:297mm;height:210mm;padding:14mm 16mm 12mm;position:relative;overflow:hidden;page-break-after:always;display:flex;flex-direction:column}
+.page:last-child{page-break-after:auto}
+.top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:5mm;margin-bottom:8mm}
+.top .l{display:flex;align-items:center;gap:4mm}
+.top img{width:9mm;height:9mm}
+.label{font:500 8pt/1 "Barlow Condensed";letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+h1{font:300 58pt/.9 "Barlow Condensed";text-transform:uppercase}
+h2{font:300 30pt/1 "Barlow Condensed";text-transform:uppercase;margin:3mm 0 6mm}
+h3{font:500 10pt/1 "Barlow Condensed";letter-spacing:.2em;text-transform:uppercase;margin-bottom:3mm}
+.cap{font-size:8.5pt;color:var(--muted);margin-top:2.5mm}
+.shot{display:block;width:100%;border:1px solid var(--line)}
+.num{position:absolute;right:16mm;bottom:8mm;font:500 8pt "Barlow Condensed";letter-spacing:.2em;color:var(--muted)}
+
+/* cover */
+.cover{padding:0;clip-path:inset(0)}
+.cover .bgimg{position:absolute;inset:0;background:url(../assets/img/mrbig2.webp) center/cover;filter:blur(40px) brightness(.45);transform:scale(1.2)}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 25%,rgba(11,17,23,.4))}
+.cover .frame{position:absolute;z-index:2;right:16mm;top:50%;transform:translateY(-50%);width:150mm;border:1px solid var(--line);box-shadow:0 20mm 40mm -10mm rgba(0,0,0,.8)}
+.cover .in{position:relative;z-index:2;padding:18mm 18mm;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.cover .brand{display:flex;align-items:center;gap:5mm}
+.cover .brand img{width:16mm;height:16mm}
+.cover .brand span{font:500 9pt "Barlow Condensed";letter-spacing:.42em;text-transform:uppercase}
+.cover p.sub{font:400 13pt/1.3 "Barlow Condensed";letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:6mm}
+
+/* logo */
+.logos{display:grid;grid-template-columns:repeat(3,1fr);gap:6mm;flex:1}
+.tile{border:1px solid var(--line);display:flex;flex-direction:column}
+.tile .stage{flex:1;display:grid;place-items:center;background:var(--bg2)}
+.tile .stage.light{background:#f2f3f4}
+.tile .meta{padding:4mm 5mm;border-top:1px solid var(--line)}
+.lockup{display:flex;flex-direction:column;align-items:center;gap:3mm}
+.lockup img{width:26mm;height:26mm}
+.lockup span{font:500 8pt "Barlow Condensed";letter-spacing:.42em;padding-left:.42em;text-transform:uppercase}
+.inv{filter:invert(1)}
+
+/* colours + type */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12mm;flex:1}
+.swatches{display:grid;grid-template-columns:repeat(5,1fr);gap:3mm}
+.sw .chip{height:38mm;border:1px solid var(--line)}
+.sw b{display:block;font:500 9pt "Barlow Condensed";letter-spacing:.14em;text-transform:uppercase;margin-top:3mm}
+.sw span{font-size:8pt;color:var(--muted);display:block}
+.typo .spec{border-top:1px solid var(--line);padding:4mm 0}
+.typo .big{font:300 44pt/.95 "Barlow Condensed";text-transform:uppercase}
+.typo .mid{font:500 14pt/1 "Barlow Condensed";letter-spacing:.2em;text-transform:uppercase}
+.typo .body{font:400 11pt/1.6 "Barlow";color:#c9ced3}
+.typo .row{display:flex;justify-content:space-between;align-items:baseline;gap:6mm}
+.principles{margin-top:8mm;display:grid;grid-template-columns:1fr 1fr;gap:4mm 8mm}
+.principles p{font-size:9pt;color:#c9ced3;border-left:1px solid var(--line);padding-left:3mm}
+
+/* grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7mm}
+.g-comp{display:grid;grid-template-columns:1.3fr .55fr .55fr;gap:7mm;flex:1}
+.g-comp>*,.g2>*{min-width:0}
+.crop{overflow:hidden;border:1px solid var(--line)}
+.crop img{display:block;width:100%}
+.btns{height:10mm;width:114mm;overflow:hidden;border:0}
+.btns img{height:10mm;width:auto;max-width:none}
+.phones{display:grid;grid-template-columns:repeat(3,auto);justify-content:center;gap:14mm;flex:1;align-items:start}
+.phone{width:62mm;border:1.5mm solid #1c252e;border-radius:7mm;overflow:hidden}
+.phone img{display:block;width:100%}
+</style>
+</head>
+<body>
+
+<!-- 1 · Cover -->
+<section class="page cover">
+  <div class="bgimg"></div>
+  <img class="frame" src="shots/hero.jpg" alt="">
+  <div class="in">
+    <div class="brand"><img src="../assets/img/logo.svg" alt=""><span>Productions</span></div>
+    <div>
+      <p class="label">Website redesign</p>
+      <h1 style="margin-top:5mm">Design<br>direction</h1>
+      <p class="sub">Homepage · Visual style</p>
+    </div>
+    <p class="label">September 2026</p>
+  </div>
+</section>
+
+<!-- 2 · Logo -->
+<section class="page">
+  <div class="top"><div class="l"><img src="../assets/img/logo.svg" alt=""><span class="label">Design direction</span></div><span class="label">01 — Logo</span></div>
+  <p class="label">Identity</p>
+  <h2>Logo &amp; lock-up</h2>
+  <div class="logos">
+    <div class="tile"><div class="stage"><div class="lockup"><img src="../assets/img/logo.svg" alt=""><span>Productions</span></div></div>
+      <div class="meta"><h3>Primary lock-up</h3><p class="cap">Symbol with the “Productions” wordmark. Used in the header and footer.</p></div></div>
+    <div class="tile"><div class="stage light"><div class="lockup" style="color:#0b1117"><img class="inv" src="../assets/img/logo.svg" alt=""><span>Productions</span></div></div>
+      <div class="meta"><h3>On light backgrounds</h3><p class="cap">Inverted version for print, press kits and light surfaces.</p></div></div>
+    <div class="tile"><div class="stage"><div style="display:flex;gap:8mm;align-items:end"><img src="../assets/img/logo.svg" alt="" style="width:18mm"><img src="../assets/img/logo.svg" alt="" style="width:10mm"><img src="../assets/img/logo.svg" alt="" style="width:5mm"></div></div>
+      <div class="meta"><h3>Symbol only</h3><p class="cap">Browser icon, social avatars and small placements.</p></div></div>
+  </div>
+  <span class="num">02</span>
+</section>
+
+<!-- 3 · Colour & type -->
+<section class="page">
+  <div class="top"><div class="l"><img src="../assets/img/logo.svg" alt=""><span class="label">Design direction</span></div><span class="label">02 — Colour &amp; type</span></div>
+  <div class="two">
+    <div>
+      <p class="label">Palette</p>
+      <h2>Colours</h2>
+      <div class="swatches">
+        <div class="sw"><div class="chip" style="background:#0b1117"></div><b>Night</b><span>#0B1117</span><span>Background</span></div>
+        <div class="sw"><div class="chip" style="background:#111a22"></div><b>Slate</b><span>#111A22</span><span>Surfaces</span></div>
+        <div class="sw"><div class="chip" style="background:#262c32"></div><b>Line</b><span>#262C32</span><span>Dividers</span></div>
+        <div class="sw"><div class="chip" style="background:#8e98a2"></div><b>Steel</b><span>#8E98A2</span><span>Secondary text</span></div>
+        <div class="sw"><div class="chip" style="background:#f2f3f4"></div><b>White</b><span>#F2F3F4</span><span>Text &amp; buttons</span></div>
+      </div>
+      <div class="principles">
+        <p>A dark, cinematic base so the key art and trailers carry the colour.</p>
+        <p>No brand accent colour: each production brings its own.</p>
+        <p>White is reserved for text and primary buttons.</p>
+        <p>Thin lines instead of boxes and shadows.</p>
+      </div>
+    </div>
+    <div class="typo">
+      <p class="label">Typography</p>
+      <h2>Type</h2>
+      <div class="spec"><div class="row"><span class="big">Mégantic</span><span class="label">Barlow Condensed Light</span></div><p class="cap">Titles and headings, uppercase</p></div>
+      <div class="spec"><div class="row"><span class="mid">Now streaming</span><span class="label">Barlow Condensed Medium</span></div><p class="cap">Navigation, labels and buttons, uppercase with wide letter-spacing</p></div>
+      <div class="spec"><div class="row"><span class="body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</span><span class="label" style="white-space:nowrap">Barlow Regular</span></div><p class="cap">Body text and descriptions</p></div>
+    </div>
+  </div>
+  <span class="num">03</span>
+</section>
+
+<!-- 4 · Hero -->
+<section class="page">
+  <div class="top"><div class="l"><img src="../assets/img/logo.svg" alt=""><span class="label">Design direction</span></div><span class="label">03 — Homepage</span></div>
+  <img class="shot" src="shots/hero.jpg" alt="" style="width:auto;height:150mm;align-self:center">
+  <p class="cap" style="text-align:center">Full-screen hero that cycles through the current productions, with a numbered title menu along the bottom.</p>
+  <span class="num">04</span>
+</section>
+
+<!-- 5 · Components -->
+<section class="page">
+  <div class="top"><div class="l"><img src="../assets/img/logo.svg" alt=""><span class="label">Design direction</span></div><span class="label">04 — Components</span></div>
+  <p class="label">Building blocks</p>
+  <h2>Design elements</h2>
+  <div class="g-comp">
+    <div style="display:flex;flex-direction:column;gap:7mm">
+      <div><h3>Buttons</h3><div class="crop btns"><img src="shots/buttons.jpg" alt=""></div></div>
+      <div><h3>Hero title menu</h3><div class="crop"><img src="shots/hero-nav.jpg" alt=""></div></div>
+      <div><h3>Trailer tile</h3><div class="crop" style="width:70%"><img src="shots/trailer-tile.jpg" alt=""></div></div>
+    </div>
+    <div><h3>Poster card</h3><div class="crop"><img src="shots/card.jpg" alt=""></div></div>
+    <div><h3>Card on hover</h3><div class="crop"><img src="shots/card-hover.jpg" alt=""></div></div>
+  </div>
+  <span class="num">05</span>
+</section>
+
+<!-- 6 · Sections -->
+<section class="page">
+  <div class="top"><div class="l"><img src="../assets/img/logo.svg" alt=""><span class="label">Design direction</span></div><span class="label">05 — Sections</span></div>
+  <div class="g2">
+    <div><h3>Latest trailers</h3><img class="shot" src="shots/trailers.jpg" alt=""></div>
+    <div><h3>About</h3><img class="shot" src="shots/about.jpg" alt=""></div>
+    <div><h3>Series &amp; films</h3><div class="crop" style="aspect-ratio:2880/1492"><img src="shots/productions.jpg" alt=""></div></div>
+    <div><h3>The team</h3><div class="crop" style="aspect-ratio:2880/1492"><img src="shots/team.jpg" alt=""></div></div>
+  </div>
+  <span class="num">06</span>
+</section>
+
+<!-- 7 · Sections 2 -->
+<section class="page">
+  <div class="top"><div class="l"><img src="../assets/img/logo.svg" alt=""><span class="label">Design direction</span></div><span class="label">05 — Sections</span></div>
+  <div class="g2">
+    <div><h3>Latest news</h3><img class="shot" src="shots/news.jpg" alt=""></div>
+    <div><h3>Contact</h3><img class="shot" src="shots/contact.jpg" alt=""></div>
+  </div>
+  <div style="margin-top:7mm"><h3>Footer</h3><img class="shot" src="shots/footer.jpg" alt=""></div>
+  <span class="num">07</span>
+</section>
+
+<!-- 8 · Mobile -->
+<section class="page">
+  <div class="top"><div class="l"><img src="../assets/img/logo.svg" alt=""><span class="label">Design direction</span></div><span class="label">06 — Mobile</span></div>
+  <div class="phones">
+    <div><div class="phone"><img src="shots/m-hero.jpg" alt=""></div><p class="cap" style="text-align:center">Hero</p></div>
+    <div><div class="phone"><img src="shots/m-menu.jpg" alt=""></div><p class="cap" style="text-align:center">Menu</p></div>
+    <div><div class="phone"><img src="shots/m-productions.jpg" alt=""></div><p class="cap" style="text-align:center">Productions</p></div>
+  </div>
+  <p class="cap" style="text-align:center;margin-top:4mm">Body text is placeholder (lorem ipsum). Final copy, high-resolution key art and trailers to come.</p>
+  <span class="num">08</span>
+</section>
+
+</body>
+</html>
