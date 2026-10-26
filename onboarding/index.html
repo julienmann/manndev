@@ -2,15 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZEZB4R3CP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-2ZEZB4R3CP');
-</script>
+<!-- Google Analytics loads only after the visitor allows it (Québec Law 25) -->
+<script defer src="/js/consent.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Project Onboarding · Mann Dev</title>
+<title>Project Onboarding · Manndev</title>
 <meta name="description" content="Tell us about your project so we can scope it properly.">
 <!-- Sent to clients directly, so kept out of search results and the sitemap. -->
 <meta name="robots" content="noindex, nofollow">
@@ -18,8 +13,8 @@
 <meta name="author" content="Julien Mann">
 <meta name="theme-color" content="#1e2530">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Mann Dev">
-<meta property="og:title" content="Project Onboarding · Mann Dev">
+<meta property="og:site_name" content="Manndev">
+<meta property="og:title" content="Project Onboarding · Manndev">
 <meta property="og:description" content="Tell us about your project so we can scope it properly.">
 <meta property="og:url" content="https://manndev.com/onboarding/">
 <meta property="og:image" content="https://manndev.com/img/og-image.png">
@@ -50,14 +45,15 @@
   --card-radius: 28px;
 }
 
-html{scroll-behavior:smooth;overflow-x:hidden;}
+html{scroll-behavior:smooth;}
+/* clip, not hidden: "hidden" turns the root into a scroll box and breaks the sticky rail */
+@supports (overflow:clip){html{overflow-x:clip;}}
 body{
   background:var(--bg);
   color:var(--fg);
   font-family:var(--body);
   font-size:16px;
   line-height:1.7;
-  overflow-x:hidden;
 }
 ::selection{background:var(--accent);color:var(--bg);}
 a{color:inherit;text-decoration:none;}
@@ -204,8 +200,14 @@ nav ul li a:hover{opacity:.75;}
   border-radius:50%;display:grid;place-items:center;transition:border-color .2s;
 }
 .opt input[type=checkbox]~.mark{border-radius:5px;}
-.opt:has(input:checked) .mark{border-color:var(--accent);}
-.opt:has(input:checked) .mark::after{content:'';width:8px;height:8px;border-radius:inherit;background:var(--accent);}
+/* the mark follows its input as a sibling, so selection shows even without :has() */
+.opt input:checked~.mark{border-color:var(--accent);}
+.opt input:checked~.mark::after{content:'';width:8px;height:8px;border-radius:inherit;background:var(--accent);}
+/* no :has(): the focus ring moves from the card to the mark */
+@supports not selector(:has(*)){
+  .opt input:focus~.mark{outline:2px solid var(--accent);outline-offset:3px;}
+  .opt input:focus:not(:focus-visible)~.mark{outline:none;}
+}
 .opt-t{display:block;font-size:.97rem;color:var(--fg);font-weight:500;line-height:1.45;}
 .opt-d{display:block;font-size:.84rem;color:var(--mid);margin-top:.15rem;line-height:1.45;}
 .other{margin-top:.75rem;}
@@ -249,6 +251,8 @@ footer{max-width:var(--container);margin:96px auto 0;padding:0 var(--gutter) 3re
   padding-top:2rem;border-top:1px solid var(--rule);
 }
 .footer-copy{font-size:.82rem;color:var(--mid);}
+.footer-legal{margin-left:1rem;border-bottom:1px solid var(--rule);transition:color .2s var(--ease-out),border-color .2s var(--ease-out);}
+.footer-legal:hover{color:var(--fg);border-bottom-color:var(--accent);}
 
 @media(pointer:coarse){
   nav ul li a,.nav-lang,.h-logo,.link-back{position:relative;}
@@ -275,7 +279,7 @@ footer{max-width:var(--container);margin:96px auto 0;padding:0 var(--gutter) 3re
 <body>
 
 <header>
-  <a href="/" class="h-logo" aria-label="Mann Dev Home" id="home-link">
+  <a href="/" class="h-logo" aria-label="Manndev Home" id="home-link">
     <img src="/img/logo.png?v=2" alt="" width="298" height="59">
   </a>
   <nav aria-label="Main navigation" id="main-nav">
@@ -336,8 +340,8 @@ footer{max-width:var(--container);margin:96px auto 0;padding:0 var(--gutter) 3re
 
 <footer>
   <div class="footer-bottom">
-    <a href="/" class="footer-logo" aria-label="Mann Dev Home"><img src="/img/logo.png?v=2" alt="" width="298" height="59"></a>
-    <p class="footer-copy">&copy; 2026 Mann Dev.</p>
+    <a href="/" class="footer-logo" aria-label="Manndev Home"><img src="/img/logo.png?v=2" alt="" width="298" height="59"></a>
+    <p class="footer-copy">&copy; 2026 Manndev. <a href="/privacy/" class="footer-legal" id="privacy-link" data-t="privacy">Privacy</a></p>
   </div>
 </footer>
 
@@ -348,8 +352,9 @@ footer{max-width:var(--container);margin:96px auto 0;padding:0 var(--gutter) 3re
    French follows Québec usage (courriel, no space before ?, nbsp before :).
 ────────────────────────────────────────── */
 const UI = {
-  title:      ['Project Onboarding · Mann Dev', 'Démarrage de projet · Mann Dev'],
+  title:      ['Project Onboarding · Manndev', 'Démarrage de projet · Manndev'],
   backToSite: ['Back to site', 'Retour au site'],
+  privacy: ['Privacy', 'Confidentialité'],
   kicker:     ['Project onboarding', 'Démarrage de projet'],
   h1:         ['Let’s <em>scope</em> your project.', 'Parlons de votre <em>projet</em>.'],
   intro:      ['About five minutes, and the questions adjust to your project. It means our first call is spent on decisions instead of questions. Only starred questions are required.',
@@ -374,7 +379,7 @@ const UI = {
   doneP:      ['Your answers are with us. We read every one personally and will be in touch within 24 hours to set up a scoping call.',
                'Vos réponses nous sont parvenues. Nous les lisons toutes personnellement et vous reviendrons d’ici 24 heures pour planifier un appel de cadrage.'],
   doneLink:   ['Back to manndev.com', 'Retour à manndev.com'],
-  home:       ['Mann Dev Home', 'Accueil Mann Dev'],
+  home:       ['Manndev Home', 'Accueil Manndev'],
   mainNav:    ['Main navigation', 'Navigation principale'],
 };
 
@@ -546,6 +551,7 @@ const savedEl = document.getElementById('saved');
 
 let L = pickLang();
 let cur = 0, seen = new Set([0]);   // indexes into STEPS (hidden steps keep their index)
+let submitted = false, doneName = '';   // once sent, the draft is gone for good
 
 function pickLang() {
   const q = new URLSearchParams(location.search).get('lang');
@@ -618,6 +624,7 @@ function render() {
   document.getElementById('main-nav').setAttribute('aria-label', ui('mainNav'));
   const href = L ? '/fr/' : '/';
   ['home-link', 'site-link', 'done-link'].forEach(id => document.getElementById(id).setAttribute('href', href));
+  document.getElementById('privacy-link').setAttribute('href', L ? '/fr/confidentialite/' : '/privacy/');
   const tog = document.getElementById('lang-toggle');
   tog.textContent = L ? 'EN' : 'FR';
   tog.lang = L ? 'en' : 'fr';
@@ -768,6 +775,7 @@ function restore(d) {
 let saveTimer;
 function save() {
   clearTimeout(saveTimer);
+  if (submitted) return;
   saveTimer = setTimeout(() => {
     try {
       localStorage.setItem(DRAFT_KEY, JSON.stringify({ v: collect(), cur, seen: [...seen] }));
@@ -793,7 +801,9 @@ document.getElementById('lang-toggle').addEventListener('click', () => {
   L = L ? 0 : 1;
   try { localStorage.setItem('lang', L ? 'fr' : 'en'); } catch (e) {}
   const u = new URL(location.href); u.searchParams.set('lang', L ? 'fr' : 'en'); history.replaceState(null, '', u);
-  render(); restore(d); show(cur, false);
+  render();
+  if (submitted) doneHeading();
+  else { restore(d); show(cur, false); }
   if (typeof gtag === 'function') gtag('event', 'language_switch', { language: L ? 'fr' : 'en' });
 });
 
@@ -853,23 +863,28 @@ function send() {
     .then(r => r.json())
     .then(j => {
       if (!j.success) throw new Error(j.message);
+      submitted = true;
       clearTimeout(saveTimer);
       try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
       if (typeof gtag === 'function') gtag('event', 'onboarding_submit', { project_type: d.type, budget: d.budget });
-      const first = (d.name || '').trim().split(/\s+/)[0];
+      doneName = (d.name || '').trim().split(/\s+/)[0];
       form.hidden = true;
       document.querySelector('.ob-rail').style.visibility = 'hidden';
-      const done = document.getElementById('done');
-      done.hidden = false;
-      const h = document.getElementById('done-h');
-      h.textContent = first ? ui('doneH', { name: first }) : ui('doneHAnon');
-      h.focus();
+      document.getElementById('done').hidden = false;
+      doneHeading().focus();
     })
     .catch(() => {
       status.textContent = ui('error');
       status.classList.add('is-error');
       nextBtn.disabled = false;
     });
+}
+
+/* thank-you heading, in the current language (re-run by the language toggle) */
+function doneHeading() {
+  const h = document.getElementById('done-h');
+  h.textContent = doneName ? ui('doneH', { name: doneName }) : ui('doneHAnon');
+  return h;
 }
 
 /* ──────────────────────────────────────────

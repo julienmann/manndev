@@ -58,9 +58,9 @@ export type ClientInfo = {
   passwordChangedAt?: string;
 };
 
-export type ClientInfoResult =
-  | { ok: true; info: ClientInfo; folder: string }
-  | { ok: false; reason: 'invalid' | 'network' };
+type Failure = { ok: false; reason: 'invalid' | 'network' };
+
+export type ClientInfoResult = { ok: true; info: ClientInfo; folder: string } | Failure;
 
 // Logins live in /client-files/_logins/<key>.json, each pointing at the
 // client's permanent data folder: { "id": "<folder>" }. Keeping the two apart
@@ -68,14 +68,18 @@ export type ClientInfoResult =
 // link (which contains the folder id) never doubles as a login.
 export const LOGINS_DIR = '_logins';
 
-async function getJson(url: string): Promise<{ ok: true; data: any } | { ok: false; reason: 'invalid' | 'network' }> {
+// 'invalid' means the file doesn't exist (a wrong or retired key), so the
+// caller can forget the key. Anything else that goes wrong (offline, 403, 5xx)
+// is 'network': a temporary problem worth retrying, not a reason to sign out.
+async function getJson(url: string): Promise<{ ok: true; data: any } | Failure> {
   let res: Response;
   try {
     res = await fetch(url, { cache: 'no-store' });
   } catch {
     return { ok: false, reason: 'network' };
   }
-  if (!res.ok) return { ok: false, reason: 'invalid' };
+  if (res.status === 404) return { ok: false, reason: 'invalid' };
+  if (!res.ok) return { ok: false, reason: 'network' };
   // Some static hosts fall back to serving index.html (with a 200) for any
   // unmatched path instead of a real 404 — treat a response that isn't
   // actually JSON the same as "doesn't exist", not a crash.
@@ -86,14 +90,26 @@ async function getJson(url: string): Promise<{ ok: true; data: any } | { ok: fal
   }
 }
 
-export async function fetchClientInfo(key: string): Promise<ClientInfoResult> {
+// Login key -> the client's data folder id.
+export async function fetchFolder(key: string): Promise<{ ok: true; folder: string } | Failure> {
   const pointer = await getJson(`/client-files/${LOGINS_DIR}/${key}.json`);
   if (!pointer.ok) return pointer;
   const folder = pointer.data?.id;
   if (typeof folder !== 'string' || !/^[0-9a-f]{32}$/.test(folder)) return { ok: false, reason: 'invalid' };
+  return { ok: true, folder };
+}
 
+export async function fetchInfo(folder: string): Promise<{ ok: true; info: ClientInfo } | Failure> {
   const info = await getJson(`/client-files/${folder}/info.json`);
   if (!info.ok) return info;
   if (typeof info.data?.file !== 'string') return { ok: false, reason: 'invalid' };
-  return { ok: true, info: info.data, folder };
+  return { ok: true, info: info.data };
+}
+
+export async function fetchClientInfo(key: string): Promise<ClientInfoResult> {
+  const pointer = await fetchFolder(key);
+  if (!pointer.ok) return pointer;
+  const info = await fetchInfo(pointer.folder);
+  if (!info.ok) return info;
+  return { ok: true, info: info.info, folder: pointer.folder };
 }

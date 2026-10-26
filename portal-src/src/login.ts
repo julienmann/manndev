@@ -9,17 +9,19 @@ const status = document.querySelector<HTMLParagraphElement>('#status')!;
 
 const setStatus = (message: string, tone?: 'error' | 'success') => showStatus(status, message, tone);
 
-async function tryKey(key: string): Promise<boolean> {
+// Signs in with the key if it's a real login. Otherwise returns why not: a
+// wrong username/password ('invalid') or a connection/server problem ('network').
+async function tryKey(key: string): Promise<'invalid' | 'network' | null> {
   const result = await fetchClientInfo(key);
-  if (!result.ok) return false;
+  if (!result.ok) return result.reason;
   localStorage.setItem(SESSION_KEY, key);
   window.location.replace('./dashboard.html');
-  return true;
+  return null;
 }
 
-// Already signed in on this device? Skip straight to the dashboard.
-const storedKey = localStorage.getItem(SESSION_KEY);
-if (storedKey) tryKey(storedKey);
+// Already signed in on this device? Skip straight to the dashboard, which
+// checks the key itself and sends an expired one back here with ?expired=1.
+if (localStorage.getItem(SESSION_KEY)) window.location.replace('./dashboard.html');
 
 if (new URLSearchParams(window.location.search).has('expired')) {
   setStatus('Your session expired. Sign in again.');
@@ -40,13 +42,17 @@ form.addEventListener('submit', async (e) => {
   submitLabel.textContent = 'Checking…';
   setStatus('');
 
-  const ok = await tryKey(await deriveClientKey(username, password));
+  const failure = await tryKey(await deriveClientKey(username, password));
+  if (!failure) return;
 
-  if (!ok) {
-    submitBtn.disabled = false;
-    submitLabel.textContent = 'Enter portal';
+  submitBtn.disabled = false;
+  submitLabel.textContent = 'Enter portal';
+  if (failure === 'network') {
+    // Not their fault: keep the password so they can just try again.
+    setStatus("Couldn't reach the portal. Check your connection and try again.", 'error');
+  } else {
     setStatus("That username and password don't match. Check them and try again.", 'error');
     passwordInput.value = '';
-    passwordInput.focus();
   }
+  passwordInput.focus();
 });

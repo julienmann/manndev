@@ -3,33 +3,28 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZEZB4R3CP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-2ZEZB4R3CP');
-</script>
+<!-- Google Analytics loads only after the visitor allows it (Québec Law 25) -->
+<script defer src="/js/consent.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Insights: Web Design Guides for Small Businesses · Mann Dev</title>
-<meta name="description" content="Practical guides on web design, performance, accessibility and SEO for small business owners, written by a Montréal web developer. No jargon, no sales pitch.">
+<title>Insights: Web Design Guides for Small Businesses · Manndev</title>
+<meta name="description" content="Practical guides on web design, performance, accessibility and SEO for small business owners, written by Manndev, a small Montréal web studio. No jargon, no sales pitch.">
 <link rel="canonical" href="https://manndev.com/blog/">
-<link rel="alternate" type="application/rss+xml" title="Mann Dev Insights" href="https://manndev.com/blog/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Manndev Insights" href="https://manndev.com/blog/feed.xml">
 <meta name="author" content="Julien Mann">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#1e2530">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Mann Dev">
-<meta property="og:title" content="Insights: Web Design Guides for Small Businesses · Mann Dev">
-<meta property="og:description" content="Practical guides on web design, performance, accessibility and SEO for small business owners, written by a Montréal web developer. No jargon, no sales pitch.">
+<meta property="og:site_name" content="Manndev">
+<meta property="og:title" content="Insights: Web Design Guides for Small Businesses · Manndev">
+<meta property="og:description" content="Practical guides on web design, performance, accessibility and SEO for small business owners, written by Manndev, a small Montréal web studio. No jargon, no sales pitch.">
 <meta property="og:url" content="https://manndev.com/blog/">
 <meta property="og:image" content="https://manndev.com/img/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_CA">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Insights: Web Design Guides for Small Businesses · Mann Dev">
-<meta name="twitter:description" content="Practical guides on web design, performance, accessibility and SEO for small business owners, written by a Montréal web developer. No jargon, no sales pitch.">
+<meta name="twitter:title" content="Insights: Web Design Guides for Small Businesses · Manndev">
+<meta name="twitter:description" content="Practical guides on web design, performance, accessibility and SEO for small business owners, written by Manndev, a small Montréal web studio. No jargon, no sales pitch.">
 <meta name="twitter:image" content="https://manndev.com/img/og-image.png">
 <link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="/img/favicon-192.png" sizes="192x192">
@@ -51,28 +46,42 @@
   --rule:   rgba(240,242,244,.09);
   --rule-soft: rgba(240,242,244,.06);
   --rule-accent: rgba(242,201,76,.22);
+  --accent-wash: rgba(242,201,76,.08);      /* hover fills */
+  --accent-edge: rgba(242,201,76,.2);       /* card edge on hover */
+  --accent-edge-strong: rgba(242,201,76,.42); /* tag edge on hover */
   --display:'Lora', Georgia, serif;
   --body:   'Figtree', system-ui, sans-serif;
   --gutter: clamp(1.5rem, 5vw, 4rem);
   --container: 1280px;
   --section-gap: 96px;
   --card-radius: 28px;
+  --ease-out: cubic-bezier(.22,1,.36,1);   /* ease-out-quint: every UI transition */
 }
 
-html{overflow-x:hidden;scroll-behavior:smooth;}
+html{scroll-behavior:smooth;}
+/* clip, not hidden: "hidden" turns the root into a scroll box and breaks the sticky contents list */
+@supports (overflow:clip){html{overflow-x:clip;}}
 body{
   background:var(--bg);
   color:var(--fg);
   font-family:var(--body);
   font-size:16px;
   line-height:1.7;
-  overflow-x:hidden;
 }
 ::selection{background:var(--accent);color:var(--bg);}
 a{color:inherit;text-decoration:none;}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
 a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}html{scroll-behavior:auto;}}
+
+.skip-link{
+  position:absolute;left:var(--gutter);top:.75rem;z-index:60;
+  font-size:.85rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--bg);
+  background:var(--accent);padding:.6rem 1rem;border-radius:999px;
+  transform:translateY(-200%);transition:transform .3s var(--ease-out);
+}
+.skip-link:focus{transform:none;}
+main:focus{outline:none;}
 
 /* ── GRAIN ── */
 body::after{
@@ -98,7 +107,7 @@ nav ul li a{
   color:var(--fg);
   border-bottom:2px solid var(--accent);
   padding-bottom:2px;
-  transition:opacity .2s;
+  transition:opacity .2s var(--ease-out);
 }
 nav ul li a:hover{opacity:.75;}
 nav ul li a.nav-portal,nav ul li a.nav-lang{border-bottom-color:transparent;opacity:.6;}
@@ -118,7 +127,7 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
   border:1px solid var(--rule-accent);
   padding:.3rem .8rem;
   color:var(--accent);
-  transition:background-color .3s ease, border-color .3s ease;
+  transition:background-color .3s var(--ease-out), border-color .3s var(--ease-out);
 }
 .meta{font-size:.82rem;color:var(--mid);}
 .meta-sep{margin:0 .5rem;}
@@ -130,13 +139,48 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
   position:relative;
 }
 .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
-.cta-underline{height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.25,1,.5,1);}
-.link-cta svg{transition:transform .3s ease;flex-shrink:0;}
+.cta-underline{height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease-out);}
+.link-cta svg{transition:transform .3s var(--ease-out);flex-shrink:0;}
 .link-cta:hover .cta-underline{transform:scaleX(1);}
 .link-cta:hover svg{transform:translateX(3px);}
+/* "Start a project": a gold dot that floods the pill on hover while the label hands
+   over to a filled copy with an arrow (after Magic UI's interactive hover button).
+   The flood is a 640px circle scaled down to the 8px dot, so it stays crisp and
+   only transform/opacity animate. */
+.cta-pill{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--accent);border-radius:999px;
+  padding:.9rem 1.75rem .9rem 1.35rem;
+  font-family:var(--body);font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);text-decoration:none;
+}
+.cta-pill-rest{display:inline-flex;align-items:center;gap:.7rem;}
+.cta-pill-dot{position:relative;width:8px;height:8px;flex-shrink:0;}
+.cta-pill-dot::before{
+  content:'';position:absolute;left:50%;top:50%;z-index:-1;
+  width:640px;height:640px;margin:-320px 0 0 -320px;border-radius:50%;
+  background:var(--accent);transform:scale(.0125);will-change:transform;
+  transition:transform .6s var(--ease-out);
+}
+.cta-pill-label{display:inline-block;transition:transform .45s var(--ease-out), opacity .3s var(--ease-out);}
+.cta-pill-hover{
+  position:absolute;inset:0;z-index:1;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  color:var(--bg);opacity:0;transform:translateX(2.5rem);
+  transition:transform .45s var(--ease-out), opacity .45s var(--ease-out);
+}
+.cta-pill:focus-visible .cta-pill-dot::before{transform:scale(1);}
+.cta-pill:focus-visible .cta-pill-label{transform:translateX(2.5rem);opacity:0;}
+.cta-pill:focus-visible .cta-pill-hover{transform:none;opacity:1;}
+@media(hover:hover){
+  .cta-pill:hover .cta-pill-dot::before{transform:scale(1);}
+  .cta-pill:hover .cta-pill-label{transform:translateX(2.5rem);opacity:0;}
+  .cta-pill:hover .cta-pill-hover{transform:none;opacity:1;}
+}
 
 /* entrance: content rises in once, staggered */
-.rise{animation:rise .6s cubic-bezier(.25,1,.5,1) both;}
+.rise{animation:rise .6s var(--ease-out) both;}
 .rise-2{animation-delay:.08s;}
 .rise-3{animation-delay:.16s;}
 .rise-4{animation-delay:.26s;}
@@ -165,10 +209,10 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
   color:var(--mid);background:transparent;cursor:pointer;
   border:1px solid var(--rule);border-radius:14px;
   padding:.5rem 1rem;
-  transition:color .2s ease, border-color .2s ease, background-color .2s ease;
+  transition:color .2s var(--ease-out), border-color .2s var(--ease-out), background-color .2s var(--ease-out);
 }
 .topic-btn:hover{color:var(--fg);border-color:var(--rule-accent);}
-.topic-btn[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);background:rgba(242,201,76,.06);}
+.topic-btn[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);background:var(--accent-wash);}
 .topic-count{color:var(--mid);margin-left:.35rem;font-weight:500;}
 
 /* featured: the newest guide, set as a card */
@@ -179,7 +223,7 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
   border-radius:var(--card-radius);
   padding:clamp(2rem,4vw,3.25rem);
   position:relative;
-  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  transition:transform .3s var(--ease-out), box-shadow .3s var(--ease-out), border-color .3s var(--ease-out);
 }
 .feature-label{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;}
 .feature-flag{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--fg);}
@@ -208,15 +252,15 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
   display:grid;grid-template-columns:4.5rem 1fr 11rem 2rem;gap:1.5rem;align-items:start;
   padding:2.25rem 0;
 }
-.entry-num{font:700 2.4rem/1 var(--display);color:rgba(242,201,76,.46);transition:color .3s ease;}
+.entry-num{font:700 2.4rem/1 var(--display);color:rgba(242,201,76,.46);transition:color .3s var(--ease-out);}
 .entry-title{font:600 clamp(1.25rem,2vw,1.5rem)/1.25 var(--display);color:var(--fg);margin-bottom:.6rem;}
 .entry-title span{
   background:linear-gradient(var(--accent),var(--accent)) left bottom/0 1px no-repeat;
-  transition:background-size .35s cubic-bezier(.25,1,.5,1);
+  transition:background-size .35s var(--ease-out);
 }
 .entry-p{font-size:.92rem;color:var(--mid);line-height:1.8;max-width:640px;}
 .entry-side{display:flex;flex-direction:column;align-items:flex-start;gap:.75rem;padding-top:.2rem;}
-.entry-arrow{color:var(--accent);padding-top:.35rem;transition:transform .3s ease;}
+.entry-arrow{color:var(--accent);padding-top:.35rem;transition:transform .3s var(--ease-out);}
 .library-empty{padding:2rem 0;color:var(--mid);}
 
 /* closing band */
@@ -236,7 +280,7 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
 @media(prefers-reduced-motion:reduce){.read-progress{display:none;}}
 
 .crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;list-style:none;margin-bottom:2rem;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;}
-.crumbs a{color:var(--fg);border-bottom:1px solid var(--rule-accent);transition:border-color .2s;}
+.crumbs a{color:var(--fg);border-bottom:1px solid var(--rule-accent);transition:border-color .2s var(--ease-out);}
 .crumbs a:hover{border-bottom-color:var(--accent);}
 .crumbs li{color:var(--mid);}
 .crumbs li+li::before{content:'/';margin-right:.5rem;color:var(--mid);}
@@ -252,7 +296,7 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
 .post-main{grid-column:1;grid-row:1;min-width:0;}
 .toc-label{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;}
 .toc{list-style:none;border-left:1px solid var(--rule);}
-.toc a{display:block;padding:.45rem 0 .45rem 1rem;margin-left:-1px;border-left:1px solid transparent;font-size:.88rem;line-height:1.45;color:var(--mid);transition:color .2s, border-color .2s;}
+.toc a{display:block;padding:.45rem 0 .45rem 1rem;margin-left:-1px;border-left:1px solid transparent;font-size:.88rem;line-height:1.45;color:var(--mid);transition:color .2s var(--ease-out), border-color .2s var(--ease-out);}
 .toc a:hover{color:var(--fg);border-left-color:var(--accent);}
 .aside-cta{margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--rule);}
 .aside-cta p{font-size:.88rem;color:var(--mid);margin-bottom:1rem;line-height:1.6;}
@@ -264,7 +308,7 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
 .prose h2 + *,.prose h3 + *{margin-top:1rem;}
 .prose strong{color:var(--fg);font-weight:600;}
 .prose em{font-style:italic;}
-.prose a{color:var(--fg);border-bottom:1px solid var(--accent);transition:color .2s;}
+.prose a{color:var(--fg);border-bottom:1px solid var(--accent);transition:color .2s var(--ease-out);}
 .prose a:hover{color:var(--accent);}
 .prose ul,.prose ol{padding-left:1.25rem;}
 .prose li + li{margin-top:.6rem;}
@@ -298,12 +342,12 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
 .footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:2rem;margin-bottom:3rem;}
 .footer-nav{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
 .footer-nav a{
-  font-family:var(--body);font-size:.82rem;font-weight:500;
+  font-family:var(--body);font-size:.85rem;font-weight:500;
   text-transform:uppercase;letter-spacing:.05em;
   color:var(--fg);
   border-bottom:2px solid var(--accent);
   padding-bottom:1px;
-  transition:opacity .2s;
+  transition:opacity .2s var(--ease-out);
 }
 .footer-nav a:hover{opacity:.7;}
 .footer-nav a.footer-portal{border-bottom-color:transparent;opacity:.5;}
@@ -312,20 +356,20 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
   padding-top:2rem;border-top:1px solid var(--rule);
 }
-.footer-copy{font-size:.82rem;color:var(--mid);}
-.footer-feed{font-size:.82rem;color:var(--mid);border-bottom:1px solid var(--rule);transition:color .2s, border-color .2s;}
+.footer-copy{font-size:.9rem;color:var(--mid);}
+.footer-feed{font-size:.9rem;color:var(--mid);border-bottom:1px solid var(--rule);transition:color .2s var(--ease-out), border-color .2s var(--ease-out);}
 .footer-feed:hover{color:var(--fg);border-bottom-color:var(--accent);}
 
 /* lifts only where a pointer can hover, so taps never leave a card mid-air */
 @media(hover:hover){
-  .feature:hover{transform:translateY(-6px);box-shadow:0 16px 44px rgba(0,0,0,.3);border-color:rgba(242,201,76,.2);}
-  .feature:hover .tag{background:rgba(242,201,76,.08);border-color:rgba(242,201,76,.45);}
+  .feature:hover{transform:translateY(-6px);box-shadow:0 16px 44px rgba(0,0,0,.3);border-color:var(--accent-edge);}
+  .feature:hover .tag{background:var(--accent-wash);border-color:var(--accent-edge-strong);}
   .feature:hover .cta-underline{transform:scaleX(1);}
   .feature:hover .link-cta svg{transform:translateX(3px);}
   .entry-link:hover .entry-num{color:rgba(242,201,76,.85);}
   .entry-link:hover .entry-title span{background-size:100% 1px;}
   .entry-link:hover .entry-arrow{transform:translateX(4px);}
-  .entry-link:hover .tag{background:rgba(242,201,76,.08);border-color:rgba(242,201,76,.45);}
+  .entry-link:hover .tag{background:var(--accent-wash);border-color:var(--accent-edge-strong);}
 }
 
 /* bigger tap areas on touch screens without changing the layout */
@@ -345,7 +389,7 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
   :root{--gutter:1.5rem;--section-gap:64px;}
   header{margin-bottom:64px;}
   nav ul{gap:1.2rem;}
-  nav ul li a{font-size:.75rem;}
+  nav ul li a{font-size:.7rem;}
   .hub-head,.feature,.ask{grid-template-columns:1fr;}
   .feature-side{border-left:none;padding-left:0;border-top:1px solid var(--rule);padding-top:1.75rem;}
   .entry-link{grid-template-columns:3.25rem 1fr;gap:.5rem 1.25rem;}
@@ -359,8 +403,10 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
   header{flex-direction:column;align-items:flex-start;gap:1.25rem;margin-bottom:48px;}
   nav{width:100%;}
   nav ul{gap:.6rem 1.1rem;flex-wrap:wrap;justify-content:flex-start;}
-  nav ul li a{font-size:.72rem;}
+  nav ul li a{font-size:.7rem;}
   .nav-hide-mobile{display:none;}
+  /* the language toggle can wrap to its own line here, so drop the divider */
+  .nav-lang-item{border-left:none;padding-left:0;margin-left:0;}
   .hub-h1{font-size:clamp(34px,9vw,52px);}
   .topics-label{width:100%;margin:0 0 .25rem;}
   .entry-link{grid-template-columns:1fr;}
@@ -377,20 +423,15 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
     {
       "@type": "Blog",
       "@id": "https://manndev.com/blog/#blog",
-      "name": "Mann Dev Insights",
+      "name": "Manndev Insights",
       "url": "https://manndev.com/blog/",
-      "description": "Practical guides on web design, performance, accessibility and SEO for small business owners, written by a Montréal web developer. No jargon, no sales pitch.",
+      "description": "Practical guides on web design, performance, accessibility and SEO for small business owners, written by Manndev, a small Montréal web studio. No jargon, no sales pitch.",
       "inLanguage": "en-CA",
       "publisher": {
         "@id": "https://manndev.com/#business"
       },
       "author": {
-        "@type": "Person",
-        "name": "Julien Mann",
-        "url": "https://manndev.com/",
-        "sameAs": [
-          "https://www.linkedin.com/in/julien-mann-b153aa404/"
-        ]
+        "@id": "https://manndev.com/#business"
       },
       "blogPost": [
         {
@@ -438,10 +479,11 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
 </script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <!-- HEADER -->
 <header>
-  <a href="/" class="h-logo" aria-label="Mann Dev Home">
+  <a href="/" class="h-logo" aria-label="Manndev Home">
     <img src="/img/logo.png?v=2" alt="" width="298" height="59">
   </a>
   <nav aria-label="Main navigation">
@@ -456,7 +498,7 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
   </nav>
 </header>
 
-<main class="container">
+<main class="container" id="main" tabindex="-1">
   <div class="hub-head">
     <div>
       <p class="kicker rise">Insights</p>
@@ -522,7 +564,7 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
     <h2 class="ask-h2" id="ask-h2">Have a question these guides don't answer?</h2>
     <div>
       <p class="ask-p">Ask it directly. Every enquiry is answered personally, usually within 24 hours.</p>
-      <a href="/contact/" class="link-cta">Start a project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cta-underline-wrap"><span class="cta-underline" style="display:block"></span></span></a>
+      <a href="/contact/" class="cta-pill"><span class="cta-pill-rest"><span class="cta-pill-dot" aria-hidden="true"></span><span class="cta-pill-label">Start a project</span></span><span class="cta-pill-hover" aria-hidden="true"><span>Start a project</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
     </div>
   </section>
 </main>
@@ -531,7 +573,7 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
 <footer>
   <div class="divider-inner"></div>
   <div class="footer-inner">
-    <a href="/" class="footer-logo" aria-label="Mann Dev Home">
+    <a href="/" class="footer-logo" aria-label="Manndev Home">
       <img src="/img/logo.png?v=2" alt="" width="298" height="59" loading="lazy">
     </a>
     <nav class="footer-nav" aria-label="Footer navigation">
@@ -540,19 +582,25 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
       <a href="/#about">About</a>
       <a href="/blog/">Insights</a>
       <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
       <a href="https://portal.manndev.com/" class="footer-portal">Portal</a>
     </nav>
   </div>
   <div class="footer-bottom">
-    <p class="footer-copy">&copy; 2026 Mann Dev.</p>
+    <p class="footer-copy">&copy; 2026 Manndev.</p>
     <a href="/blog/feed.xml" class="footer-feed">Insights RSS feed</a>
   </div>
 </footer>
 
 <script>
-/* remember an explicit language pick so the redirect on the home page respects it */
+/* remember an explicit language pick so the redirect on the home page respects it,
+   and land on the French home without replaying its intro (same-tab clicks only) */
 document.getElementById('lang-toggle').addEventListener('click', e => {
-  try { localStorage.setItem('lang', e.currentTarget.dataset.lang); } catch (err) {}
+  const sameTab = e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
+  try {
+    localStorage.setItem('lang', e.currentTarget.dataset.lang);
+    if (sameTab) sessionStorage.setItem('skipIntro', '1');
+  } catch (err) {}
   if (typeof gtag === 'function') gtag('event', 'language_switch', { language: e.currentTarget.dataset.lang });
 });
 

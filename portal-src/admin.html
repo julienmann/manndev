@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="/img/favicon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-<title>Admin — Mann Dev</title>
+<title>Admin — Manndev</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -35,7 +35,7 @@
   </div>
 
   <div class="portal-bar">
-    <a href="https://manndev.com/" class="portal-wordmark portal-wordmark--inline"><img src="/img/logo.png?v=2" alt="Mann Dev" width="298" height="59"><span>Admin</span></a>
+    <a href="https://manndev.com/" class="portal-wordmark portal-wordmark--inline"><img src="/img/logo.png?v=2" alt="Manndev" width="298" height="59"><span>Admin</span></a>
   </div>
 
   <main class="portal-main admin-main">
@@ -51,6 +51,7 @@
           <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
         </button>
         <span class="admin-folder-name" id="folder-name">No folder selected</span>
+        <button type="button" class="admin-remove-btn" id="reconnect-btn" hidden>Reconnect folder</button>
       </div>
     </section>
 
@@ -95,7 +96,7 @@
 
     <section class="admin-section">
       <h2 class="admin-heading">Deploy</h2>
-      <p class="admin-note">After editing clients, push the folder to the server (never committed to git). The script refuses to push if a client changed their password since your last pull, so you can't undo their change by accident.</p>
+      <p class="admin-note">After editing clients, push the folder to the server (never committed to git). The script refuses to push if a client changed their password since your last pull, so you can't undo their change by accident, and lists anything it would delete on the server before asking you to type <code>yes</code>.</p>
       <pre class="admin-code">./scripts/clients.sh push</pre>
     </section>
   </main>

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-28T18:13:30+00:00",
-  "title": "Design System: Mann Dev",
+  "generatedAt": "2026-10-26",
+  "title": "Design System: Manndev",
   "extensions": {
     "colorMeta": {
       "bg": {
@@ -176,11 +176,6 @@
     },
     "shadows": [
       {
-        "name": "process-lift",
-        "value": "0 12px 40px rgba(0,0,0,.28)",
-        "purpose": "Process card hover, with scale(1.025) and a 14% gold edge."
-      },
-      {
         "name": "principle-lift",
         "value": "0 16px 44px rgba(0,0,0,.3)",
         "purpose": "Principle card hover, with translateY(-6px) and a 20% gold edge."
@@ -206,11 +201,6 @@
         "name": "gsap-entrance",
         "value": "power3.out / power4.out, 0.5-0.8s, clearProps transform when done",
         "purpose": "Scroll and hero entrances."
-      },
-      {
-        "name": "ring-spin",
-        "value": "120s linear infinite",
-        "purpose": "Hero mark ring; off under reduced motion."
       }
     ],
     "breakpoints": [
@@ -233,7 +223,7 @@
       "name": "Text Link CTA",
       "kind": "button",
       "refersTo": "link-cta",
-      "description": "The only button style: gold uppercase label, drawn underline and nudging arrow.",
+      "description": "Secondary actions: gold uppercase label, drawn underline and nudging arrow. \"Start a project\" is the hover-fill pill; the form submit is an outlined button.",
       "html": "<a class=\"ds-cta\" href=\"#\">Start a project <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg><span class=\"ds-cta-line\"></span></a>",
       "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-cta{position:relative;display:inline-flex;align-items:center;gap:.5rem;font-family:Figtree,system-ui,sans-serif;font-size:1rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);text-decoration:none}.ds-cta svg{transition:transform .3s ease}.ds-cta-line{position:absolute;left:0;right:0;bottom:-3px;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.25,1,.5,1)}.ds-cta:hover .ds-cta-line,.ds-cta:focus-visible .ds-cta-line{transform:scaleX(1)}.ds-cta:hover svg{transform:translateX(3px)}.ds-cta:focus-visible{outline:2px solid var(--accent);outline-offset:3px}"
     },
@@ -281,21 +271,21 @@
       "name": "Choice Option",
       "kind": "custom",
       "refersTo": "choice-option",
-      "description": "Build Finder answer row: a real radio underneath, gold edge and fill when chosen.",
+      "description": "Onboarding answer row: a real radio underneath, gold edge and fill when chosen.",
       "html": "<label class=\"ds-opt\"><input type=\"radio\" name=\"ds\" checked><span class=\"ds-mark\"></span><span><b>Win more customers</b><small>Look established and turn visitors into enquiries.</small></span></label>",
       "css": ":host{--bg:#1e2530;--surface:#252b34;--fg:#f0f2f4;--mid:#969ba6;--accent:#f2c94c;--rule:rgba(240,242,244,.09);--rule-soft:rgba(240,242,244,.06);--rule-accent:rgba(242,201,76,.22)}.ds-opt{position:relative;display:flex;gap:.9rem;align-items:flex-start;max-width:420px;padding:1rem 1.1rem;border:1px solid var(--rule);border-radius:14px;cursor:pointer;font-family:Figtree,system-ui,sans-serif;color:var(--fg)}.ds-opt input{position:absolute;opacity:0}.ds-mark{flex-shrink:0;width:18px;height:18px;margin-top:.15rem;border:1.5px solid #636872;border-radius:50%;display:grid;place-items:center}.ds-opt b{display:block;font-weight:500}.ds-opt small{display:block;color:var(--mid);font-size:.84rem;margin-top:.15rem}.ds-opt:has(input:checked){border-color:var(--accent);background:rgba(242,201,76,.06)}.ds-opt:has(input:checked) .ds-mark{border-color:var(--accent)}.ds-opt:has(input:checked) .ds-mark::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent)}.ds-opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}"
     }
   ],
   "narrative": {
     "northStar": "Harbour at Dusk",
-    "overview": "The last light over a working harbour: deep water navy going dark, one warm gold line on the horizon, and soft, well-worn forms that have clearly been made by hand. Mann Dev is a small studio selling custom, hand-coded websites, so the page itself has to be the proof. Nothing here is a template: every surface, underline and card lift is built for this site, and the restraint is the confidence.\n\nThe system is layered, not flat. The navy field carries a faint printed grain; a large, barely-visible m/d mark turns slowly behind the hero like a harbour light; cards sit a step above the water in a slate fill with a hairline edge, and rise toward you (shadow, gold edge, a few pixels of lift) when you reach for them. Gold is the only colour and it is rationed: text links, underlines, tags, the availability pulse, the one italic word in the hero. Type does the talking: Lora for anything that needs authority, Figtree for everything that needs to work.\n\nThis system rejects what PRODUCT.md names as anti-references: \"generic SaaS landing pages (bright gradients, hero-metric blocks, stock illustrations)\", \"bloated agency sites with layers of process jargon and team photos\", and \"anything that reads as templated, since 'no templates' is a core claim the design must visually back up.\"",
+    "overview": "The last light over a working harbour: deep water navy going dark, one warm gold line on the horizon, and soft, well-worn forms that have clearly been made by hand. Manndev is a small studio selling custom, hand-coded websites, so the page itself has to be the proof. Nothing here is a template: every surface, underline and card lift is built for this site, and the restraint is the confidence. The system is layered, not flat. The navy field carries a faint printed grain, and a single gold horizon line runs under the hero; cards sit a step above the water in a slate fill with a hairline edge, and rise toward you (shadow, gold edge, a few pixels of lift) when you reach for them. Gold is the only colour and it is rationed: text links, underlines, tags, the availability pulse, the one italic word in the hero. Type does the talking: Lora for anything that needs authority, Figtree for everything that needs to work.",
     "keyCharacteristics": [
       "Deep dusk-navy field (never black) with a slate surface one step up; printed grain over everything",
       "One lamplight gold accent, used on no more than a hairline, a word, or a small tag at a time",
       "Lora serif for headlines, card titles and numerals; Figtree sans for body, labels and UI",
       "Generously rounded forms (28px cards, 20px panels, 14px choices)",
-      "No filled buttons: every action is a gold text link with a drawn underline and a nudging arrow",
-      "Layered depth: grain and the hero mark at rest, lift and gold edges on intent"
+      "One button that fills: \"Start a project\" is an outlined gold pill whose dot floods it with gold on hover; the form submit and other primary actions stay outlined; every other action is a gold text link with a drawn underline and a nudging arrow",
+      "Layered depth: grain and the gold horizon at rest, lift and gold edges on intent"
     ],
     "rules": [
       {
@@ -315,7 +305,7 @@
       },
       {
         "name": "The Serif-For-Weight Rule",
-        "body": "Lora appears only where a line needs authority: headlines, card titles, numerals, the Build Finder's question and result. Never in labels or running body copy.",
+        "body": "Lora appears only where a line needs authority: headlines, card titles, numerals, service and project names, the onboarding questions. Never in labels or running body copy.",
         "section": "typography"
       },
       {
@@ -340,14 +330,14 @@
       },
       {
         "name": "The Compositor Rule",
-        "body": "Animate only `transform` and `opacity`. Underlines scale on `scaleX`, the tab indicator moves with `x` and `scaleX`, the hero ring spins as its own layer. Never animate width, left or margins.",
+        "body": "Animate only `transform` and `opacity`. Underlines scale on `scaleX`; covered process cards dim through a child layer's `opacity`, never a scrubbed custom property. Never animate width, left or margins.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "**Do** keep every action a gold text link with a drawn underline and arrow (The One Lamp Rule).",
+      "**Do** keep every secondary action a gold text link with a drawn underline and arrow; \"Start a project\" is the pill, the form submit and 404 \"Back to home\" are outlined buttons (The One Lamp Rule).",
       "**Do** keep the water warm navy (`#1e2530`) and the hull slate (`#252b34`).",
-      "**Do** use Lora only for headlines, card titles, numerals and Build Finder questions and results.",
+      "**Do** use Lora only for headlines, card titles, numerals, service names and onboarding questions.",
       "**Do** keep every readable word at `mid` (5.1:1) or brighter, and every label at 0.7rem or larger.",
       "**Do** put hover lifts in `@media (hover:hover)` and extend small tap targets to 44px on touch.",
       "**Do** end GSAP entrance tweens with `clearProps` so CSS hovers can work.",
@@ -358,12 +348,12 @@
       "**Don't** build anything resembling \"generic SaaS landing pages (bright gradients, hero-metric blocks, stock illustrations)\".",
       "**Don't** drift toward \"bloated agency sites with layers of process jargon and team photos\".",
       "**Don't** ship \"anything that reads as templated\". \"No templates\" is a core claim the design must visually back up.",
-      "**Don't** add a filled button anywhere; gold fills are for the \"Monthly\" badges only.",
+      "**Don't** add other filled buttons; gold fills are for the \"Monthly\" badge, the hovered \"Start a project\" pill and the focused skip link only.",
       "**Don't** use `dim` (`#636872`) for information: it fails contrast.",
       "**Don't** use gradient text, glass cards, or coloured side stripes thicker than 1px.",
       "**Don't** use em dashes in copy.",
       "**Don't** animate `width`, `left`, `top` or margins.",
-      "**Don't** fabricate client testimonials or social proof. Real, attributed testimonials come from Julien directly."
+      "**Don't** fabricate client testimonials or social proof. Real, attributed testimonials and projects come from the studio directly."
     ]
   }
 }

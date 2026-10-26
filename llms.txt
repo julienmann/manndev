@@ -1,20 +1,21 @@
-# Mann Dev
+# Manndev
 
-> Custom websites and web apps built from scratch in Montréal. No templates, no page builders — just clean, fast code you own outright.
+> Custom websites and web apps built from scratch in Montréal. No templates, no page builders: just clean, fast code you own outright.
 
-Mann Dev is a web design and development studio founded by Julien Mann, based in Montréal, Québec, working remotely worldwide. Every project is hand-coded — no templates, no page builders — with a focus on performance, accessibility, and code the client owns outright.
+Manndev is a small web design and development studio in Montréal, Québec, founded by Julien Mann and working remotely worldwide. Every project is hand-coded (no templates, no page builders), with a focus on performance, accessibility, and code the client owns outright.
 
 ## Services
 
-- [Landing Page](https://manndev.com/#services): A single, focused page built to convert. Custom design, fully responsive, deployed within a few days.
-- [Full Website](https://manndev.com/#services): Multi-page site covering about, services, portfolio, and contact. Custom design system, CMS integration if needed.
-- [Care & Hosting](https://manndev.com/#services): Flat monthly rate for managed hosting, uptime monitoring, security patches, and ongoing support.
-- [AI Automation](https://manndev.com/#services): Custom AI-powered workflows, chatbots, and automations built into existing tools or as standalone systems.
+- [Design & Development](https://manndev.com/#services): Landing pages and full websites, designed and hand-coded from scratch, with mockups before any code. Code, hosting and accounts belong to the client.
+- [Hosting & Security](https://manndev.com/#services): Hosting, domain, SSL, business email, Cloudflare CDN, uptime monitoring every 5 minutes, automated backups, security updates and Law 25 compliance.
+- [Search & Visibility](https://manndev.com/#services): SEO setup, local SEO and Google Maps, Google Business Profile management, AI search optimization and a monthly report.
+- [Automation](https://manndev.com/#services): Bilingual AI chatbot for FAQs, hours and menus, online booking with reminders, and review requests, replies and monitoring.
+- [Care plan](https://manndev.com/#principles): Monthly care for launched sites: managed hosting on a global CDN, uptime monitoring, security and dependency patches, content updates and bug fixes.
 
 ## Contact
 
 - [Start a project](https://manndev.com/contact/): Contact form for new enquiries, answered personally within 24 hours.
-- Email: julien@manndev.com
+- Email: contact@manndev.com
 - [LinkedIn](https://www.linkedin.com/in/julien-mann-b153aa404/): Professional profile.
 
 <!-- blog:start (scripts/build-blog.py) -->
@@ -29,3 +30,4 @@ Mann Dev is a web design and development studio founded by Julien Mann, based in
 
 - [Version française](https://manndev.com/fr/): The same page in French.
 - [Portal](https://portal.manndev.com/): Login for existing clients.
+- [Privacy policy](https://manndev.com/privacy/): What personal information we collect, why, and how to access, correct or delete it.

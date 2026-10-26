@@ -6,15 +6,19 @@ brand
 
 ## Users
 
-Small business owners, creatives, and startup founders (decision-makers, roughly 30-55) who need a website built and are evaluating whether to hire a freelancer, an agency, or a no-code platform. They're visiting to decide if Julien is credible, capable, and worth a 30-60 minute discovery call. Remote-friendly, but based out of Montréal.
+Small business owners, creatives, and startup founders (decision-makers, roughly 30-55) who need a website built and are evaluating whether to hire a small studio, a large agency, or a no-code platform. They're visiting to decide if Manndev is credible, capable, and worth a 30-60 minute discovery call. Remote-friendly, but based out of Montréal.
 
 ## Product Purpose
 
-A single-page portfolio and lead-generation site for Julien Mann, a solo freelance web developer. It exists to convert visitors into enquiries by demonstrating craft directly in the page itself (custom-built, no templates, GSAP-driven interactions, Lighthouse-100 target) rather than just claiming it. Success is a submitted contact form from a qualified lead.
+A single-page portfolio and lead-generation site for Manndev, a small Montréal web studio run by a hands-on team. It exists to convert visitors into enquiries by demonstrating craft directly in the page itself (custom-built, no templates, GSAP-driven interactions, fast on real devices) rather than just claiming it. Success is a submitted contact form from a qualified lead.
 
 ## Brand Personality
 
-Confident, editorial, precise. Voice is plain and direct — short sentences, no jargon, no hype language ("seriously," "actually works," "no obligation"). Personality of a craftsman who works alone and stands behind the work, not an agency selling a process. Quietly premium: warm navy, serif-headline aesthetic rather than bright SaaS gradients.
+Confident, editorial, precise. Voice is plain and direct — short sentences, no jargon, no hype language ("seriously," "actually works," "no obligation"). Personality of a small team of craftspeople who stand behind the work, not an agency selling a process. Always "we", never "I". Quietly premium: warm navy, serif-headline aesthetic rather than bright SaaS gradients.
+
+## Claims we don't make
+
+No promised scores or rankings: never "Lighthouse 100", "perfect score", "page one on Google". Speed and accessibility are described as practices we follow and measure, not guaranteed numbers.
 
 ## Anti-references
 
@@ -22,8 +26,8 @@ Generic SaaS landing pages (bright gradients, hero-metric blocks, stock illustra
 
 ## Design Principles
 
-- Show, don't tell — claims about craft (clean code, custom design, performance) should be demonstrated in the page's own construction (the process section's numbered build steps, real Lighthouse numbers, deliberate motion), not just asserted in copy.
-- One person, one voice — every section should read like it came from the same hand that writes the code; no committee-speak, no department handoffs implied.
+- Show, don't tell — claims about craft (clean code, custom design, performance) should be demonstrated in the page's own construction (the process film, real shipped work, measured speed on real devices, deliberate motion), not just asserted in copy.
+- One team, one voice — every section should read like it came from the same people who design and write the code; no committee-speak, no department handoffs implied.
 - Editorial restraint over decoration — confidence is expressed through typography, rule lines, and negative space, not gradients or stock imagery.
 - Earn the scroll — interactions (process timeline, tabs, scramble text) reward attention, but never become a barrier to finding the contact form.
 

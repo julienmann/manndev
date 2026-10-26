@@ -35,6 +35,7 @@ async function idbSet(key: string, value: unknown): Promise<void> {
 }
 
 const pickFolderBtn = document.querySelector<HTMLButtonElement>('#pick-folder-btn')!;
+const reconnectBtn = document.querySelector<HTMLButtonElement>('#reconnect-btn')!;
 const folderNameEl = document.querySelector<HTMLSpanElement>('#folder-name')!;
 const clientListEl = document.querySelector<HTMLDivElement>('#client-list')!;
 const addForm = document.querySelector<HTMLFormElement>('#add-form')!;
@@ -70,57 +71,107 @@ const USERNAME_RE = /^[a-z0-9][a-z0-9._-]{2,31}$/;
 
 const setAddStatus = (message: string, tone?: 'error' | 'success') => setStatus(addStatus, message, tone);
 
-// Best-effort: unzip the client's build into <client folder>/preview/ so the dashboard
-// can offer a live view. Silently skips (returns false) if the zip doesn't
-// look like a static site — the raw zip download still works either way.
-async function extractPreview(clientDir: FileSystemDirectoryHandle, zipFile: File): Promise<boolean> {
+// A file of the live preview: its path inside preview/, split into segments.
+type PreviewFile = { segments: string[]; data: Uint8Array<ArrayBuffer> };
+
+const PREVIEW_DIR = 'preview';
+const PREVIEW_STAGING = '.preview-new';   // a dot-folder, so nginx never serves a leftover
+
+// Unzips a deliverable and returns the files for its live preview, or null if
+// the zip doesn't look like a static site (no index.html at its root or in a
+// single wrapping folder). Throws if an entry's name can't be written safely,
+// before anything on disk has changed.
+async function readPreview(zipFile: File): Promise<PreviewFile[] | null> {
   let entries: Record<string, Uint8Array>;
   try {
     entries = unzipSync(new Uint8Array(await zipFile.arrayBuffer()));
   } catch {
-    return false;
+    return null;   // not a zip fflate can read: still delivered, just no preview
   }
 
-  const paths = Object.keys(entries).filter(path => {
-    const normalized = path.replace(/\\/g, '/');
-    if (normalized.endsWith('/')) return false;
-    const segments = normalized.split('/');
-    if (segments.includes('__MACOSX')) return false;
-    if (segments[segments.length - 1].startsWith('.')) return false;
-    return true;
-  });
+  let files: PreviewFile[] = [];
+  const invalid: string[] = [];
+  for (const [name, data] of Object.entries(entries)) {
+    const normalized = name.replace(/\\/g, '/');
+    if (normalized.endsWith('/')) continue;   // a folder entry
+    const segments = normalized.split('/').filter(segment => segment !== '' && segment !== '.');
+    if (!segments.length) continue;
+    if (segments.some(segment => segment === '..' || /[\u0000-\u001f]/.test(segment))) {
+      invalid.push(name);
+      continue;
+    }
+    // Dot-files and anything in a dot-folder (.git/config, .env…) never
+    // belong in a public preview, nor does macOS zip cruft.
+    if (segments.some(segment => segment.startsWith('.') || segment === '__MACOSX')) continue;
+    files.push({ segments, data: data as Uint8Array<ArrayBuffer> });   // fflate never returns shared buffers
+  }
 
   // macOS zip tools often wrap contents in a single top-level folder — unwrap
   // it so index.html ends up at the preview root regardless of how it was zipped.
-  let stripPrefix = '';
-  if (!paths.includes('index.html')) {
-    const topLevelDirs = new Set(paths.map(path => path.split('/')[0]));
-    if (topLevelDirs.size === 1) {
-      const onlyDir = [...topLevelDirs][0] + '/';
-      if (paths.every(path => path.startsWith(onlyDir))) stripPrefix = onlyDir;
+  const hasIndex = () => files.some(file => file.segments.length === 1 && file.segments[0] === 'index.html');
+  if (!hasIndex() && new Set(files.map(file => file.segments[0])).size === 1 && files.every(file => file.segments.length > 1)) {
+    files = files.map(file => ({ ...file, segments: file.segments.slice(1) }));
+  }
+
+  if (!invalid.length && hasIndex()) {
+    // A path that is both a file and a folder ("a" and "a/b") would fail half-way through writing.
+    const filePaths = new Set(files.map(file => file.segments.join('/')));
+    for (const file of files) {
+      if (file.segments.slice(0, -1).some((_, i) => filePaths.has(file.segments.slice(0, i + 1).join('/')))) {
+        invalid.push(file.segments.join('/'));
+      }
     }
   }
 
-  if (!paths.some(path => path.slice(stripPrefix.length) === 'index.html')) return false;
+  if (invalid.length) {
+    const sample = invalid.slice(0, 3).map(name => `"${name}"`).join(', ');
+    throw new Error(`Nothing was changed: this zip has file names that can't be unpacked safely (${sample}${invalid.length > 3 ? ', …' : ''}). Re-zip the files and try again.`);
+  }
+  return hasIndex() ? files : null;
+}
 
-  await clientDir.removeEntry('preview', { recursive: true }).catch(() => {});
-  const previewDir = await clientDir.getDirectoryHandle('preview', { create: true });
-
-  for (const path of paths) {
-    const relPath = path.slice(stripPrefix.length);
-    if (!relPath) continue;
-
-    const parts = relPath.split('/');
-    const fileName = parts.pop()!;
-    let dir = previewDir;
-    for (const part of parts) {
+async function writeTree(root: FileSystemDirectoryHandle, files: PreviewFile[]) {
+  for (const file of files) {
+    let dir = root;
+    for (const part of file.segments.slice(0, -1)) {
       dir = await dir.getDirectoryHandle(part, { create: true });
     }
+    await writeFile(dir, file.segments[file.segments.length - 1], file.data);
+  }
+}
 
-    await writeFile(dir, fileName, entries[path] as Uint8Array<ArrayBuffer>);   // fflate never returns shared buffers
+// Replaces <client folder>/preview/ with `files` (or just removes it when the
+// new zip has no site). The new preview is written to a staging folder and
+// renamed into place, so a failed write leaves the old one untouched. Where
+// the browser can't rename a local folder, it falls back to writing in place.
+async function replacePreview(clientDir: FileSystemDirectoryHandle, files: PreviewFile[] | null) {
+  if (!files) {
+    await clientDir.removeEntry(PREVIEW_DIR, { recursive: true }).catch(() => {});
+    return;
   }
 
-  return true;
+  await clientDir.removeEntry(PREVIEW_STAGING, { recursive: true }).catch(() => {});
+  const staging = await clientDir.getDirectoryHandle(PREVIEW_STAGING, { create: true });
+  try {
+    await writeTree(staging, files);
+  } catch (err) {
+    await clientDir.removeEntry(PREVIEW_STAGING, { recursive: true }).catch(() => {});
+    throw err;
+  }
+
+  await clientDir.removeEntry(PREVIEW_DIR, { recursive: true }).catch(() => {});
+  try {
+    await staging.move(PREVIEW_DIR);
+  } catch {
+    await clientDir.removeEntry(PREVIEW_STAGING, { recursive: true }).catch(() => {});
+    const previewDir = await clientDir.getDirectoryHandle(PREVIEW_DIR, { create: true });
+    try {
+      await writeTree(previewDir, files);
+    } catch (err) {
+      await clientDir.removeEntry(PREVIEW_DIR, { recursive: true }).catch(() => {});   // no half-written preview
+      throw err;
+    }
+  }
 }
 
 async function readInfo(clientDir: FileSystemDirectoryHandle): Promise<ClientInfo | null> {
@@ -197,7 +248,7 @@ async function listClients(): Promise<ClientEntry[]> {
     const clientDir = entry as FileSystemDirectoryHandle;
     const info = await readInfo(clientDir);
     if (!info) continue;
-    const hasPreview = await clientDir.getDirectoryHandle('preview').then(() => true).catch(() => false);
+    const hasPreview = await clientDir.getDirectoryHandle(PREVIEW_DIR).then(() => true).catch(() => false);
     clients.push({ folder: entry.name, info, hasPreview, hasLogin: loginFolders.has(entry.name) });
   }
   return clients;
@@ -302,6 +353,7 @@ async function setMode(next: Mode) {
 async function setDirHandle(handle: FileSystemDirectoryHandle) {
   dirHandle = handle;
   folderNameEl.textContent = handle.name;
+  reconnectBtn.hidden = true;
   addSubmitBtn.disabled = false;
   addSubmitLabel.textContent = SUBMIT_LABELS[mode.kind];
   await refreshClientList();
@@ -327,12 +379,20 @@ addUsernameInput.addEventListener('input', () => {
   addUsernameInput.value = addUsernameInput.value.toLowerCase().replace(/\s/g, '');
 });
 
-// Writes the zip (and its unpacked preview) into a data folder, replacing
-// whatever deliverable was there. Returns whether a preview was generated.
-async function writeDeliverable(clientDir: FileSystemDirectoryHandle, file: File, previousFile?: string): Promise<boolean> {
+// Writes the zip and its preview into a data folder, then info.json, and only
+// then removes the previous zip, so a failure part-way leaves the client's
+// current files (and info.json) as they were. Returns whether a preview was made.
+async function writeDeliverable(clientDir: FileSystemDirectoryHandle, file: File, preview: PreviewFile[] | null, info: ClientInfo, previousFile?: string): Promise<boolean> {
+  try {
+    await writeFile(clientDir, file.name, file);
+    await replacePreview(clientDir, preview);
+    await writeInfo(clientDir, info);
+  } catch (err) {
+    if (file.name !== previousFile) await clientDir.removeEntry(file.name).catch(() => {});
+    throw err;
+  }
   if (previousFile && previousFile !== file.name) await clientDir.removeEntry(previousFile).catch(() => {});
-  await writeFile(clientDir, file.name, file);
-  return extractPreview(clientDir, file);
+  return preview !== null;
 }
 
 addForm.addEventListener('submit', async (e) => {
@@ -375,18 +435,26 @@ addForm.addEventListener('submit', async (e) => {
     }
 
     let hasPreview: boolean | null = null;
+    // Read and check the zip before touching the folder: bad entry names stop here.
+    const preview = file && current.kind !== 'reset' ? await readPreview(file) : null;
 
     if (current.kind === 'create') {
       const folder = toHex(crypto.getRandomValues(new Uint8Array(16)));
+      const key = await deriveClientKey(username, password);
       const clientDir = await dirHandle.getDirectoryHandle(folder, { create: true });
-      hasPreview = await writeDeliverable(clientDir, file!);
-      await writeInfo(clientDir, { name: name || null, username, file: file!.name, uploadedAt: new Date().toISOString() });
-      await writePointer(await deriveClientKey(username, password), folder);
+      try {
+        hasPreview = await writeDeliverable(clientDir, file!, preview, { name: name || null, username, file: file!.name, uploadedAt: new Date().toISOString() });
+        await writePointer(key, folder);
+      } catch (err) {
+        // Leave no half-made client behind to be pushed.
+        await (await loginsDir()).removeEntry(`${key}.json`).catch(() => {});
+        await dirHandle.removeEntry(folder, { recursive: true }).catch(() => {});
+        throw err;
+      }
     } else if (current.kind === 'update') {
       const clientDir = await dirHandle.getDirectoryHandle(current.folder);
       const info = (await readInfo(clientDir))!;
-      hasPreview = await writeDeliverable(clientDir, file!, info.file);
-      await writeInfo(clientDir, { ...info, name: name || null, file: file!.name, uploadedAt: new Date().toISOString() });
+      hasPreview = await writeDeliverable(clientDir, file!, preview, { ...info, name: name || null, file: file!.name, uploadedAt: new Date().toISOString() }, info.file);
     } else {
       const clientDir = await dirHandle.getDirectoryHandle(current.folder);
       const info = (await readInfo(clientDir))!;
@@ -398,7 +466,7 @@ addForm.addEventListener('submit', async (e) => {
     }
 
     const previewNote = hasPreview === null ? ''
-      : hasPreview ? ' Live preview available.' : ' No live preview (no index.html at the zip root), but the download still works.';
+      : hasPreview ? ' Live preview available.' : ' No live preview (no index.html at the zip root). The client will only see the file name, so send them the file directly.';
     const loginNote = needsLogin ? `Send the client: username "${username}", password "${password}".` : 'File updated.';
     await setMode({ kind: 'create' });
     setAddStatus(`Saved. ${loginNote}${previewNote} Then push to the server.`, 'success');
@@ -413,10 +481,33 @@ addForm.addEventListener('submit', async (e) => {
 
 addPasswordInput.value = generatePassword();
 
-(async () => {
+// Reopens the folder picked last time. Chrome only grants access again without
+// asking if it still remembers the permission; otherwise requestPermission()
+// needs a click, so offer a button for it.
+async function restoreFolder() {
   const savedHandle = await idbGet<FileSystemDirectoryHandle>(DIR_HANDLE_KEY);
   if (!savedHandle) return;
 
-  const permission = await savedHandle.requestPermission({ mode: 'readwrite' });
-  if (permission === 'granted') await setDirHandle(savedHandle);
-})();
+  const permission = await savedHandle.queryPermission({ mode: 'readwrite' });
+  if (permission === 'granted') {
+    await setDirHandle(savedHandle);
+  } else if (permission === 'prompt') {
+    folderNameEl.textContent = `${savedHandle.name} (not connected)`;
+    reconnectBtn.hidden = false;
+    reconnectBtn.onclick = async () => {
+      try {
+        const answer = await savedHandle.requestPermission({ mode: 'readwrite' });
+        if (answer === 'granted') await setDirHandle(savedHandle);
+        if (answer !== 'denied') return;   // 'prompt': dismissed, the button stays
+      } catch {
+        // the folder was moved or deleted
+      }
+      folderNameEl.textContent = `Couldn't reconnect ${savedHandle.name}. Choose the folder again.`;
+      reconnectBtn.hidden = true;
+    };
+  }
+}
+
+restoreFolder().catch(() => {
+  // the saved folder is gone or unreadable: Choose folder still works
+});

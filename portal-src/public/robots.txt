@@ -1,2 +1,4 @@
 User-agent: *
-Disallow: /
+# The portal pages carry <meta name="robots" content="noindex">, which a
+# crawler only sees if it may fetch them. Client files stay off-limits.
+Disallow: /client-files/

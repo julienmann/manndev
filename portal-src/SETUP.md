@@ -32,10 +32,10 @@ For local iteration: `cd portal-src && npm install && npm run dev`, then open `h
 ./scripts/clients.sh pull
 ```
 
-1. **Choose folder** → pick the `client-files/` folder in your local checkout of this repo. It's remembered for next time.
-2. **New client:** fill in a username, a password (one is generated for you; copy it before saving), the client's name, and their zip file → **Save client**. `__MACOSX/` cruft and dotfiles are stripped, and a live preview is unpacked if the zip has an `index.html` at its root (or in a single wrapping folder).
+1. **Choose folder** → pick the `client-files/` folder in your local checkout of this repo. It's remembered for next time; if Chrome has forgotten the permission, click **Reconnect folder**.
+2. **New client:** fill in a username, a password (one is generated for you; copy it before saving), the client's name, and their zip file → **Save client**. A live preview is unpacked if the zip has an `index.html` at its root (or in a single wrapping folder); `__MACOSX/` cruft and anything in a dot-file or dot-folder (`.git/`, `.env`…) are left out of it. A zip with entry names that can't be unpacked safely (e.g. `..`) is refused before anything changes, and a failed save removes the half-made client.
 3. **Existing clients** each have:
-   - **Update file**: replace the zip (and preview). The login is untouched.
+   - **Update file**: replace the zip (and preview, or remove it if the new zip has no site). The old zip is only deleted once the new one, its preview and `info.json` are written. The login is untouched.
    - **Reset password**: new password for the same username; the old one stops working after you push.
    - **Remove**: deletes the client's data folder and login.
    - A **"Password changed by client"** note with the date, when they've changed it themselves (you'll only see it after a pull).
@@ -59,9 +59,15 @@ Then on the server: `git pull`.
 ./scripts/clients.sh push
 ```
 
-Both `pull` and `push` mirror exactly (`rsync --delete`). When the API changes a password it stamps `client-files/.changed-at`; `push` compares the server's stamp with the one you last pulled and refuses if they differ, so pushing a stale copy can't undo a client's change (or delete their new login).
+Both `pull` and `push` mirror exactly (`rsync --delete`), so `push` guards against mirroring the wrong copy:
 
-**Permissions:** the admin page can create files nginx can't read (`700`/`600`), which makes a correct login fail like a wrong one. A cron job on the server (`crontab -l` as `lmann`) re-chmods `client-files/` to `755`/`644` every 5 minutes. To fix it immediately: `ssh lmann@lionelmann.com "find /srv/www/manndev/client-files -mindepth 1 -type d -exec chmod 755 {} \; ; find /srv/www/manndev/client-files -mindepth 1 -type f -exec chmod 644 {} \;"`.
+- It refuses if your local `client-files/` has no client folders (a fresh or empty folder would wipe the server).
+- When the API changes a password it stamps `client-files/.changed-at`; `push` compares the server's stamp with the one you last pulled and refuses if they differ, so pushing a stale copy can't undo a client's change (or delete their new login).
+- It does a dry run first. If anything would be deleted on the server it lists the paths and only continues if you type `yes`. Updating a file or resetting a password normally deletes the old zip/preview or login; anything else is worth a second look.
+- The server side of every `rsync` runs under `flock client-files/.sync.lock` (util-linux), the same lock the API holds while it changes a password, so the two never interleave. `push` never sends `.changed-at` (the server owns it) or `.DS_Store`.
+- After the push it re-reads the server's stamp. If a client changed their password between the check and the push, it prints a loud warning: the push may have undone that change, so run `pull`, push again from that copy, and use **Reset password** if the client says their new password doesn't work.
+
+**Permissions:** the admin page can create files nginx can't read (`700`/`600`), which makes a correct login fail like a wrong one. `rsync -a` keeps those modes and this Mac's `/usr/bin/rsync` (openrsync) can't `--chmod`, so `push` fixes them over ssh straight after the transfer (`755` for folders, `644` for files) and deletes any `.DS_Store` on the server. The cron job on the server (`crontab -l` as `lmann`) that re-chmods `client-files/` every 5 minutes stays as a backstop. To fix it by hand: `ssh lmann@lionelmann.com "find /srv/www/manndev/client-files -type d -exec chmod 755 {} + && find /srv/www/manndev/client-files -type f -exec chmod 644 {} +"`.
 
 The portal is built with `base: '/'` in `vite.config.ts` and fetches `/client-files/…` and `/img/…` by absolute path, so the subdomain's nginx block serves the built `portal/` folder at `/` and the repo root's `client-files/` and `img/` folders alongside it:
 
@@ -69,6 +75,22 @@ The portal is built with `base: '/'` in `vite.config.ts` and fetches `/client-fi
 server {
     server_name portal.manndev.com;
     root /srv/www/manndev;                      # so /img/ and /client-files/ resolve
+
+    # Dot-files and dot-folders are never public (.changed-at, .sync.lock, a
+    # stray .git/). Regex locations beat the prefix ones below; keep this one
+    # first so it also beats the preview block.
+    location ~ /\.(?!well-known/) { return 404; }
+
+    # Live previews are the client's own code. The sandbox CSP runs them in an
+    # opaque origin, so their scripts can't read this origin's storage (the
+    # client's login key in localStorage, the admin page's IndexedDB). That
+    # makes the preview's own module scripts, fonts and fetches cross-origin,
+    # hence the CORS header.
+    location ~ ^/client-files/[^/]+/preview/ {
+        add_header Content-Security-Policy "sandbox allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads" always;
+        add_header Access-Control-Allow-Origin "*" always;
+        try_files $uri $uri/ =404;
+    }
 
     location / {
         root /srv/www/manndev/portal;           # the built portal
@@ -85,6 +107,8 @@ server {
     # listen 443 ssl + certificate lines are added by certbot
 }
 ```
+
+**The live nginx config is not deployed from this repo.** After changing the block above, edit the `portal.manndev.com` server block on the server to match, then `sudo nginx -t && sudo systemctl reload nginx`. Check that a preview response has the `Content-Security-Policy: sandbox …` header and that `https://portal.manndev.com/client-files/.changed-at` returns 404. If that server block has its own `add_header` lines (e.g. HSTS), repeat them inside the preview location: nginx drops inherited `add_header`s in a location that sets its own. Inside the sandbox a preview can't use cookies, `localStorage` or service workers, so a site that relies on them may behave differently there than when it's live.
 
 The main site deliberately does **not** serve the portal. The `portal/`, `portal-src/` and `client-files/` folders still sit in the `manndev.com` web root (the subdomain serves them from there), so the HTTPS `manndev.com` server block refuses them:
 
@@ -104,7 +128,7 @@ Send the username and password separately if you can (e.g. username by email, pa
 
 ## 4. Password-change service
 
-`portal-src/server/portal_api.py` (Python 3 standard library only) listens on `127.0.0.1:8787` and exposes one endpoint, `POST /api/change-password` with `{ "oldKey", "newKey" }`. The dashboard derives both keys in the browser from the username plus the current and new passwords. The service checks that the old key's pointer exists, writes the new pointer, deletes the old one, stamps `passwordChangedAt` in the client's `info.json` and updates `client-files/.changed-at`. It never sees a password. Failed attempts are limited to 10 per IP per 15 minutes.
+`portal-src/server/portal_api.py` (Python 3 standard library only) listens on `127.0.0.1:8787` and exposes one endpoint, `POST /api/change-password` with `{ "oldKey", "newKey" }`. The dashboard derives both keys in the browser from the username plus the current and new passwords. The service checks that the old key's pointer exists, stamps `passwordChangedAt` in the client's `info.json`, updates `client-files/.changed-at`, then writes the new pointer and deletes the old one last, so a failure part-way leaves the old password working (and returns 500). If `info.json` is unreadable it changes nothing. It holds `client-files/.sync.lock` while it works (the lock `clients.sh` takes around rsync), and returns 503 if a sync holds it for more than 20 seconds. It never sees a password. Failed attempts are limited to 10 per IP per 15 minutes; malformed requests get a 400.
 
 Install once on the server (after `git pull`):
 

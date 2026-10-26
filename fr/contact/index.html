@@ -3,16 +3,11 @@
 <html lang="fr-CA">
 <head>
 <meta charset="UTF-8">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZEZB4R3CP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-2ZEZB4R3CP');
-</script>
+<!-- Google Analytics loads only after the visitor allows it (Québec Law 25) -->
+<script defer src="/js/consent.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nous joindre · Mann Dev</title>
-<meta name="description" content="Démarrez un projet avec Mann Dev. Parlez-nous de votre projet. Chaque demande reçoit une réponse personnelle, habituellement en moins de 24 heures.">
+<title>Nous joindre · Manndev</title>
+<meta name="description" content="Démarrez un projet avec Manndev. Parlez-nous de votre projet. Chaque demande reçoit une réponse personnelle, habituellement en moins de 24 heures.">
 <link rel="canonical" href="https://manndev.com/fr/contact/">
 <link rel="alternate" hreflang="en" href="https://manndev.com/contact/">
 <link rel="alternate" hreflang="fr" href="https://manndev.com/fr/contact/">
@@ -21,9 +16,9 @@
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#1e2530">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Mann Dev">
-<meta property="og:title" content="Nous joindre · Mann Dev">
-<meta property="og:description" content="Démarrez un projet avec Mann Dev. Parlez-nous de votre projet. Chaque demande reçoit une réponse personnelle, habituellement en moins de 24 heures.">
+<meta property="og:site_name" content="Manndev">
+<meta property="og:title" content="Nous joindre · Manndev">
+<meta property="og:description" content="Démarrez un projet avec Manndev. Parlez-nous de votre projet. Chaque demande reçoit une réponse personnelle, habituellement en moins de 24 heures.">
 <meta property="og:url" content="https://manndev.com/fr/contact/">
 <meta property="og:image" content="https://manndev.com/img/og-image.png">
 <meta property="og:locale" content="fr_CA">
@@ -47,11 +42,13 @@
   --accent: #f2c94c;
   --rule:   rgba(240,242,244,.09);
   --rule-soft: rgba(240,242,244,.06);
+  --accent-wash: rgba(242,201,76,.08);      /* hover fills */
   --display:'Lora', Georgia, serif;
   --body:   'Figtree', system-ui, sans-serif;
   --gutter: clamp(1.5rem, 5vw, 4rem);
   --container: 1280px;
   --section-gap: 96px;
+  --ease-out: cubic-bezier(.22,1,.36,1);   /* ease-out-quint: every UI transition */
 }
 
 html{overflow-x:hidden;}
@@ -68,6 +65,15 @@ a{color:inherit;text-decoration:none;}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
 a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}}
+
+.skip-link{
+  position:absolute;left:var(--gutter);top:.75rem;z-index:60;
+  font-size:.85rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--bg);
+  background:var(--accent);padding:.6rem 1rem;border-radius:999px;
+  transform:translateY(-200%);transition:transform .3s var(--ease-out);
+}
+.skip-link:focus{transform:none;}
+main:focus{outline:none;}
 
 /* ── GRAIN ── */
 body::after{
@@ -93,7 +99,7 @@ nav ul li a{
   color:var(--fg);
   border-bottom:2px solid var(--accent);
   padding-bottom:2px;
-  transition:opacity .2s;
+  transition:opacity .2s var(--ease-out);
 }
 nav ul li a:hover{opacity:.75;}
 nav ul li a.nav-portal,nav ul li a.nav-lang{border-bottom-color:transparent;opacity:.6;}
@@ -102,7 +108,7 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
 
 /* ── CONTACT ── */
 .kicker{
-  font-family:var(--body);font-size:.72rem;font-weight:600;
+  font-family:var(--body);font-size:.7rem;font-weight:600;
   text-transform:uppercase;letter-spacing:.18em;color:var(--accent);
   margin-bottom:1.5rem;
 }
@@ -123,16 +129,23 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
   color:var(--accent);margin-bottom:.4rem;
 }
 .contact-val{font-size:1rem;color:var(--fg);line-height:1.6;}
-.contact-val-sub{display:block;font-size:.85rem;color:var(--mid);margin-top:.15rem;}
+.contact-val-sub{display:block;font-size:.9rem;color:var(--mid);margin-top:.15rem;}
 .status-dot{
-  display:inline-block;margin-right:.5rem;
-  width:7px;height:7px;border-radius:50%;background:var(--accent);
-  animation:pulse 2s ease-in-out infinite;
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--accent);
+  position:relative;flex-shrink:0;
 }
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+.contact-val .status-dot{display:inline-block;margin-right:.5rem;}
+.status-dot::after{
+  content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);
+  animation:ripple 2.4s var(--ease-out) infinite;
+}
+@keyframes ripple{from{transform:scale(1);opacity:.5;}to{transform:scale(3.2);opacity:0;}}
+@media(prefers-reduced-motion:reduce){.status-dot::after{animation:none;opacity:0;}}
 
 /* entrance: content rises in once, staggered */
-.rise{animation:rise .6s cubic-bezier(.25,1,.5,1) both;}
+.rise{animation:rise .6s var(--ease-out) both;}
 .rise-2{animation-delay:.08s;}
 .rise-3{animation-delay:.16s;}
 .rise-4{animation-delay:.26s;}
@@ -140,46 +153,57 @@ nav ul li a.nav-portal:hover,nav ul li a.nav-lang:hover{opacity:1;border-bottom-
 
 /* form */
 .form-field{position:relative;margin-bottom:2rem;}
+/* fields: 1rem text, at least 44px tall; the label floats up with transform only */
 .form-input,.form-textarea,.form-select{
   width:100%;background:transparent;border:none;border-bottom:1px solid var(--rule);
-  padding:.8rem 0 .6rem;color:var(--fg);
-  font-family:var(--body);font-size:.95rem;outline:none;
-  transition:border-color .3s;border-radius:0;
+  padding:.85rem 0 .7rem;color:var(--fg);
+  font-family:var(--body);font-size:1rem;outline:none;
+  transition:border-color .3s var(--ease-out);border-radius:0;
 }
+.form-input,.form-select{min-height:2.75rem;}
 .form-label{
   position:absolute;top:.8rem;left:0;
-  font-family:var(--body);font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
-  color:var(--mid);pointer-events:none;
-  transition:all .25s ease;
+  font-family:var(--body);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+  color:var(--mid);pointer-events:none;transform-origin:left;
+  transition:transform .3s var(--ease-out), color .3s var(--ease-out);
 }
 .form-input:focus~.form-label,.form-input:not(:placeholder-shown)~.form-label,
 .form-textarea:focus~.form-label,.form-textarea:not(:placeholder-shown)~.form-label{
-  top:-1rem;font-size:.7rem;color:var(--fg);
+  transform:translateY(-1.8rem);color:var(--fg);
 }
+.form-label-raised{transform:translateY(-1.8rem);}
 .form-input:focus,.form-textarea:focus,.form-select:focus{border-bottom-color:var(--accent);}
 .form-input::placeholder,.form-textarea::placeholder{opacity:0;}
 .form-textarea{resize:none;height:5.5rem;}
-.char-count{position:absolute;right:0;top:.8rem;font-size:.7rem;color:var(--mid);}
+/* remaining characters: shown under the field only near the 2000 limit */
+.char-count{position:absolute;right:0;top:calc(100% + .35rem);font-size:.7rem;line-height:1;color:var(--mid);}
 .char-count.warn{color:var(--accent);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
-.form-select{appearance:none;cursor:pointer;font-size:.85rem;letter-spacing:.04em;color:var(--mid);}
-option{background:var(--bg);}
+/* service picker: gold chevron; grey while on the default, full text colour once picked */
+.form-select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  color:var(--mid);padding-right:1.75rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23f2c94c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .15rem center;background-size:14px 14px;
+}
+.form-select.is-chosen{color:var(--fg);}
+option{background:var(--bg);color:var(--fg);}
 .submit-row{display:flex;align-items:center;gap:2.5rem;margin-top:1.5rem;flex-wrap:wrap;}
 .form-submit{
-  font-family:var(--body);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  font-family:var(--body);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
   color:var(--accent);background:none;border:none;cursor:pointer;
   display:inline-flex;align-items:center;gap:.5rem;position:relative;padding:0;
 }
 .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
-.cta-underline{height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.25,1,.5,1);}
+.cta-underline{height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease-out);}
 .form-submit:not(:disabled):hover .cta-underline{transform:scaleX(1);}
-.form-submit svg{transition:transform .3s ease;flex-shrink:0;}
+.form-submit svg{transition:transform .3s var(--ease-out);flex-shrink:0;}
 .form-submit:not(:disabled):hover svg{transform:translateX(3px);}
 .form-submit:disabled{opacity:.35;cursor:not-allowed;}
-.form-submit.btn-outline{border:1px solid var(--accent);padding:.9rem 1.5rem;transition:background-color .25s ease;}
-.form-submit.btn-outline:not(:disabled):hover{background:rgba(242,201,76,.08);}
+.form-submit.btn-outline{border:1px solid var(--accent);border-radius:999px;padding:.9rem 1.75rem;transition:background-color .25s var(--ease-out);}
+.form-submit.btn-outline:not(:disabled):hover{background:var(--accent-wash);}
 .btn-outline .cta-underline-wrap{display:none;}
-.submit-note{font-size:.85rem;color:var(--mid);}
+.submit-note{font-size:.9rem;color:var(--mid);}
 
 /* ── FOOTER ── */
 footer .divider-inner{margin-bottom:3rem;}
@@ -187,12 +211,12 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
 .footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:2rem;margin-bottom:3rem;}
 .footer-nav{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
 .footer-nav a{
-  font-family:var(--body);font-size:.82rem;font-weight:500;
+  font-family:var(--body);font-size:.85rem;font-weight:500;
   text-transform:uppercase;letter-spacing:.05em;
   color:var(--fg);
   border-bottom:2px solid var(--accent);
   padding-bottom:1px;
-  transition:opacity .2s;
+  transition:opacity .2s var(--ease-out);
 }
 .footer-nav a:hover{opacity:.7;}
 .footer-nav a.footer-portal{border-bottom-color:transparent;opacity:.5;}
@@ -201,7 +225,7 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
   padding-top:2rem;border-top:1px solid var(--rule);
 }
-.footer-copy{font-size:.82rem;color:var(--mid);}
+.footer-copy{font-size:.9rem;color:var(--mid);}
 
 /* bigger tap areas on touch screens without changing the layout */
 @media(pointer:coarse){
@@ -214,7 +238,7 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
   :root{--gutter:1.5rem;--section-gap:64px;}
   header{margin-bottom:64px;}
   nav ul{gap:1.2rem;}
-  nav ul li a{font-size:.75rem;}
+  nav ul li a{font-size:.7rem;}
   .contact-grid{grid-template-columns:1fr;}
   .form-row{grid-template-columns:1fr;gap:0;}
   .footer-inner{flex-direction:column;align-items:flex-start;}
@@ -224,18 +248,21 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
   header{flex-direction:column;align-items:flex-start;gap:1.25rem;margin-bottom:48px;}
   nav{width:100%;}
   nav ul{gap:.6rem 1.1rem;flex-wrap:wrap;justify-content:flex-start;}
-  nav ul li a{font-size:.72rem;}
+  nav ul li a{font-size:.7rem;}
   .nav-hide-mobile{display:none;}
+  /* the language toggle can wrap to its own line here, so drop the divider */
+  .nav-lang-item{border-left:none;padding-left:0;margin-left:0;}
   .submit-row{flex-direction:column;align-items:flex-start;}
   .footer-bottom{flex-direction:column;align-items:flex-start;}
 }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Aller au contenu</a>
 
 <!-- HEADER -->
 <header>
-  <a href="/fr/" class="h-logo" aria-label="Accueil Mann Dev">
+  <a href="/fr/" class="h-logo" aria-label="Accueil Manndev">
     <img src="/img/logo.png?v=2" alt="" width="298" height="59">
   </a>
   <nav aria-label="Navigation principale">
@@ -250,10 +277,10 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
   </nav>
 </header>
 
-<main class="container">
+<main class="container" id="main" tabindex="-1">
   <p class="kicker rise">Parlons-en</p>
   <h1 class="contact-h1 rise rise-2">Démarrer un projet</h1>
-  <p class="contact-intro rise rise-3">Remplissez le formulaire ci-dessous pour commencer. Parlez-nous de votre projet; chaque demande reçoit une réponse personnelle, habituellement en moins de 24 heures.</p>
+  <p class="contact-intro rise rise-3">Parlez-nous de votre projet. Chaque demande reçoit une réponse personnelle, habituellement en moins de 24 heures.</p>
   <div class="contact-grid rise rise-4">
     <div class="contact-details">
       <div class="contact-item">
@@ -276,9 +303,10 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
       </div>
     </div>
 
-    <form id="contact-form">
+    <!-- method/action: without JS the browser POSTs to Web3Forms instead of a GET with the details in the URL -->
+    <form id="contact-form" method="post" action="https://api.web3forms.com/submit">
       <input type="hidden" name="access_key" value="3da1f7ac-99e9-49bd-8aa1-c3b621510613">
-      <input type="hidden" name="subject" value="New Web Dev Enquiry — Mann Dev">
+      <input type="hidden" name="subject" value="New Web Dev Enquiry — Manndev">
       <input type="checkbox" name="botcheck" style="display:none;">
       <input type="hidden" name="language" id="language-field" value="Français">
       <div class="form-row">
@@ -296,19 +324,20 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
         <label class="form-label" for="email">Adresse courriel</label>
       </div>
       <div class="form-field">
-        <select class="form-select" id="service" name="service" aria-label="Choisissez un service">
-          <option value="" disabled selected>Choisissez un service</option>
-          <option value="Landing Page">Page d’atterrissage</option>
-          <option value="Full Website">Site web complet</option>
-          <option value="Care &amp; Hosting (Monthly)">Entretien et hébergement (mensuel)</option>
-          <option value="AI Automation">Automatisation IA</option>
-          <option value="Not sure yet">Je ne sais pas encore</option>
+        <select class="form-select" id="service" name="service">
+          <option value="Design &amp; Development">Conception et développement</option>
+          <option value="Hosting &amp; Security">Hébergement et sécurité</option>
+          <option value="Search &amp; Visibility">Recherche et visibilité</option>
+          <option value="Automation">Automatisation</option>
+          <option value="Care plan (monthly)">Forfait d’entretien (mensuel)</option>
+          <option value="Not sure yet" selected>Je ne sais pas encore</option>
         </select>
+        <label class="form-label form-label-raised" for="service">Service</label>
       </div>
       <div class="form-field">
-        <textarea class="form-textarea" id="message" name="message" placeholder="x" maxlength="300" required></textarea>
+        <textarea class="form-textarea" id="message" name="message" placeholder="x" maxlength="2000" required></textarea>
         <label class="form-label" for="message">Parlez-nous de votre projet</label>
-        <span class="char-count" id="char-count">300</span>
+        <span class="char-count" id="char-count"></span>
       </div>
       <div class="submit-row">
         <button class="form-submit btn-outline" type="submit">
@@ -326,7 +355,7 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
 <footer>
   <div class="divider-inner"></div>
   <div class="footer-inner">
-    <a href="/fr/" class="footer-logo" aria-label="Accueil Mann Dev">
+    <a href="/fr/" class="footer-logo" aria-label="Accueil Manndev">
       <img src="/img/logo.png?v=2" alt="" width="298" height="59">
     </a>
     <nav class="footer-nav" aria-label="Navigation du pied de page">
@@ -335,11 +364,12 @@ footer{max-width:var(--container);margin:0 auto;padding:0 var(--gutter) 3rem;}
       <a href="/fr/#about">À propos</a>
       <a href="/blog/">Ressources</a>
       <a href="/fr/contact/">Contact</a>
+      <a href="/fr/confidentialite/">Confidentialité</a>
       <a href="https://portal.manndev.com/" class="footer-portal">Portail</a>
     </nav>
   </div>
   <div class="footer-bottom">
-    <p class="footer-copy">&copy; 2026 Mann Dev.</p>
+    <p class="footer-copy">&copy; 2026 Manndev.</p>
   </div>
 </footer>
 
@@ -350,17 +380,28 @@ document.getElementById('lang-toggle').addEventListener('click', e => {
   if (typeof gtag === 'function') gtag('event', 'language_switch', { language: e.currentTarget.dataset.lang });
 });
 
+/* remaining characters, shown only once fewer than 200 are left */
 const msgArea   = document.getElementById('message');
 const charCount = document.getElementById('char-count');
-msgArea.addEventListener('input', () => {
-  const left = 300 - msgArea.value.length;
-  charCount.textContent = left;
+function updateCount() {
+  const left = msgArea.maxLength - msgArea.value.length;
+  charCount.textContent = left < 200 ? left : '';
   charCount.classList.toggle('warn', left < 60);
-});
+}
+msgArea.addEventListener('input', updateCount);
+updateCount();
+
+/* service picker reads grey on the default, full colour once something else is picked */
+const service = document.getElementById('service');
+function updateService() {
+  service.classList.toggle('is-chosen', !service.options[service.selectedIndex].defaultSelected);
+}
+service.addEventListener('change', updateService);
+updateService();   /* a restored form (back button) may already hold a pick */
 
 const MSG = document.documentElement.lang.startsWith('fr')
-  ? { sending: 'Envoi en cours…', sent: '✓ Message reçu. Nous vous répondrons sous peu.', error: 'Erreur. Veuillez réessayer.' }
-  : { sending: 'Sending…', sent: "✓ Message received. We'll be in touch soon.", error: 'Error. Please try again.' };
+  ? { sending: 'Envoi en cours…', sent: '✓ Message reçu. Nous vous répondrons sous peu.', error: 'Une erreur est survenue pendant l’envoi. Votre texte est toujours là : réessayez, ou écrivez-nous à contact@manndev.com.' }
+  : { sending: 'Sending…', sent: "✓ Message received. We'll be in touch soon.", error: 'Something went wrong sending your message. Your text is still here: try again, or email us at contact@manndev.com.' };
 
 document.getElementById('contact-form').addEventListener('submit', e => {
   e.preventDefault();
@@ -379,7 +420,8 @@ document.getElementById('contact-form').addEventListener('submit', e => {
     if (j.success) {
       if (typeof gtag === 'function') gtag('event', 'generate_lead', { form_id: 'contact-form', page_path: location.pathname });
       e.target.reset();
-      charCount.textContent = '300';
+      updateCount();     /* clears the counter and its .warn */
+      updateService();
     }
   })
   .catch(() => { status.textContent = MSG.error; })

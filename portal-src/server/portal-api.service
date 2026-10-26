@@ -1,6 +1,6 @@
 # systemd unit for the client portal API. Install steps: portal-src/SETUP.md §4.
 [Unit]
-Description=Mann Dev client portal API (password changes)
+Description=Manndev client portal API (password changes)
 After=network.target
 
 [Service]

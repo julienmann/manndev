@@ -5,7 +5,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://manndev.com/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://manndev.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://manndev.com/"/>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -14,7 +14,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://manndev.com/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://manndev.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://manndev.com/"/>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -23,7 +23,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://manndev.com/contact/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://manndev.com/fr/contact/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://manndev.com/contact/"/>
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -32,9 +32,27 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://manndev.com/contact/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://manndev.com/fr/contact/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://manndev.com/contact/"/>
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://manndev.com/privacy/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://manndev.com/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://manndev.com/fr/confidentialite/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://manndev.com/privacy/"/>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://manndev.com/fr/confidentialite/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://manndev.com/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://manndev.com/fr/confidentialite/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://manndev.com/privacy/"/>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
   <!-- blog:start (scripts/build-blog.py) -->
   <url>

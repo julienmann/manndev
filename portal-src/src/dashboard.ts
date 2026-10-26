@@ -1,4 +1,4 @@
-import { SESSION_KEY, MIN_PASSWORD, fetchClientInfo, deriveClientKey, escapeHtml, formatDate, setStatus, type ClientInfo } from './session';
+import { SESSION_KEY, MIN_PASSWORD, fetchFolder, fetchInfo, deriveClientKey, escapeHtml, formatDate, setStatus, type ClientInfo } from './session';
 
 const CTA_ARROW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
 const CTA_UNDERLINE = '<div class="cta-underline-wrap"><div class="cta-underline"></div></div>';
@@ -64,7 +64,9 @@ const pwOpenBtn = document.querySelector<HTMLButtonElement>('#pw-open-btn')!;
 // The "Change password" button in the top bar opens the form in a dialog.
 function bindPasswordForm(username: string) {
   document.querySelector<HTMLElement>('#pw-username')!.textContent = username;
-  document.querySelector<HTMLInputElement>('#pw-username-field')!.value = username;
+  // defaultValue, not value: form.reset() would otherwise blank this hidden
+  // field, and password managers read it to know which login to update.
+  document.querySelector<HTMLInputElement>('#pw-username-field')!.defaultValue = username;
   pwOpenBtn.hidden = false;
 
   const form = document.querySelector<HTMLFormElement>('#pw-form')!;
@@ -86,7 +88,21 @@ function bindPasswordForm(username: string) {
     current.focus();
   });
   document.querySelector<HTMLButtonElement>('#pw-close-btn')!.addEventListener('click', () => pwDialog.close());
-  pwDialog.addEventListener('click', (e) => { if (e.target === pwDialog) pwDialog.close(); });   // backdrop
+
+  // Close on a backdrop click. The dialog's own padding is also the dialog
+  // element, so check the point is outside its box, and that the press started
+  // outside too: a text selection dragged out of an input mustn't close it.
+  const outsideDialog = (e: MouseEvent) => {
+    const box = pwDialog.getBoundingClientRect();
+    return e.target === pwDialog
+      && (e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom);
+  };
+  let pressedOutside = false;
+  pwDialog.addEventListener('pointerdown', (e) => { pressedOutside = outsideDialog(e); });
+  pwDialog.addEventListener('click', (e) => {
+    if (pressedOutside && outsideDialog(e)) pwDialog.close();
+    pressedOutside = false;
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -144,22 +160,27 @@ async function init() {
     return;
   }
 
-  const result = await fetchClientInfo(key);
+  const pointer = await fetchFolder(key);
+  if (!pointer.ok) return fail(pointer.reason);
 
-  if (!result.ok) {
-    if (result.reason === 'network') {
-      renderError();
-    } else {
-      localStorage.removeItem(SESSION_KEY);
-      window.location.replace('./index.html?expired=1');
-    }
-    return;
-  }
+  // Once the folder is known, info.json and the preview check are independent.
+  const [result, previewAvailable] = await Promise.all([fetchInfo(pointer.folder), hasLivePreview(pointer.folder)]);
+  if (!result.ok) return fail(result.reason);
 
   accountName.textContent = result.info.name ?? '';
   if (result.info.username) bindPasswordForm(result.info.username);
-  const previewAvailable = await hasLivePreview(result.folder);
-  renderFiles(result.folder, result.info, previewAvailable);
+  renderFiles(pointer.folder, result.info, previewAvailable);
+}
+
+// A temporary problem gets a retry button; only a key that no longer exists
+// signs the client out.
+function fail(reason: 'invalid' | 'network') {
+  if (reason === 'network') {
+    renderError();
+  } else {
+    localStorage.removeItem(SESSION_KEY);
+    window.location.replace('./index.html?expired=1');
+  }
 }
 
 logoutBtn.addEventListener('click', () => {

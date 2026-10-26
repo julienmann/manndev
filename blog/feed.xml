@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mann Dev Insights</title>
+    <title>Manndev Insights</title>
     <link>https://manndev.com/blog/</link>
     <atom:link href="https://manndev.com/blog/feed.xml" rel="self" type="application/rss+xml"/>
-    <description>Practical guides on web design, performance, accessibility and SEO for small business owners, written by a Montréal web developer. No jargon, no sales pitch.</description>
+    <description>Practical guides on web design, performance, accessibility and SEO for small business owners, written by Manndev, a small Montréal web studio. No jargon, no sales pitch.</description>
     <language>en-ca</language>
     <lastBuildDate>Fri, 02 Oct 2026 12:00:00 -0400</lastBuildDate>
     <item>

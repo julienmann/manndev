@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZEZB4R3CP"></script>
+<!-- Google Analytics loads only after the visitor allows it (Québec Law 25) -->
+<script defer src="/js/consent.js"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-2ZEZB4R3CP');
   gtag('event', 'page_not_found', { page_path: location.pathname, referrer: document.referrer });
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Page not found · Mann Dev</title>
+<title>Page not found · Manndev</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#1e2530">
 <link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32">
@@ -34,6 +33,8 @@
   --body:   'Figtree', system-ui, sans-serif;
   --gutter: clamp(1.5rem, 5vw, 4rem);
   --container: 1280px;
+  --accent-wash: rgba(242,201,76,.08);      /* hover fills */
+  --ease-out: cubic-bezier(.22,1,.36,1);   /* ease-out-quint: every UI transition */
 }
 
 html{overflow-x:hidden;}
@@ -51,6 +52,15 @@ a{color:inherit;text-decoration:none;}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
 a:focus:not(:focus-visible){outline:none;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.001ms!important;}}
+
+.skip-link{
+  position:absolute;left:var(--gutter);top:.75rem;z-index:60;
+  font-size:.85rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--bg);
+  background:var(--accent);padding:.6rem 1rem;border-radius:999px;
+  transform:translateY(-200%);transition:transform .3s var(--ease-out);
+}
+.skip-link:focus{transform:none;}
+main:focus{outline:none;}
 
 /* ── GRAIN ── */
 body::after{
@@ -78,7 +88,7 @@ main{flex:1;display:flex;align-items:center;padding-top:4rem;padding-bottom:6rem
   margin-bottom:1.5rem;
 }
 .kicker{
-  font-family:var(--body);font-size:.72rem;font-weight:600;
+  font-family:var(--body);font-size:.7rem;font-weight:600;
   text-transform:uppercase;letter-spacing:.18em;color:var(--accent);
   margin-bottom:1rem;
 }
@@ -98,18 +108,53 @@ main{flex:1;display:flex;align-items:center;padding-top:4rem;padding-bottom:6rem
   color:var(--accent);
   position:relative;
 }
-.link-cta svg{transition:transform .3s ease;flex-shrink:0;}
+.link-cta svg{transition:transform .3s var(--ease-out);flex-shrink:0;}
 .link-cta:hover svg{transform:translateX(3px);}
 .link-cta .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
 .cta-underline{
   height:100%;background:var(--accent);
   transform:scaleX(0);transform-origin:left;
-  transition:transform .3s cubic-bezier(.25,1,.5,1);
+  transition:transform .3s var(--ease-out);
 }
 .link-cta:hover .cta-underline{transform:scaleX(1);}
-.link-cta.btn-outline{border:1px solid var(--accent);padding:.9rem 1.5rem;transition:background-color .25s ease;}
-.link-cta.btn-outline:hover{background:rgba(242,201,76,.08);}
+.link-cta.btn-outline{border:1px solid var(--accent);border-radius:999px;padding:.9rem 1.75rem;transition:background-color .25s var(--ease-out);}
+.link-cta.btn-outline:hover{background:var(--accent-wash);}
 .btn-outline .cta-underline-wrap{display:none;}
+/* "Start a project": a gold dot that floods the pill on hover while the label hands
+   over to a filled copy with an arrow (after Magic UI's interactive hover button).
+   The flood is a 640px circle scaled down to the 8px dot, so it stays crisp and
+   only transform/opacity animate. */
+.cta-pill{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--accent);border-radius:999px;
+  padding:.9rem 1.75rem .9rem 1.35rem;
+  font-family:var(--body);font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);text-decoration:none;
+}
+.cta-pill-rest{display:inline-flex;align-items:center;gap:.7rem;}
+.cta-pill-dot{position:relative;width:8px;height:8px;flex-shrink:0;}
+.cta-pill-dot::before{
+  content:'';position:absolute;left:50%;top:50%;z-index:-1;
+  width:640px;height:640px;margin:-320px 0 0 -320px;border-radius:50%;
+  background:var(--accent);transform:scale(.0125);will-change:transform;
+  transition:transform .6s var(--ease-out);
+}
+.cta-pill-label{display:inline-block;transition:transform .45s var(--ease-out), opacity .3s var(--ease-out);}
+.cta-pill-hover{
+  position:absolute;inset:0;z-index:1;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  color:var(--bg);opacity:0;transform:translateX(2.5rem);
+  transition:transform .45s var(--ease-out), opacity .45s var(--ease-out);
+}
+.cta-pill:focus-visible .cta-pill-dot::before{transform:scale(1);}
+.cta-pill:focus-visible .cta-pill-label{transform:translateX(2.5rem);opacity:0;}
+.cta-pill:focus-visible .cta-pill-hover{transform:none;opacity:1;}
+@media(hover:hover){
+  .cta-pill:hover .cta-pill-dot::before{transform:scale(1);}
+  .cta-pill:hover .cta-pill-label{transform:translateX(2.5rem);opacity:0;}
+  .cta-pill:hover .cta-pill-hover{transform:none;opacity:1;}
+}
 
 .nf-alt{margin-top:4rem;padding-top:1.5rem;border-top:1px solid var(--rule);font-size:.9rem;color:var(--mid);max-width:480px;}
 .nf-alt a{color:var(--fg);border-bottom:1px solid var(--accent);}
@@ -139,19 +184,29 @@ html.is-fr .nf-alt-en,html.is-en .nf-alt-fr{display:none;}
     }
     var root = document.documentElement;
     root.classList.add(fr ? 'is-fr' : 'is-en');
-    if (fr) { root.lang = 'fr-CA'; document.title = 'Page introuvable · Mann Dev'; }
+    if (fr) { root.lang = 'fr-CA'; document.title = 'Page introuvable · Manndev'; }
   })();
 </script>
 </head>
 <body>
+<a class="skip-link" href="#main" id="skip-link">Skip to content</a>
 
 <header>
-  <a href="/" class="h-logo" aria-label="Mann Dev Home">
+  <a href="/" class="h-logo" id="h-logo" aria-label="Manndev Home">
     <img src="/img/logo.png?v=2" alt="" width="298" height="59">
   </a>
 </header>
+<script>
+  /* French mode: the skip link and logo speak French and go to the French home */
+  if (document.documentElement.classList.contains('is-fr')) {
+    document.getElementById('skip-link').textContent = 'Aller au contenu';
+    var logo = document.getElementById('h-logo');
+    logo.href = '/fr/';
+    logo.setAttribute('aria-label', 'Accueil Manndev');
+  }
+</script>
 
-<main class="container">
+<main class="container" id="main" tabindex="-1">
   <div>
     <p class="nf-code" aria-hidden="true">404</p>
 
@@ -164,10 +219,9 @@ html.is-fr .nf-alt-en,html.is-en .nf-alt-fr{display:none;}
           <span>Back to home</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-        <a href="/contact/" class="link-cta">
-          <span>Start a project</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+        <a href="/contact/" class="cta-pill">
+          <span class="cta-pill-rest"><span class="cta-pill-dot" aria-hidden="true"></span><span class="cta-pill-label">Start a project</span></span>
+          <span class="cta-pill-hover" aria-hidden="true"><span>Start a project</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </a>
       </div>
     </div>
@@ -181,10 +235,9 @@ html.is-fr .nf-alt-en,html.is-en .nf-alt-fr{display:none;}
           <span>Retour à l’accueil</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-        <a href="/fr/contact/" class="link-cta">
-          <span>Démarrer un projet</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+        <a href="/fr/contact/" class="cta-pill">
+          <span class="cta-pill-rest"><span class="cta-pill-dot" aria-hidden="true"></span><span class="cta-pill-label">Démarrer un projet</span></span>
+          <span class="cta-pill-hover" aria-hidden="true"><span>Démarrer un projet</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </a>
       </div>
     </div>

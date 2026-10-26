@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "appRoot": "/Users/julienmann/www/manndev/portal-src",
+  "repoRoot": "/Users/julienmann/www/manndev",
+  "contextRoot": "/Users/julienmann/www/manndev",
+  "sessionRoot": "/Users/julienmann/www/manndev/portal-src/.impeccable/live",
+  "productPath": "/Users/julienmann/www/manndev/PRODUCT.md",
+  "designPath": "/Users/julienmann/www/manndev/DESIGN.md",
+  "resolvedFrom": "candidate:portal-src"
+}

@@ -44,13 +44,17 @@ AUTHOR = 'Julien Mann'
 TOPICS = ['Web Design', 'Performance', 'Accessibility', 'SEO', 'Business']   # display order
 WPM = 225
 
-HUB_TITLE = 'Insights: Web Design Guides for Small Businesses · Mann Dev'
+HUB_TITLE = 'Insights: Web Design Guides for Small Businesses · Manndev'
 HUB_DESC = ('Practical guides on web design, performance, accessibility and SEO for small '
-            'business owners, written by a Montréal web developer. No jargon, no sales pitch.')
+            'business owners, written by Manndev, a small Montréal web studio. No jargon, no sales pitch.')
 
 ARROW = ('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>')
 UNDERLINE = '<span class="cta-underline-wrap"><span class="cta-underline" style="display:block"></span></span>'
+# "Start a project" pill, as on the home page (16px arrow in the hover state)
+START_PILL = ('<a href="/contact/" class="cta-pill"><span class="cta-pill-rest"><span class="cta-pill-dot" aria-hidden="true"></span>'
+              '<span class="cta-pill-label">Start a project</span></span><span class="cta-pill-hover" aria-hidden="true">'
+              '<span>Start a project</span>' + ARROW.replace('width="14" height="14"', 'width="16" height="16"') + '</span></a>')
 
 
 def fail(msg):
@@ -102,7 +106,7 @@ def load(path):
         if hid in seen:
             fail(f'{path.name}: two headings share the id "{hid}"')
         seen.add(hid)
-        toc.append((hid, re.sub(r'<[^>]+>', '', inner)))
+        toc.append((hid, html.unescape(re.sub(r'<[^>]+>', '', inner))))
         return h.group(0) if found else f'<h2 id="{hid}"{attrs}>{inner}</h2>'
     body = re.sub(r'<h2([^>]*)>(.*?)</h2>', anchor, body, flags=re.S)
 
@@ -144,23 +148,18 @@ def page(*, title, description, canonical, og_type, jsonld, main, head_extra='',
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZEZB4R3CP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){{dataLayer.push(arguments);}}
-  gtag('js', new Date());
-  gtag('config', 'G-2ZEZB4R3CP');
-</script>
+<!-- Google Analytics loads only after the visitor allows it (Québec Law 25) -->
+<script defer src="/js/consent.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{canonical}">
-<link rel="alternate" type="application/rss+xml" title="Mann Dev Insights" href="{BLOG}feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Manndev Insights" href="{BLOG}feed.xml">
 <meta name="author" content="{AUTHOR}">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#1e2530">
 <meta property="og:type" content="{og_type}">
-<meta property="og:site_name" content="Mann Dev">
+<meta property="og:site_name" content="Manndev">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{canonical}">
@@ -187,10 +186,11 @@ def page(*, title, description, canonical, og_type, jsonld, main, head_extra='',
 </script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <!-- HEADER -->
 <header>
-  <a href="/" class="h-logo" aria-label="Mann Dev Home">
+  <a href="/" class="h-logo" aria-label="Manndev Home">
     <img src="/img/logo.png?v=2" alt="" width="298" height="59">
   </a>
   <nav aria-label="Main navigation">
@@ -211,7 +211,7 @@ def page(*, title, description, canonical, og_type, jsonld, main, head_extra='',
 <footer>
   <div class="divider-inner"></div>
   <div class="footer-inner">
-    <a href="/" class="footer-logo" aria-label="Mann Dev Home">
+    <a href="/" class="footer-logo" aria-label="Manndev Home">
       <img src="/img/logo.png?v=2" alt="" width="298" height="59" loading="lazy">
     </a>
     <nav class="footer-nav" aria-label="Footer navigation">
@@ -220,19 +220,25 @@ def page(*, title, description, canonical, og_type, jsonld, main, head_extra='',
       <a href="/#about">About</a>
       <a href="/blog/">Insights</a>
       <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
       <a href="https://portal.manndev.com/" class="footer-portal">Portal</a>
     </nav>
   </div>
   <div class="footer-bottom">
-    <p class="footer-copy">&copy; {date.today().year} Mann Dev.</p>
+    <p class="footer-copy">&copy; {date.today().year} Manndev.</p>
     <a href="/blog/feed.xml" class="footer-feed">Insights RSS feed</a>
   </div>
 </footer>
 
 <script>
-/* remember an explicit language pick so the redirect on the home page respects it */
+/* remember an explicit language pick so the redirect on the home page respects it,
+   and land on the French home without replaying its intro (same-tab clicks only) */
 document.getElementById('lang-toggle').addEventListener('click', e => {{
-  try {{ localStorage.setItem('lang', e.currentTarget.dataset.lang); }} catch (err) {{}}
+  const sameTab = e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
+  try {{
+    localStorage.setItem('lang', e.currentTarget.dataset.lang);
+    if (sameTab) sessionStorage.setItem('skipIntro', '1');
+  }} catch (err) {{}}
   if (typeof gtag === 'function') gtag('event', 'language_switch', {{ language: e.currentTarget.dataset.lang }});
 }});
 {script}</script>
@@ -305,7 +311,7 @@ def build_hub():
                 for t, n in counts.items() if n]
     f = next((p for p in posts if p['featured']), posts[0])
     feature_toc = '\n'.join(f'          <li>{esc(t)}</li>' for _, t in f['toc'][:5])
-    main = f'''<main class="container">
+    main = f'''<main class="container" id="main" tabindex="-1">
   <div class="hub-head">
     <div>
       <p class="kicker rise">Insights</p>
@@ -353,7 +359,7 @@ def build_hub():
     <h2 class="ask-h2" id="ask-h2">Have a question these guides don't answer?</h2>
     <div>
       <p class="ask-p">Ask it directly. Every enquiry is answered personally, usually within 24 hours.</p>
-      <a href="/contact/" class="link-cta">Start a project {ARROW}{UNDERLINE}</a>
+      {START_PILL}
     </div>
   </section>
 </main>'''
@@ -385,8 +391,8 @@ def build_hub():
 })();
 '''
     jsonld = {'@context': 'https://schema.org', '@graph': [
-        {'@type': 'Blog', '@id': BLOG + '#blog', 'name': 'Mann Dev Insights', 'url': BLOG,
-         'description': HUB_DESC, 'inLanguage': 'en-CA', 'publisher': PUBLISHER, 'author': PERSON,
+        {'@type': 'Blog', '@id': BLOG + '#blog', 'name': 'Manndev Insights', 'url': BLOG,
+         'description': HUB_DESC, 'inLanguage': 'en-CA', 'publisher': PUBLISHER, 'author': PUBLISHER,
          'blogPost': [posting(p) for p in posts]},
         crumbs_ld(('Home', f'{SITE}/'), ('Insights', BLOG)),
     ]}
@@ -410,7 +416,7 @@ def build_post(p):
       </ol>
       <div class="aside-cta">
         <p>Planning a new site, or fixing the one you have?</p>
-        <a href="/contact/" class="link-cta">Start a project {ARROW}{UNDERLINE}</a>
+        {START_PILL}
       </div>
     </aside>''' if p['toc'] else ''
     updated = ''
@@ -428,7 +434,7 @@ def build_post(p):
   </section>''' if more else ''
 
     main = f'''<div class="read-progress" aria-hidden="true"><span></span></div>
-<main class="container">
+<main class="container" id="main" tabindex="-1">
   <article>
     <div class="post-head">
       <nav aria-label="Breadcrumb" class="rise">
@@ -457,8 +463,8 @@ def build_post(p):
           <span class="author-mark" aria-hidden="true">m/d</span>
           <div>
             <p class="author-name">{AUTHOR}</p>
-            <p class="author-p">Julien builds custom websites and web apps for small businesses from Montréal, by hand and without templates. Every site ships fast, accessible and fully owned by the client.</p>
-            <a href="/contact/" class="link-cta">Talk to Julien {ARROW}{UNDERLINE}</a>
+            <p class="author-p">Julien writes for the Manndev team, a small Montréal web studio. We design and build custom websites and web apps for small businesses by hand, without templates: every site ships fast, accessible and fully owned by the client.</p>
+            <a href="/contact/" class="link-cta">Talk to us {ARROW}{UNDERLINE}</a>
           </div>
         </div>
       </div>
@@ -473,7 +479,7 @@ def build_post(p):
         posting(p, full=True),
         crumbs_ld(('Home', f'{SITE}/'), ('Insights', BLOG), (p['title'], p['url'])),
     ]}
-    return page(title=f'{p["title"]} · Mann Dev', description=p['description'], canonical=p['url'],
+    return page(title=f'{p["title"]} · Manndev', description=p['description'], canonical=p['url'],
                 og_type='article', jsonld=jsonld, main=main, head_extra=head_extra)
 
 
@@ -494,7 +500,7 @@ def build_feed():
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mann Dev Insights</title>
+    <title>Manndev Insights</title>
     <link>{BLOG}</link>
     <atom:link href="{BLOG}feed.xml" rel="self" type="application/rss+xml"/>
     <description>{esc(HUB_DESC)}</description>

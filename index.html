@@ -2,16 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZEZB4R3CP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-2ZEZB4R3CP');
-</script>
+<!-- Google Analytics loads only after the visitor allows it (Québec Law 25) -->
+<script defer src="/js/consent.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mann Dev — Web Design &amp; Development in Montréal</title>
-<meta name="description" content="Custom websites and web apps built from scratch in Montréal. No templates, no page builders — just clean, fast code you own outright.">
+<title>Manndev · Web Design &amp; Development in Montréal</title>
+<meta name="description" content="Custom websites and web apps built from scratch in Montréal. No templates, no page builders: just clean, fast code you own outright.">
 <link rel="canonical" href="https://manndev.com/">
 <link rel="alternate" hreflang="en" href="https://manndev.com/">
 <link rel="alternate" hreflang="fr" href="https://manndev.com/fr/">
@@ -21,8 +16,29 @@
 <script id="lang-redirect">
 try {
   var l = localStorage.getItem('lang');
-  if (l === 'fr' || (!l && /^fr\b/i.test((navigator.languages && navigator.languages[0]) || navigator.language || ''))) location.replace('/fr/' + location.hash);
+  if (l === 'fr' || (!l && /^fr\b/i.test((navigator.languages && navigator.languages[0]) || navigator.language || ''))) location.replace('/fr/' + location.search + location.hash);
 } catch (e) {}
+</script>
+<!-- `js`: scripts run, so tab panels can hide until chosen. `js-anim` hides the hero
+     until the GSAP intro takes it over, so it never paints, vanishes and replays.
+     `js-intro` adds the spotlight intro: every load except a switch from the language
+     toggle or a link to a section (#contact etc.). Skipped for reduced motion. If either
+     GSAP file hasn't arrived after 3 s, the page is shown as is and nothing replays. -->
+<script>
+(function () {
+  var h = document.documentElement;
+  h.classList.add('js');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  h.classList.add('js-anim');
+  var skip = !!location.hash;
+  try { skip = skip || sessionStorage.getItem('skipIntro') === '1'; sessionStorage.removeItem('skipIntro'); } catch (e) {}
+  if (!skip) h.classList.add('js-intro');
+  setTimeout(function () {
+    if (window.gsap && window.ScrollTrigger) return;
+    h.dataset.revealed = '1';
+    h.classList.remove('js-anim', 'js-intro');
+  }, 3000);
+})();
 </script>
 <meta name="author" content="Julien Mann">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -32,20 +48,20 @@ try {
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Mann Dev">
-<meta property="og:title" content="Mann Dev — Web Design &amp; Development in Montréal">
-<meta property="og:description" content="Custom websites and web apps built from scratch in Montréal. No templates, no page builders — just clean, fast code you own outright.">
+<meta property="og:site_name" content="Manndev">
+<meta property="og:title" content="Manndev · Web Design &amp; Development in Montréal">
+<meta property="og:description" content="Custom websites and web apps built from scratch in Montréal. No templates, no page builders: just clean, fast code you own outright.">
 <meta property="og:url" content="https://manndev.com/">
 <meta property="og:image" content="https://manndev.com/img/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Mann Dev — Web Design &amp; Development, Montréal">
+<meta property="og:image:alt" content="Manndev · Web Design &amp; Development, Montréal">
 <meta property="og:locale" content="en_CA">
 <meta property="og:locale:alternate" content="fr_CA">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Mann Dev — Web Design &amp; Development in Montréal">
+<meta name="twitter:title" content="Manndev · Web Design &amp; Development in Montréal">
 <meta name="twitter:description" content="Custom websites and web apps built from scratch in Montréal. Clean, fast, accessible code you own outright.">
 <meta name="twitter:image" content="https://manndev.com/img/og-image.png">
 
@@ -69,38 +85,72 @@ try {
   --rule:   rgba(240,242,244,.09);
   --rule-soft: rgba(240,242,244,.06);
   --rule-accent: rgba(242,201,76,.22);
+  --accent-wash: rgba(242,201,76,.08);      /* hover fills */
+  --accent-edge: rgba(242,201,76,.2);       /* card edge on hover */
+  --accent-edge-strong: rgba(242,201,76,.42); /* care card and tag edge on hover */
   --display:'Lora', Georgia, serif;
   --body:   'Figtree', system-ui, sans-serif;
   --gutter: clamp(1.5rem, 5vw, 4rem);
   --container: 1280px;
   --section-gap: 96px;
   --card-radius: 28px;
+  --ease-out: cubic-bezier(.22,1,.36,1);   /* ease-out-quint: every UI transition */
 }
 
-html{scroll-behavior:smooth;overflow-x:hidden;}
+html{scroll-behavior:smooth;}
+/* clip, not hidden: "hidden" turns body into a scroll box and breaks the sticky process
+   stack. Browsers without clip get nothing here, and the horizon is sized to fit anyway. */
+@supports (overflow:clip){html,body{overflow-x:clip;}}
 body{
   background:var(--bg);
   color:var(--fg);
   font-family:var(--body);
   font-size:16px;
   line-height:1.7;
-  overflow-x:hidden;
 }
 ::selection{background:var(--accent);color:var(--bg);}
 a{color:inherit;text-decoration:none;}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
 a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none;}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;}html{scroll-behavior:auto;}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;transition-duration:.001ms!important;transition-delay:0s!important;}html{scroll-behavior:auto;}}
+h1,h2,h3{text-wrap:balance;}
+p{text-wrap:pretty;}
+
+.js-anim header,.js-anim .hero-h1,.js-anim .hero-sub,.js-anim #hero .cta-pill,.js-anim .hero-footer{visibility:hidden;}
+
+/* ── SPOTLIGHT INTRO ── a warm light sweeps across the logo in the dark, then
+   opens out to reveal the page while the logo settles into the header */
+#intro{display:none;}
+.js-intro #intro{display:block;position:fixed;inset:0;z-index:49;pointer-events:none;overflow:hidden;}
+.intro-logo{position:absolute;inset:0;margin:auto;height:clamp(32px,7vw,52px);width:auto;aspect-ratio:298 / 59;}
+.intro-light{
+  --r:0px;--d:300vmax;
+  position:absolute;left:50%;top:50%;width:var(--d);height:var(--d);
+  margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);
+  background:radial-gradient(circle,
+    rgba(242,201,76,.11) 0, rgba(242,201,76,.04) calc(var(--r) * .55),
+    rgba(30,37,48,0) var(--r), var(--bg) calc(var(--r) * 1.9));
+  will-change:transform,opacity;
+}
+
+/* Headline step (DESIGN.md): every section opener shares it */
+.about-h2,.work-h2,.process-h2,.principles-h2,.services-h2,.contact-h2{
+  font:500 clamp(30px,4vw,52px)/1.12 var(--display);color:var(--fg);
+}
+
+.skip-link{
+  position:absolute;left:var(--gutter);top:.75rem;z-index:60;
+  font-size:.85rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--bg);
+  background:var(--accent);padding:.6rem 1rem;border-radius:999px;
+  transform:translateY(-200%);transition:transform .3s var(--ease-out);
+}
+.skip-link:focus{transform:none;}
+main:focus{outline:none;}
 
 /* ── CONTAINER ── */
 .container{max-width:var(--container);margin:0 auto;padding:0 var(--gutter);}
 
 /* ── DIVIDER ── */
-.divider{
-  border:none;
-  border-top:1px solid var(--rule);
-  margin:var(--section-gap) 0;
-}
 .divider-inner{
   max-width:var(--container);
   margin:var(--section-gap) auto;
@@ -122,22 +172,14 @@ a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none;}
   height:100%;
   background:var(--accent);
   transform:scaleX(0);transform-origin:left;
-  transition:transform .3s cubic-bezier(.25,1,.5,1);
+  transition:transform .3s var(--ease-out);
 }
-.link-cta:hover .cta-underline,
-.form-submit:not(:disabled):hover .cta-underline{transform:scaleX(1);}
+.link-cta:hover .cta-underline{transform:scaleX(1);}
 .link-cta svg{
-  transition:transform .3s ease;
+  transition:transform .3s var(--ease-out);
   flex-shrink:0;
 }
 .link-cta:hover svg{transform:translateX(3px);}
-
-/* ── CARD ── */
-.card{
-  background:var(--surface);
-  border-radius:var(--card-radius);
-  padding:2.5rem;
-}
 
 /* ── HEADER ── */
 header{
@@ -146,7 +188,7 @@ header{
   justify-content:space-between;
   padding:2rem var(--gutter);
   max-width:var(--container);
-  margin:0 auto 120px;
+  margin:0 auto;
 }
 .h-logo img,.footer-logo img{
   display:block;
@@ -168,7 +210,7 @@ nav ul li a{
   color:var(--fg);
   border-bottom:2px solid var(--accent);
   padding-bottom:2px;
-  transition:opacity .2s;
+  transition:opacity .2s var(--ease-out);
 }
 nav ul li a:hover{opacity:.75;}
 nav ul li a.nav-portal,nav ul li a.nav-lang{
@@ -186,82 +228,62 @@ body::after{
 }
 
 /* ── HERO ── */
+/* the hero owns the first screen: header + hero = one viewport, so the next
+   section starts below the fold. --header-h is measured by script (fallback 84px). */
 #hero{
   position:relative;
   max-width:var(--container);
   margin:0 auto clamp(56px,7vw,80px);
   padding:0 var(--gutter) 0;
+  min-height:calc(100vh - var(--header-h, 84px));
+  min-height:calc(100svh - var(--header-h, 84px));
+  display:flex;flex-direction:column;
 }
-#hero .container{position:relative;z-index:1;}
-.hero-mark{
-  position:absolute;z-index:0;pointer-events:none;
-  top:50%;right:clamp(0px,6vw,96px);
-  height:min(64vh,560px,80vw);aspect-ratio:1;transform:translateY(-54%);
-  color:var(--fg);opacity:.055;
-}
-.hero-mark svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
-/* the ring is its own <svg> so the spin is a compositor-only transform */
-.hero-ring{animation:markSpin 120s linear infinite;}
-@keyframes markSpin{to{transform:rotate(360deg);}}
-@media(prefers-reduced-motion:reduce){.hero-ring{animation:none;}}
+#hero .container{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;padding-top:2rem;}
+#hero .hero-h1{margin-top:auto;}
+#hero .hero-footer{margin-top:auto;padding-bottom:2.5rem;width:100%;}
+#hero .container{position:relative;z-index:1;text-align:center;}
 .hero-h1 em{
   font-style:italic;color:var(--accent);
   position:relative;display:inline-block;
 }
-.hero-scribble{
-  position:absolute;left:-2%;bottom:.02em;width:104%;height:.2em;
-  overflow:visible;pointer-events:none;
-}
-.hero-scribble path{
-  fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;
-  vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:0;
-}
-.hero-meta{
-  font-family:var(--body);
-  font-size:.8rem;
-  font-weight:500;
-  text-transform:uppercase;
-  letter-spacing:.15em;
-  color:var(--accent);
-  margin-bottom:2rem;
-}
 .hero-h1{
   font:500 clamp(40px,6vw,70px)/1.08 var(--display);
   max-width:80%;
-  margin-bottom:2rem;
+  margin:0 auto 2rem;
+  text-align:center;
   color:var(--fg);
 }
 .hero-sub{
-  font-size:1.05rem;
+  font-size:1.1rem;
   color:var(--mid);
   max-width:520px;
   line-height:1.8;
-  margin-bottom:2.5rem;
+  margin:0 auto 2.5rem;
 }
-.hero-footer{
-  display:flex;
-  align-items:center;
-  gap:3rem;
-  flex-wrap:wrap;
-  padding-top:2rem;
-  border-top:1px solid var(--rule);
-  margin-top:2rem;
+.hero-footer{position:relative;padding-top:2rem;}
+/* the horizon: one gold line, edge to edge, that the cursor can disturb */
+.horizon{
+  /* full-bleed: the viewport minus any classic scrollbar (--sbw, set by script) */
+  position:absolute;top:-60px;width:calc(100vw - var(--sbw,0px));left:calc(50% - (100vw - var(--sbw,0px)) / 2);height:120px;
+  overflow:visible;pointer-events:none;
 }
-.status-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:.5rem;
-  font-family:var(--body);
-  font-size:.8rem;
-  color:var(--fg);
+.horizon path{
+  fill:none;stroke:var(--accent);stroke-width:1;vector-effect:non-scaling-stroke;
+  opacity:.4;
 }
 .status-dot{
   width:7px;height:7px;
   border-radius:50%;
   background:var(--accent);
-  animation:pulse 2s ease-in-out infinite;
+  position:relative;flex-shrink:0;
 }
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+.status-dot::after{
+  content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);
+  animation:ripple 2.4s var(--ease-out) infinite;
+}
+@keyframes ripple{from{transform:scale(1);opacity:.5;}to{transform:scale(3.2);opacity:0;}}
+@media(prefers-reduced-motion:reduce){.status-dot::after{animation:none;opacity:0;}}
 
 /* ── ABOUT ── */
 .about-grid{
@@ -269,20 +291,9 @@ body::after{
   grid-template-columns:2.4fr 1fr;
   gap:clamp(3rem,8vw,7rem);
 }
-.about-h6{
-  font-family:var(--body);
-  font-size:.72rem;
-  font-weight:600;
-  text-transform:uppercase;
-  letter-spacing:.18em;
-  color:var(--accent);
-  margin-bottom:2rem;
-}
 .about-h2{
-  font:500 clamp(30px,4vw,52px)/1.12 var(--display);
   max-width:85%;
   margin-bottom:2rem;
-  color:var(--fg);
 }
 .about-text p{
   font-size:1rem;
@@ -297,34 +308,64 @@ body::after{
 }
 .about-skills-label{
   font-family:var(--body);
-  font-size:.72rem;
+  font-size:.7rem;
   font-weight:600;
   text-transform:uppercase;
   letter-spacing:.18em;
   color:var(--accent);
   margin-bottom:1.8rem;
 }
-.skills-list{
-  list-style:none;
+.outcomes{list-style:none;display:flex;flex-direction:column;}
+.outcomes li{display:flex;flex-direction:column;gap:.2rem;padding:1.1rem 0;border-bottom:1px solid var(--rule-soft);}
+.outcomes li:first-child{padding-top:0;}
+.outcomes li:last-child{border-bottom:none;}
+.out-h{font:600 1.25rem/1.2 var(--display);color:var(--fg);}
+.out-p{font-size:.9rem;color:var(--mid);line-height:1.6;}
+
+/* ── SELECTED WORK ── */
+.work-h2{max-width:80%;margin-bottom:3rem;}
+.work-list{list-style:none;border-top:1px solid var(--rule);}
+.work-row{
+  display:grid;grid-template-columns:1fr auto 4rem;align-items:baseline;gap:2rem;
+  padding:1.6rem 0;border-bottom:1px solid var(--rule);position:relative;
 }
-.skills-list li{
-  color:var(--mid);
-  font-size:1.1rem;
-  letter-spacing:-.02em;
-  line-height:1.6;
-  padding:3px 0;
+.work-row::after{
+  content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--accent);
+  transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease-out);
+}
+.work-name{font:500 clamp(1.6rem,3vw,2.4rem)/1.1 var(--display);color:var(--fg);transition:transform .5s var(--ease-out);}
+.work-type{font-size:.9rem;color:var(--mid);}
+.work-year{font-size:.9rem;color:var(--mid);text-align:right;font-variant-numeric:tabular-nums;}
+.work-thumb{display:none;}
+/* the screenshot that trails the cursor (pointer devices only) */
+.work-preview{
+  position:fixed;top:0;left:0;z-index:20;pointer-events:none;
+  width:min(30vw,380px);aspect-ratio:16/10;border-radius:14px;overflow:hidden;
+  box-shadow:0 16px 44px rgba(0,0,0,.3);opacity:0;
+}
+.work-preview img{width:100%;height:100%;object-fit:cover;display:block;}
+@media(hover:hover){
+  .work-row:hover::after{transform:scaleX(1);}
+  .work-row:hover .work-name{transform:translateX(.5rem);}
+}
+/* touch: no cursor to follow, so each row shows its own screenshot */
+@media(hover:none){
+  .work-preview{display:none;}
+  .work-row{grid-template-columns:1fr auto;}
+  .work-thumb{display:block;grid-column:1 / -1;width:100%;height:auto;border-radius:14px;margin-bottom:.5rem;}
+  .work-type{grid-column:1;}
+  .work-year{grid-row:2;grid-column:2;}
 }
 
 /* ── PROCESS ── */
-#process{}
-.process-h2{
-  font:500 clamp(30px,4vw,52px)/1.12 var(--display);
-  max-width:80%;
-  margin-bottom:3rem;
-  color:var(--fg);
-}
+/* heading on the left, the film link beside it; the film opens in place below */
+.process-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem 3rem;flex-wrap:wrap;margin-bottom:3rem;}
+.process-h2{max-width:80%;}
+.film-toggle{background:none;border:0;padding:0;cursor:pointer;font-size:.85rem;margin-bottom:.6rem;}
+.film-toggle .film-close,.film-toggle[aria-expanded="true"] .film-open,.film-toggle[aria-expanded="true"] .film-play{display:none;}
+.film-toggle[aria-expanded="true"] .film-close{display:inline;}
 .process-film{
-  margin:0 0 1.5rem;
+  margin:0 0 3rem;
   border-radius:var(--card-radius);
   overflow:hidden;
   background:var(--bg);
@@ -332,37 +373,54 @@ body::after{
   aspect-ratio:16/9;
 }
 .process-film-video{display:block;width:100%;height:100%;object-fit:cover;}
-.process-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1.5rem;
-}
+/* process: the five steps are sticky cards that pile onto each other as you scroll;
+   each one tucks a little lower than the last, so the stack shows its edges */
+.process-grid{display:flex;flex-direction:column;padding-bottom:12vh;}   /* lets the full stack hold before it scrolls away */
 .process-card{
+  --i:0;
+  position:sticky;top:calc(9vh + var(--i) * 1.4rem);
+  margin-bottom:14vh;min-height:min(56vh,440px);
+  display:grid;grid-template-columns:minmax(6rem,.8fr) 2fr;grid-template-rows:auto auto 1fr;
+  column-gap:clamp(2rem,6vw,6rem);align-items:start;
   background:var(--surface);
   border-radius:var(--card-radius);
-  padding:2.5rem;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
+  padding:clamp(2rem,5vw,3.5rem);
   border:1px solid var(--rule-soft);
-  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  box-shadow:0 -14px 40px rgba(0,0,0,.22);
+  transform-origin:50% 0;
 }
-.process-card:last-child{
-  grid-column:span 2;
+.process-card:last-child{margin-bottom:0;}
+/* the card being read lights up, as the hover used to: gold edge, bright numeral */
+.process-card{transition:border-color .45s var(--ease-out);}
+.process-card .pc-num{transition:color .45s var(--ease-out);}
+.process-card.is-lit{border-color:var(--accent-edge);}
+.process-card.is-lit .pc-num{color:rgba(242,201,76,.85);}
+/* covered cards dim under the one arriving: a child layer whose opacity is scrubbed
+   directly (added by script; --i is set by script too, one step per card) */
+.pc-shade{
+  position:absolute;inset:0;border-radius:inherit;background:var(--bg);
+  opacity:0;pointer-events:none;z-index:2;
+}
+/* too short a screen to read a whole stuck card: let them scroll like normal cards */
+@media(max-height:560px){
+  .process-card{position:relative;top:auto;margin-bottom:1.5rem;min-height:0;}
+  .process-grid{padding-bottom:0;}
 }
 .pc-num{
-  font:700 3.5rem/1 var(--display);
-  color:rgba(242,201,76,.18);
-  transition:color .25s ease;
+  grid-row:1 / -1;
+  font:700 clamp(4rem,10vw,8.5rem)/.85 var(--display);
+  color:rgba(242,201,76,.46);
 }
 .pc-title{
-  font:600 1.25rem/1.2 var(--display);
+  font:600 clamp(1.6rem,2.6vw,2.2rem)/1.15 var(--display);
   color:var(--fg);
 }
 .pc-body{
-  font-size:.92rem;
+  font-size:1rem;
   color:var(--mid);
-  line-height:1.85;
+  line-height:1.8;
+  max-width:56ch;
+  margin-top:1rem;
 }
 .pc-tag{
   display:inline-block;
@@ -374,17 +432,15 @@ body::after{
   border:1px solid var(--rule-accent);
   padding:.3rem .8rem;
   color:var(--accent);
-  margin-top:auto;
+  align-self:end;
+  margin-top:2rem;
   width:fit-content;
 }
 
 /* ── PRINCIPLES ── */
-#principles{}
 .principles-h2{
-  font:500 clamp(30px,4vw,52px)/1.12 var(--display);
   max-width:80%;
   margin-bottom:3rem;
-  color:var(--fg);
 }
 .principles-grid{
   display:grid;
@@ -399,13 +455,13 @@ body::after{
   border-radius:var(--card-radius);
   padding:2.5rem;
   border:1px solid var(--rule-soft);
-  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  position:relative;
+  transition:transform .3s var(--ease-out), border-color .3s var(--ease-out);
 }
 .care-split{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;}
 .care-list{display:flex;flex-direction:column;gap:.5rem;padding-left:2rem;border-left:1px solid var(--rule-accent);}
-.care-list-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;font-weight:600;color:var(--accent);margin-bottom:.75rem;}
+.care-list-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;font-weight:600;color:var(--accent);margin-bottom:.75rem;}
 .care-list-item{font-size:.9rem;color:var(--mid);}
-.care-list-cta{margin-top:1.5rem;font-size:.82rem;}
 .principle-tall .principle-icon{margin-bottom:2rem;}
 .principle-card.principle-care{
   grid-column:1 / -1;
@@ -421,16 +477,16 @@ body::after{
 .principle-icon{
   color:var(--accent);
   opacity:.8;
-  transition:opacity .3s ease;
+  transition:opacity .3s var(--ease-out);
 }
-.principle-icon svg{display:block;transition:transform .35s cubic-bezier(.2,.8,.2,1);}
+.principle-icon svg{display:block;transition:transform .35s var(--ease-out);}
 .principle-h3{
-  font:600 1.3rem/1.2 var(--display);
+  font:600 1.25rem/1.2 var(--display);
   color:var(--fg);
   margin-bottom:.75rem;
 }
 .principle-p{
-  font-size:.92rem;
+  font-size:.9rem;
   color:var(--mid);
   line-height:1.85;
 }
@@ -445,7 +501,7 @@ body::after{
   border:1px solid var(--rule-accent);
   padding:.3rem .8rem;
   color:var(--accent);
-  transition:background-color .3s ease, border-color .3s ease;
+  transition:background-color .3s var(--ease-out), border-color .3s var(--ease-out);
 }
 .care-badge{
   display:inline-block;
@@ -462,47 +518,55 @@ body::after{
 }
 
 /* ── SERVICES ── */
-#services{}
 .services-h2{
-  font:500 clamp(30px,4vw,52px)/1.12 var(--display);
   margin-bottom:.5rem;
-  color:var(--fg);
 }
-.services-sub{
-  font-size:.9rem;
-  color:var(--mid);
-  margin-bottom:2.5rem;
+
+/* services: one centred stack of names; the active one rolls into Sea Fog letter by
+   letter (hover, focus or tap), and its details cross-fade in underneath */
+#services .container{text-align:center;}
+#services .services-h2{margin-bottom:3.5rem;}
+.svc-show{max-width:880px;margin:0 auto 3.5rem;}
+.svc-names{display:flex;flex-direction:column;align-items:center;gap:.15rem;}
+.svc-name{
+  background:none;border:0;padding:.2rem .5rem;cursor:pointer;
+  font:600 clamp(1.6rem,4.4vw,3.6rem)/1.3 var(--display);color:var(--mid);
+  letter-spacing:-.01em;
 }
-.services-sub strong{color:var(--fg);font-weight:600;}
-.svc-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:3rem 2.5rem;
-  margin-bottom:3rem;
+.svc-roll{display:inline;}
+.svc-roll .wd{display:inline-block;overflow:hidden;vertical-align:top;white-space:nowrap;}
+.svc-roll .c{
+  display:inline-block;position:relative;
+  transition:transform .6s var(--ease-out);transition-delay:calc(var(--i) * 14ms);
 }
-.svc-group{border-top:1px solid var(--rule);padding-top:1.5rem;}
-.svc-num{
-  font-family:var(--body);font-size:.7rem;font-weight:600;
-  letter-spacing:.2em;color:var(--accent);margin-bottom:.75rem;
+.svc-roll .c::after{content:attr(data-c);position:absolute;left:0;top:100%;color:var(--fg);}
+.svc-name.is-active .svc-roll .c{transform:translateY(-100%);}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+
+.svc-detail{display:grid;margin-top:2.5rem;}
+/* without scripts every panel simply shows, one under the other */
+.svc-panel{margin-bottom:2rem;}
+.js .svc-panel{
+  grid-area:1 / 1;margin-bottom:0;
+  opacity:0;transform:translateY(10px);visibility:hidden;
+  transition:opacity .45s var(--ease-out), transform .45s var(--ease-out), visibility 0s .45s;
 }
-.svc-h3{font:600 1.5rem/1.15 var(--display);color:var(--fg);margin-bottom:1rem;}
-.svc-note{font-size:.85rem;color:var(--mid);margin:-.5rem 0 1rem;}
-.svc-list{list-style:none;padding:0;margin:0;}
-.svc-list li{
-  display:flex;align-items:flex-start;gap:.75rem;
-  padding:.5rem 0;border-bottom:1px solid var(--rule-soft);
-  font-size:.9rem;color:var(--mid);
-}
-.svc-list li:last-child{border-bottom:none;}
-.svc-list li::before{content:'→';color:var(--accent);flex-shrink:0;line-height:1.6;}
+.js .svc-panel.is-active{opacity:1;transform:none;visibility:visible;transition:opacity .55s var(--ease-out) .08s, transform .55s var(--ease-out) .08s, visibility 0s;}
+.svc-sum{font:italic 500 1.25rem/1.4 var(--display);color:var(--fg);margin-bottom:1rem;}
+.svc-items{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.6rem;max-width:72ch;margin:0 auto;}
+/* each item carries its own gold dot, so a wrapped line never starts with a stray separator */
+.svc-items li{font-size:.9rem;color:var(--mid);display:inline-block;max-width:100%;}
+/* inline dot: when an item wraps, the dot stays in front of its first word */
+.svc-items li::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--accent);vertical-align:middle;margin:0 .55rem .15em 0;}
 
 /* ── CONTACT ── */
 .contact-h2{
-  font:500 clamp(30px,4vw,52px)/1.12 var(--display);
   max-width:80%;
   margin-bottom:.5rem;
-  color:var(--fg);
 }
+.contact-aside{font-size:.9rem;color:var(--mid);margin:-2rem 0 3rem;max-width:480px;}
+.contact-aside a{color:var(--accent);border-bottom:1px solid var(--rule-accent);transition:border-color .25s var(--ease-out);}
+.contact-aside a:hover{border-bottom-color:var(--accent);}
 .contact-intro{
   font-size:1rem;
   color:var(--mid);
@@ -515,7 +579,6 @@ body::after{
   gap:clamp(3rem,6vw,6rem);
   align-items:start;
 }
-.contact-details{}
 .contact-item{
   margin-bottom:2rem;
   padding-bottom:2rem;
@@ -539,7 +602,7 @@ body::after{
 }
 .contact-val-sub{
   display:block;
-  font-size:.85rem;
+  font-size:.9rem;
   color:var(--mid);
   margin-top:.15rem;
 }
@@ -550,34 +613,39 @@ body::after{
   width:100%;
   background:transparent;
   border:none;
-  border-bottom:1px solid var(--rule);
-  padding:.8rem 0 .6rem;
+  border-bottom:1px solid rgba(240,242,244,.42);   /* 3:1 on the water, so the field is findable */
+  padding:.85rem 0 .7rem;
   color:var(--fg);
   font-family:var(--body);
-  font-size:.95rem;
+  font-size:1rem;
   outline:none;
-  transition:border-color .3s;
+  transition:border-color .3s var(--ease-out);
 }
 .form-label{
   position:absolute;top:.8rem;left:0;
-  font-family:var(--body);font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
-  color:var(--mid);pointer-events:none;
-  transition:all .25s ease;
+  font-family:var(--body);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+  color:var(--mid);pointer-events:none;transform-origin:left;
+  transition:transform .3s var(--ease-out), color .3s var(--ease-out);
 }
 .form-input:focus~.form-label,.form-input:not(:placeholder-shown)~.form-label,
-.form-textarea:focus~.form-label,.form-textarea:not(:placeholder-shown)~.form-label{
-  top:-1rem;font-size:.7rem;color:var(--fg);
+.form-textarea:focus~.form-label,.form-textarea:not(:placeholder-shown)~.form-label,
+.form-label-static{
+  transform:translateY(-1.8rem);color:var(--fg);
 }
-.form-input:focus,.form-textarea:focus{border-bottom-color:var(--accent);}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-bottom-color:var(--accent);}
 .form-input::placeholder,.form-textarea::placeholder{opacity:0;}
-.form-textarea{resize:none;height:5.5rem;}
-.char-count{position:absolute;right:0;top:.8rem;font-size:.7rem;color:var(--mid);}
+/* grows with the text (script), up to a point */
+.form-textarea{resize:none;min-height:5.5rem;max-height:20rem;overflow-y:auto;}
+.char-count{position:absolute;right:0;top:-1rem;font-size:.7rem;color:var(--mid);}
 .char-count.warn{color:var(--accent);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
 .form-select{
   appearance:none;cursor:pointer;
-  font-size:.85rem;letter-spacing:.04em;
-  color:var(--mid);
+  font-size:1rem;
+  color:var(--fg);
+  padding-right:2rem;
+  /* a small gold chevron, so it reads as a choice */
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23f2c94c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right .25rem center;
 }
 option{background:var(--bg);}
 .submit-row{
@@ -586,7 +654,7 @@ option{background:var(--bg);}
 }
 .form-submit{
   font-family:var(--body);
-  font-size:.82rem;
+  font-size:.85rem;
   letter-spacing:.1em;
   text-transform:uppercase;
   font-weight:600;
@@ -600,44 +668,70 @@ option{background:var(--bg);}
   position:relative;
   padding:0;
 }
-.form-submit .cta-underline-wrap{position:absolute;bottom:-3px;left:0;right:0;height:2px;}
-.submit-note{font-size:.85rem;color:var(--mid);}
+.submit-note{font-size:.9rem;color:var(--mid);}
 
 .form-submit:disabled{opacity:.35;cursor:not-allowed;}
 
-/* ── OUTLINED BUTTON (primary CTAs) ── */
-.link-cta.btn-outline,.form-submit.btn-outline{
-  border:1px solid var(--accent);
-  padding:.9rem 1.5rem;
-  transition:background-color .25s ease;
+/* "Start a project": a gold dot that floods the pill on hover while the label hands
+   over to a filled copy with an arrow (after Magic UI's interactive hover button).
+   The flood is a 640px circle scaled down to the 8px dot, so it stays crisp and
+   only transform/opacity animate. */
+.cta-pill{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--accent);border-radius:999px;
+  padding:.9rem 1.75rem .9rem 1.35rem;
+  font-family:var(--body);font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);text-decoration:none;
 }
-.link-cta.btn-outline:hover,.form-submit.btn-outline:not(:disabled):hover{background:rgba(242,201,76,.08);}
-.btn-outline .cta-underline-wrap{display:none;}
+.cta-pill-rest{display:inline-flex;align-items:center;gap:.7rem;}
+.cta-pill-dot{position:relative;width:8px;height:8px;flex-shrink:0;}
+.cta-pill-dot::before{
+  content:'';position:absolute;left:50%;top:50%;z-index:-1;
+  width:640px;height:640px;margin:-320px 0 0 -320px;border-radius:50%;
+  background:var(--accent);transform:scale(.0125);will-change:transform;
+  transition:transform .6s var(--ease-out);
+}
+.cta-pill-label{display:inline-block;transition:transform .45s var(--ease-out), opacity .3s var(--ease-out);}
+.cta-pill-hover{
+  position:absolute;inset:0;z-index:1;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  color:var(--bg);opacity:0;transform:translateX(2.5rem);
+  transition:transform .45s var(--ease-out), opacity .45s var(--ease-out);
+}
+.cta-pill:focus-visible .cta-pill-dot::before{transform:scale(1);}
+.cta-pill:focus-visible .cta-pill-label{transform:translateX(2.5rem);opacity:0;}
+.cta-pill:focus-visible .cta-pill-hover{transform:none;opacity:1;}
+@media(hover:hover){
+  .cta-pill:hover .cta-pill-dot::before{transform:scale(1);}
+  .cta-pill:hover .cta-pill-label{transform:translateX(2.5rem);opacity:0;}
+  .cta-pill:hover .cta-pill-hover{transform:none;opacity:1;}
+}
 
+/* ── OUTLINED BUTTON (form submit) ── */
+.form-submit.btn-outline{
+  border:1px solid var(--accent);
+  border-radius:999px;
+  padding:.9rem 1.75rem;
+  transition:background-color .25s var(--ease-out);
+}
+.form-submit.btn-outline:not(:disabled):hover{background:var(--accent-wash);}
+
+.principle-card::after{
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  box-shadow:0 16px 44px rgba(0,0,0,.3);opacity:0;transition:opacity .35s var(--ease-out);
+}
 /* card hover lifts: pointer devices only, so a tap on a phone doesn't leave a card stuck "hovered" */
 @media(hover:hover){
-  .process-card:hover{
-    transform:scale(1.025);
-    box-shadow:0 12px 40px rgba(0,0,0,.28);
-    border-color:rgba(242,201,76,.14);
-    z-index:1;
-  }
-  .process-card:hover .pc-num{
-    color:rgba(242,201,76,.85);
-  }
   .principle-card:hover{
     transform:translateY(-6px);
-    box-shadow:0 16px 44px rgba(0,0,0,.3);
-    border-color:rgba(242,201,76,.2);
+    border-color:var(--accent-edge);
   }
-  .principle-card.principle-care:hover{border-color:rgba(242,201,76,.4);}
+  .principle-card:hover::after{opacity:1;}
+  .principle-card.principle-care:hover{border-color:var(--accent-edge-strong);}
   .principle-card:hover .principle-icon{opacity:1;}
   .principle-card:hover .principle-icon svg{transform:translateY(-3px) scale(1.06);}
-  .principle-card:hover .principle-tag{background:rgba(242,201,76,.08);border-color:rgba(242,201,76,.45);}
-}
-/* touch devices never see the hover state, so show the step numerals at full 3:1 contrast */
-@media(hover:none){
-  .pc-num{color:rgba(242,201,76,.46);}
+  .principle-card:hover .principle-tag{background:var(--accent-wash);border-color:var(--accent-edge-strong);}
 }
 /* bigger tap areas on touch screens without changing the layout: an invisible
    hit box around each small text link (the links are visually ~17-27px tall) */
@@ -654,7 +748,7 @@ footer .divider-inner{margin-bottom:3rem;}
 footer{
   max-width:var(--container);
   margin:0 auto;
-  padding:0 var(--gutter) 3rem;
+  padding:0 var(--gutter) clamp(1.5rem,3vw,2.5rem);
 }
 .footer-inner{
   display:flex;
@@ -669,14 +763,14 @@ footer{
 }
 .footer-nav a{
   font-family:var(--body);
-  font-size:.82rem;
+  font-size:.85rem;
   font-weight:500;
   text-transform:uppercase;
   letter-spacing:.05em;
   color:var(--fg);
   border-bottom:2px solid var(--accent);
   padding-bottom:1px;
-  transition:opacity .2s;
+  transition:opacity .2s var(--ease-out);
 }
 .footer-nav a:hover{opacity:.7;}
 .footer-nav a.footer-portal{
@@ -693,42 +787,71 @@ footer{
   padding-top:2rem;
   border-top:1px solid var(--rule);
 }
-.footer-copy{font-size:.82rem;color:var(--mid);}
+.footer-copy{font-size:.9rem;color:var(--mid);}
+/* third-party carbon badge, re-dressed as a site label (ids beat its injected styles) */
+footer #wcb.carbonbadge{display:flex;align-items:center;gap:1rem;font-size:.9rem;color:var(--mid);text-align:left;}
+footer #wcb #wcb_p{display:flex;align-items:center;}
+footer #wcb #wcb_g,footer #wcb #wcb_a{
+  font-family:var(--body);margin:0;border-radius:0;border:1px solid var(--rule-accent);background:transparent;
+  font-size:.7rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:.45rem .8rem;min-width:0;
+}
+footer #wcb #wcb_g{color:var(--fg);border-right:0;}
+footer #wcb #wcb_a{color:var(--accent);transition:background-color .25s var(--ease-out);}
+footer #wcb #wcb_a:hover{background:var(--accent-wash);}
+footer #wcb #wcb_2{font-family:var(--body);font-size:.9rem;color:var(--mid);margin:0;}
+footer #wcb.wcb-empty{display:none;}
 
-/* fade-up class kept for markup reference; GSAP handles visibility */
+/* lamplight wordmark: a full-width outline; a gold copy on top shows only inside a soft
+   circle that follows the cursor (or sweeps across once on touch and rests on the slash) */
+.footer-mark{
+  position:relative;margin-top:clamp(2.5rem,6vw,4.5rem);
+  --mx:53%;--my:55%;--r:clamp(110px,16vw,240px);
+  user-select:none;-webkit-user-select:none;
+}
+.footer-mark svg{display:block;width:100%;height:auto;overflow:visible;}
+.footer-mark text{font-family:var(--body);font-weight:600;font-size:210px;}
+.fm-base text{fill:none;stroke:var(--fg);stroke-opacity:.13;stroke-width:1.2;vector-effect:non-scaling-stroke;}
+.fm-base .fm-slash{stroke:var(--accent);stroke-opacity:.5;}
+.fm-lit{
+  position:absolute;inset:0;opacity:0;transition:opacity .6s var(--ease-out);
+  -webkit-mask-image:radial-gradient(circle at var(--mx) var(--my), #000 0, rgba(0,0,0,.5) calc(var(--r) * .5), transparent var(--r));
+          mask-image:radial-gradient(circle at var(--mx) var(--my), #000 0, rgba(0,0,0,.5) calc(var(--r) * .5), transparent var(--r));
+}
+.fm-lit text{fill:var(--rule-accent);stroke:var(--accent);stroke-width:1.8;vector-effect:non-scaling-stroke;}
+.footer-mark.is-lit .fm-lit{opacity:1;}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   :root{--gutter:1.5rem;--section-gap:64px;}
-  header{margin-bottom:64px;}
   nav ul{gap:1.2rem;}
-  nav ul li a{font-size:.75rem;}
+  nav ul li a{font-size:.7rem;}
   .hero-h1{max-width:100%;}
   .about-grid{grid-template-columns:1fr;}
   .about-skills-col{border-left:none;padding-left:0;border-top:1px solid var(--rule);padding-top:2rem;}
-  .process-grid{grid-template-columns:1fr;}
-  .process-card:last-child{grid-column:span 1;grid-template-columns:1fr;}
+  .process-card{
+    top:calc(4.5vh + var(--i) * .9rem);margin-bottom:10vh;min-height:0;
+    grid-template-columns:1fr;grid-template-rows:none;
+  }
+  .pc-num{grid-row:auto;font-size:3.5rem;margin-bottom:1.25rem;}
   .care-split{grid-template-columns:1fr;}
   .care-list{padding-left:0;border-left:none;padding-top:2rem;border-top:1px solid var(--rule-accent);}
   .principles-grid{grid-template-columns:1fr;}
   .principle-tall{grid-row:span 1;}
   .principle-inner-row{grid-template-columns:1fr;}
-  .svc-grid{grid-template-columns:repeat(2,1fr);}
   .contact-grid{grid-template-columns:1fr;}
   .form-row{grid-template-columns:1fr;}
   .footer-inner{flex-direction:column;align-items:flex-start;}
   .footer-nav{gap:1.5rem;}
-  .hero-footer{gap:1.5rem;}
 }
 @media(max-width:600px){
-  header{flex-direction:column;align-items:flex-start;gap:1.25rem;margin-bottom:48px;}
+  header{flex-direction:column;align-items:flex-start;gap:1.25rem;}
   nav{width:100%;}
   nav ul{gap:.6rem 1.1rem;flex-wrap:wrap;justify-content:flex-start;}
-  nav ul li a{font-size:.72rem;}
+  nav ul li a{font-size:.7rem;}
   .nav-hide-mobile{display:none;}
+  /* the language toggle can wrap to its own line here, so drop the divider */
+  .nav-lang-item{border-left:none;padding-left:0;margin-left:0;}
   .hero-h1{font-size:clamp(34px,9vw,52px);}
-  .hero-mark{height:auto;width:84vw;right:50%;top:42%;transform:translate(50%,-50%);opacity:.045;}
-  .svc-grid{grid-template-columns:1fr;gap:2.5rem;}
   .submit-row{flex-direction:column;align-items:flex-start;}
   .footer-bottom{flex-direction:column;align-items:flex-start;}
 }
@@ -738,20 +861,20 @@ footer{
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "@id": "https://manndev.com/#business",
-  "name": "Mann Dev",
-  "alternateName": "Mann Dev — Web Design & Development",
-  "description": "Custom websites and web apps built from scratch in Montréal. No templates, no page builders — just clean, fast, accessible code you own outright.",
+  "name": "Manndev",
+  "alternateName": "Manndev · Web Design & Development",
+  "description": "Custom websites and web apps built from scratch in Montréal. No templates, no page builders: just clean, fast, accessible code you own outright.",
   "url": "https://manndev.com/",
   "image": "https://manndev.com/img/og-image.png",
   "logo": "https://manndev.com/img/logo.png",
-  "email": "julien@manndev.com",
+  "email": "contact@manndev.com",
   "priceRange": "$$",
   "founder": {
     "@type": "Person",
     "name": "Julien Mann",
     "jobTitle": "Web Developer",
     "url": "https://manndev.com/",
-    "email": "julien@manndev.com",
+    "email": "contact@manndev.com",
     "sameAs": ["https://www.linkedin.com/in/julien-mann-b153aa404/"]
   },
   "address": {
@@ -762,25 +885,33 @@ footer{
   },
   "areaServed": "Worldwide",
   "sameAs": ["https://www.linkedin.com/in/julien-mann-b153aa404/"],
-  "knowsAbout": ["Web Design", "Web Development", "Landing Pages", "AI Automation", "Managed Hosting", "Web Accessibility", "Performance Optimization"],
+  "knowsAbout": ["Web Design", "Web Development", "Landing Pages", "Managed Hosting", "Local SEO", "Automation", "Web Accessibility", "Performance Optimization"],
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "Services",
     "itemListElement": [
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Landing Page", "description": "A single, focused page built to convert. Custom design, fully responsive, deployed within a few days." } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Full Website", "description": "Multi-page site with a custom design system and CMS integration if needed." } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Care & Hosting", "description": "Flat monthly rate for managed hosting, uptime monitoring, security patches, and ongoing support." } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Automation", "description": "Custom AI-powered workflows, chatbots, and automations built into existing tools or as standalone systems." } }
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Design & Development", "description": "Landing pages and full websites, designed and hand-coded from scratch, with mockups before any code. Code, hosting and accounts belong to the client." } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Hosting & Security", "description": "Hosting, domain, SSL, business email, Cloudflare CDN, uptime monitoring every 5 minutes, automated backups, security updates and Law 25 compliance." } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Search & Visibility", "description": "SEO setup, local SEO and Google Maps, Google Business Profile management, AI search optimization and a monthly report." } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Automation", "description": "Bilingual AI chatbot for FAQs, hours and menus, online booking with reminders, and review requests, replies and monitoring." } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Care plan", "description": "Monthly care: managed hosting on a global CDN, uptime monitoring, security and dependency patches, content updates and bug fixes." } }
     ]
   }
 }
 </script>
 </head>
 <body>
+<a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
+<!-- spotlight intro (every load; see the js-intro script in <head>) -->
+<div id="intro" aria-hidden="true">
+  <img class="intro-logo" src="/img/logo.png?v=2" alt="" width="298" height="59">
+  <div class="intro-light"></div>
+</div>
 
 <!-- HEADER -->
 <header>
-  <a href="https://manndev.com/" class="h-logo" aria-label="Mann Dev Home" data-i18n-label="a11y.home">
+  <a href="https://manndev.com/" class="h-logo" aria-label="Manndev Home" data-i18n-label="a11y.home">
     <img src="/img/logo.png?v=2" alt="" width="298" height="59">
   </a>
   <nav aria-label="Main navigation" data-i18n-label="a11y.mainNav">
@@ -794,33 +925,35 @@ footer{
     </ul>
   </nav>
 </header>
+<script>
+/* header height for the full-screen hero (it wraps to two rows on phones), and the
+   scrollbar width for the full-bleed horizon */
+(function () {
+  var hd = document.querySelector('header');
+  var root = document.documentElement;
+  function set() {
+    root.style.setProperty('--header-h', hd.offsetHeight + 'px');
+    root.style.setProperty('--sbw', (innerWidth - root.clientWidth) + 'px');
+  }
+  set();
+  addEventListener('resize', set, { passive: true });
+  if (document.fonts) document.fonts.ready.then(set);
+})();
+</script>
 
-<main>
+<main id="main" tabindex="-1">
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-mark" aria-hidden="true">
-    <svg class="hero-ring" viewBox="0 0 300 300" fill="none" stroke="currentColor">
-      <circle cx="150" cy="150" r="138" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.1 23.2"/>
-    </svg>
-    <svg viewBox="0 0 300 300" fill="none" stroke="currentColor">
-      <text x="150" y="150" text-anchor="middle" dominant-baseline="central" font-family="Figtree, system-ui, sans-serif" font-weight="600" font-size="112" letter-spacing="-4" stroke-width="1.6">m/d</text>
-    </svg>
-  </div>
   <div class="container">
-    <p class="hero-meta fade-up" data-i18n="hero.meta">Web Design &amp; Development</p>
-    <h1 class="hero-h1 fade-up"><span data-i18n="hero.h1a">Good work deserves</span><br><span data-i18n="hero.h1b">to be</span> <em><span data-i18n="hero.h1c">found</span><svg class="hero-scribble" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M3 13 C 38 7, 84 4, 124 7 S 180 15, 197 8"/></svg></em>.</h1>
-    <p class="hero-sub fade-up" data-i18n="hero.sub">Websites and web apps built for businesses that are ready to be taken seriously online. Built to last.</p>
-    <a href="#contact" class="link-cta btn-outline fade-up">
-      <span data-i18n="cta.start">Start a project</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+    <h1 class="hero-h1"><span data-i18n="hero.h1a">Good work deserves</span><br><span data-i18n="hero.h1b">to be</span> <em><span data-i18n="hero.h1c">found</span></em>.</h1>
+    <p class="hero-sub" data-i18n="hero.sub">Websites and apps built for businesses and individuals. Your online presence from A to Z.</p>
+    <a href="#contact" class="cta-pill">
+      <span class="cta-pill-rest"><span class="cta-pill-dot" aria-hidden="true"></span><span class="cta-pill-label" data-i18n="cta.start">Start a project</span></span>
+      <span class="cta-pill-hover" aria-hidden="true"><span data-i18n="cta.start">Start a project</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
     </a>
-    <div class="hero-footer fade-up">
-      <span class="status-pill">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span data-i18n="hero.status">Available for new projects</span>
-      </span>
+    <div class="hero-footer">
+      <svg class="horizon" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60H1000"/></svg>
     </div>
   </div>
 </section>
@@ -828,9 +961,8 @@ footer{
 <!-- ABOUT -->
 <section id="about">
   <div class="container">
-    <div class="about-grid fade-up">
+    <div class="about-grid">
       <div class="about-main">
-        <p class="about-h6" data-i18n="about.kicker">Your Business Deserves Better</p>
         <h2 class="about-h2"><span data-i18n="about.h2">Your work is real. Your website should be too.</span></h2>
         <div class="about-text" data-i18n="about.text">
           <p>Instagram can suspend your account. Facebook can change its algorithm overnight. A website is the one piece of your business online that you actually own: no platform can take it away, throttle its reach, or bury it under someone else's ads.</p>
@@ -844,20 +976,13 @@ footer{
         </a>
       </div>
       <div class="about-skills-col">
-        <p class="about-skills-label" data-i18n="about.skillsLabel">We can help with</p>
-        <ul class="skills-list" aria-label="Services and skills" data-i18n-label="a11y.skills">
-          <li data-i18n="skill.design">Web Design</li>
-          <li data-i18n="skill.dev">Web Development</li>
-          <li data-i18n="skill.landing">Landing Pages</li>
-          <li data-i18n="skill.full">Full Websites</li>
-          <li data-i18n="skill.ecom">E-commerce</li>
-          <li data-i18n="skill.ai">AI Automation</li>
-          <li data-i18n="skill.care">Care &amp; Hosting</li>
-          <li>Performance</li>
-          <li data-i18n="skill.a11y">Accessibility</li>
-          <li data-i18n="skill.seo">Analytics &amp; SEO</li>
-          <li data-i18n="skill.maint">Site Maintenance</li>
-        </ul>
+        <p class="about-skills-label" data-i18n="about.outLabel">What a good site does</p>
+        <ol class="outcomes">
+          <li><span class="out-h" data-i18n="out.1h">Gets you found</span><span class="out-p" data-i18n="out.1p">On Google, on Maps and in AI search.</span></li>
+          <li><span class="out-h" data-i18n="out.2h">Earns trust</span><span class="out-p" data-i18n="out.2p">Before the first call or visit.</span></li>
+          <li><span class="out-h" data-i18n="out.3h">Does the busywork</span><span class="out-p" data-i18n="out.3p">Bookings, questions and reviews, day and night.</span></li>
+          <li><span class="out-h" data-i18n="out.4h">Stays healthy</span><span class="out-p" data-i18n="out.4p">Fast, secure and up to date, long after launch.</span></li>
+        </ol>
       </div>
     </div>
   </div>
@@ -865,23 +990,122 @@ footer{
 
 <div class="divider-inner"></div>
 
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <h2 class="services-h2"><span data-i18n="svc.h2">Websites that bring in customers.</span></h2>
+    <div class="svc-show">
+    <div class="svc-names" role="tablist" aria-label="Services" aria-orientation="vertical">
+      <button class="svc-name" type="button" role="tab" id="svc-t0" aria-controls="svc-p0" aria-selected="true"><span class="svc-name-text" data-i18n="svc.g0">Design &amp; Development</span></button>
+      <button class="svc-name" type="button" role="tab" id="svc-t1" aria-controls="svc-p1" aria-selected="false"><span class="svc-name-text" data-i18n="svc.g1">Hosting &amp; Security</span></button>
+      <button class="svc-name" type="button" role="tab" id="svc-t3" aria-controls="svc-p3" aria-selected="false"><span class="svc-name-text" data-i18n="svc.g3">Search &amp; Visibility</span></button>
+      <button class="svc-name" type="button" role="tab" id="svc-t4" aria-controls="svc-p4" aria-selected="false"><span class="svc-name-text" data-i18n="svc.g4">Automation</span></button>
+    </div>
+    <div class="svc-detail">
+      <div class="svc-panel" role="tabpanel" id="svc-p0" aria-labelledby="svc-t0">
+        <p class="svc-sum" data-i18n="svc.g0.sum">Designed and coded from scratch, around your business.</p>
+        <ul class="svc-items">
+          <li data-i18n="svc.g0.i1">Custom design, with mockups before any code</li>
+          <li data-i18n="svc.g0.i2">Hand-coded, no templates or page builders</li>
+          <li data-i18n="svc.g0.i3">Landing pages and full websites</li>
+          <li data-i18n="svc.g0.i4">Fast and accessible on every device (WCAG 2.2 AA)</li>
+          <li data-i18n="svc.g0.i5">Code, hosting and accounts you own</li>
+          <li data-i18n="svc.g0.i6">30 days of support after launch</li>
+        </ul>
+      </div>
+      <div class="svc-panel" role="tabpanel" id="svc-p1" aria-labelledby="svc-t1">
+        <p class="svc-sum" data-i18n="svc.g1.sum">Hosting, email, backups and Law 25 compliance.</p>
+        <ul class="svc-items">
+          <li data-i18n="svc.g1.i1">Hosting, domain &amp; SSL</li>
+          <li data-i18n="svc.g1.i2">Business email setup</li>
+          <li data-i18n="svc.g1.i3">Cloudflare CDN for fast loading</li>
+          <li data-i18n="svc.g1.i4">Uptime monitoring every 5 minutes</li>
+          <li data-i18n="svc.g1.i5">Automated backups</li>
+          <li data-i18n="svc.g1.i6">Regular security updates</li>
+          <li data-i18n="svc.g1.i7">Law 25 cookie banner &amp; privacy policy</li>
+        </ul>
+      </div>
+      <div class="svc-panel" role="tabpanel" id="svc-p3" aria-labelledby="svc-t3">
+        <p class="svc-sum" data-i18n="svc.g3.sum">Found on Google, on Maps and in AI search.</p>
+        <ul class="svc-items">
+          <li data-i18n="svc.g3.i1">SEO setup</li>
+          <li data-i18n="svc.g3.i2">Local SEO &amp; Google Maps optimization</li>
+          <li data-i18n="svc.g3.i3">Google Business Profile management</li>
+          <li data-i18n="svc.g3.i4">AI search optimization (ChatGPT, Google AI)</li>
+          <li data-i18n="svc.g3.i5">Monthly report &amp; analytics summary</li>
+        </ul>
+      </div>
+      <div class="svc-panel" role="tabpanel" id="svc-p4" aria-labelledby="svc-t4">
+        <p class="svc-sum" data-i18n="svc.g4.sum">Bookings, reminders and review replies, handled.</p>
+        <ul class="svc-items">
+          <li data-i18n="svc.g4.i1">Bilingual AI chatbot for FAQs, hours and menus</li>
+          <li data-i18n="svc.g4.i2">Online booking with SMS &amp; email reminders</li>
+          <li data-i18n="svc.g4.i3">Automatic review requests</li>
+          <li data-i18n="svc.g4.i4">AI-drafted replies to reviews</li>
+          <li data-i18n="svc.g4.i5">Review monitoring &amp; alerts</li>
+        </ul>
+      </div>
+    </div>
+    </div>
+
+    <a href="#contact" class="cta-pill svc-cta">
+      <span class="cta-pill-rest"><span class="cta-pill-dot" aria-hidden="true"></span><span class="cta-pill-label" data-i18n="cta.start">Start a project</span></span>
+      <span class="cta-pill-hover" aria-hidden="true"><span data-i18n="cta.start">Start a project</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+    </a>
+  </div>
+</section>
+
+<div class="divider-inner"></div>
+
+<!-- SELECTED WORK
+     Hidden until there are real, client-approved projects to show. To publish:
+     remove `hidden`, add one <li> per project (screenshot at /img/work/<slug>.jpg,
+     1200x750), give each type line a data-i18n key + French in i18n/fr.json,
+     then run scripts/build-fr.py. -->
+<section id="work" hidden>
+  <div class="container">
+    <h2 class="work-h2"><span data-i18n="work.h2">Recent sites, live and in use.</span></h2>
+    <ul class="work-list">
+      <!--
+      <li>
+        <a class="work-row" href="https://example.com/" target="_blank" rel="noopener">
+          <img class="work-thumb" src="/img/work/example.jpg" alt="" width="1200" height="750" loading="lazy">
+          <span class="work-name">Client name</span>
+          <span class="work-type">Website and booking</span>
+          <span class="work-year">2026</span>
+        </a>
+      </li>
+      -->
+    </ul>
+  </div>
+  <div class="work-preview" aria-hidden="true"></div>
+  <div class="divider-inner"></div>
+</section>
+
 <!-- PROCESS -->
 <section id="process">
   <div class="container">
-    <p class="about-h6 fade-up" data-i18n="process.kicker">How It Works</p>
-    <h2 class="process-h2 fade-up"><span data-i18n="process.h2a">From first call</span><br><span data-i18n="process.h2b">to launch day.</span></h2>
-    <figure class="process-film" aria-hidden="true">
-      <video class="process-film-video" muted loop playsinline preload="none" poster="/img/process-film-poster.jpg" width="1920" height="1080">
+    <div class="process-head">
+      <h2 class="process-h2"><span data-i18n="process.h2a">From first call</span><br><span data-i18n="process.h2b">to launch day.</span></h2>
+      <button class="link-cta film-toggle" type="button" aria-expanded="false" aria-controls="process-film">
+        <svg class="film-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+        <span class="film-open" data-i18n="film.open">Watch the 21-second film</span>
+        <span class="film-close" data-i18n="film.close">Close the film</span>
+        <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
+      </button>
+    </div>
+    <figure class="process-film" id="process-film" hidden>
+      <video class="process-film-video" muted loop playsinline preload="none" data-poster="/img/process-film-poster.jpg" width="1920" height="1080" aria-label="Our process in 21 seconds, a silent animation" data-i18n-label="a11y.film">
         <source src="/img/process-film.webm" type="video/webm">
         <source src="/img/process-film.mp4" type="video/mp4">
       </video>
     </figure>
-    <div class="process-grid fade-up">
+    <div class="process-grid">
 
       <div class="process-card">
         <div class="pc-num" aria-hidden="true">01</div>
         <div class="pc-title" data-i18n="p1.title">Brief &amp; Discovery</div>
-        <div class="pc-body" data-i18n="p1.body">A 30 to 60 minute call to understand your goals, your audience, and what success looks like. We take notes, ask the right questions, and come back with a clear direction. No obligation. If it's not the right fit, we'll say so honestly.</div>
+        <div class="pc-body" data-i18n="p1.body">A 30 to 60 minute call to understand your goals, your audience, and what success looks like. We take notes, ask the right questions, and come back with a clear direction. If it's not the right fit, we'll say so honestly.</div>
         <span class="pc-tag" data-i18n="p1.tag">30 to 60 min call</span>
       </div>
 
@@ -896,14 +1120,14 @@ footer{
         <div class="pc-num" aria-hidden="true">03</div>
         <div class="pc-title" data-i18n="p3.title">Build</div>
         <div class="pc-body" data-i18n="p3.body">Clean HTML, CSS, and JavaScript, or a modern stack like Next.js if the project calls for it. Every component is written from scratch, nothing templated. You get a live preview link from day one and can watch the site take shape in real time.</div>
-        <span class="pc-tag">Next.js &middot; TypeScript &middot; Tailwind</span>
+        <span class="pc-tag" data-i18n="p3.tag">Hand-coded &middot; Live preview</span>
       </div>
 
       <div class="process-card">
         <div class="pc-num" aria-hidden="true">04</div>
         <div class="pc-title" data-i18n="p4.title">Review &amp; Refine</div>
-        <div class="pc-body" data-i18n="p4.body">Two structured rounds of feedback built into every project. We test across browsers and devices, optimise for performance, and work through your notes. Lighthouse 100 is the target, not a vanity metric, but a proxy for a site that loads fast and is accessible to everyone.</div>
-        <span class="pc-tag" data-i18n="p4.tag">Lighthouse &middot; Cross-browser &middot; A11y</span>
+        <div class="pc-body" data-i18n="p4.body">Two structured rounds of feedback built into every project. We test across browsers and devices, optimise for performance, and work through your notes. We measure speed and accessibility on real devices and fix what we find, because a site that loads fast and works for everyone matters more than any score.</div>
+        <span class="pc-tag" data-i18n="p4.tag">Speed &middot; Every browser &middot; Accessibility</span>
       </div>
 
       <div class="process-card">
@@ -922,8 +1146,8 @@ footer{
 <!-- PRINCIPLES -->
 <section id="principles">
   <div class="container">
-    <h2 class="principles-h2 fade-up"><span data-i18n="pr.h2">Three standards every build ships to.</span></h2>
-    <div class="principles-grid fade-up">
+    <h2 class="principles-h2"><span data-i18n="pr.h2">Built to three standards, and kept that way.</span></h2>
+    <div class="principles-grid">
 
       <!-- Tall card: Inclusivity and Accessibility -->
       <div class="principle-card principle-tall">
@@ -994,11 +1218,6 @@ footer{
             <p class="care-list-item" data-i18n="care.i3a">→ Security &amp; dependency patches</p>
             <p class="care-list-item" data-i18n="care.i4a">→ Content &amp; copy updates</p>
             <p class="care-list-item" data-i18n="care.i5a">→ Bug fixes, priority response 24 hrs</p>
-            <a href="#services" class="link-cta care-list-cta">
-              <span data-i18n="care.cta">See Care &amp; Hosting plans</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
-            </a>
           </div>
         </div>
       </div>
@@ -1009,91 +1228,13 @@ footer{
 
 <div class="divider-inner"></div>
 
-<!-- SERVICES -->
-<section id="services">
-  <div class="container">
-    <p class="about-h6 fade-up">Services</p>
-    <h2 class="services-h2 fade-up"><span data-i18n="svc.h2">Websites that bring in customers.</span></h2>
-    <p class="services-sub fade-up" data-i18n="svc.sub">Custom websites from <strong>$400</strong>. Care plans from <strong>$50/mo</strong>, built from the services below.</p>
-
-    <div class="svc-grid">
-      <div class="svc-group">
-        <p class="svc-num">01</p>
-        <h3 class="svc-h3" data-i18n="svc.g1">Hosting &amp; Security</h3>
-        <ul class="svc-list">
-          <li data-i18n="svc.g1.i1">Hosting, domain &amp; SSL</li>
-          <li data-i18n="svc.g1.i2">Business email setup</li>
-          <li data-i18n="svc.g1.i3">Cloudflare CDN for fast loading</li>
-          <li data-i18n="svc.g1.i4">Uptime monitoring every 5 minutes</li>
-          <li data-i18n="svc.g1.i5">Automated backups</li>
-          <li data-i18n="svc.g1.i6">Regular security updates</li>
-          <li data-i18n="svc.g1.i7">Law 25 cookie banner &amp; privacy policy</li>
-        </ul>
-      </div>
-      <div class="svc-group">
-        <p class="svc-num">02</p>
-        <h3 class="svc-h3" data-i18n="svc.g2">Updates &amp; Support</h3>
-        <ul class="svc-list">
-          <li data-i18n="svc.g2.i1">Monthly content updates (unused time rolls over)</li>
-          <li data-i18n="svc.g2.i2">Bilingual FR/EN content upkeep</li>
-          <li data-i18n="svc.g2.i3">Email support</li>
-          <li data-i18n="svc.g2.i4">Emergency &amp; same-day fixes, with a direct line</li>
-          <li data-i18n="svc.g2.i5">Quarterly strategy call</li>
-        </ul>
-      </div>
-      <div class="svc-group">
-        <p class="svc-num">03</p>
-        <h3 class="svc-h3" data-i18n="svc.g3">Search &amp; Visibility</h3>
-        <ul class="svc-list">
-          <li data-i18n="svc.g3.i1">SEO setup</li>
-          <li data-i18n="svc.g3.i2">Local SEO &amp; Google Maps optimization</li>
-          <li data-i18n="svc.g3.i3">Google Business Profile management</li>
-          <li data-i18n="svc.g3.i4">AI search optimization (ChatGPT, Google AI)</li>
-          <li data-i18n="svc.g3.i5">Monthly report &amp; analytics summary</li>
-        </ul>
-      </div>
-      <div class="svc-group">
-        <p class="svc-num">04</p>
-        <h3 class="svc-h3" data-i18n="svc.g4">Reviews &amp; Automation</h3>
-        <ul class="svc-list">
-          <li data-i18n="svc.g4.i1">Bilingual AI chatbot for FAQs, hours and menus</li>
-          <li data-i18n="svc.g4.i2">Online booking with SMS &amp; email reminders</li>
-          <li data-i18n="svc.g4.i3">Automatic review requests</li>
-          <li data-i18n="svc.g4.i4">AI-drafted replies to reviews</li>
-          <li data-i18n="svc.g4.i5">Review monitoring &amp; alerts</li>
-        </ul>
-      </div>
-      <div class="svc-group">
-        <p class="svc-num">05</p>
-        <h3 class="svc-h3" data-i18n="svc.g5">Add-ons</h3>
-        <p class="svc-note" data-i18n="svc.g5.note">Extras you can add to any plan.</p>
-        <ul class="svc-list">
-          <li data-i18n="svc.g5.i1">Extra update hours</li>
-          <li data-i18n="svc.g5.i2">Additional pages</li>
-          <li data-i18n="svc.g5.i3">Photo shoot (half day)</li>
-          <li data-i18n="svc.g5.i4">Logo &amp; brand refresh</li>
-          <li data-i18n="svc.g5.i5">Google Ads management</li>
-          <li data-i18n="svc.g5.i6">Social media posts</li>
-        </ul>
-      </div>
-    </div>
-
-    <a href="#contact" class="link-cta btn-outline svc-cta fade-up">
-      <span data-i18n="cta.start">Start a project</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-  </div>
-</section>
-
-<div class="divider-inner"></div>
-
 <!-- CONTACT -->
 <section id="contact">
   <div class="container">
-    <p class="about-h6 fade-up" data-i18n="contact.kicker">Let's Talk</p>
-    <h2 class="contact-h2 fade-up"><span data-i18n="cta.start">Start a project</span></h2>
-    <p class="contact-intro fade-up" data-i18n="contact.intro">Fill out the form below to start. Tell us what you're building; every enquiry is answered personally, usually within 24 hours.</p>
-    <div class="contact-grid fade-up">
+    <h2 class="contact-h2"><span data-i18n="cta.start">Start a project</span></h2>
+    <p class="contact-intro" data-i18n="contact.intro">Tell us what you're building. Every enquiry is answered personally, usually within 24 hours.</p>
+    <p class="contact-aside" data-i18n="contact.aside">Still weighing a website builder? <a href="/blog/custom-website-vs-website-builder/">Read our honest comparison</a>.</p>
+    <div class="contact-grid">
       <div class="contact-details">
         <div class="contact-item">
           <div class="contact-label" data-i18n="contact.avail">Availability</div>
@@ -1106,7 +1247,7 @@ footer{
           <div class="contact-label" data-i18n="contact.base">Base</div>
           <div class="contact-val">
             Montréal, QC
-            <span class="contact-val-sub" data-i18n="contact.remote">Remote-friendly worldwide</span>
+            <span class="contact-val-sub"><span class="mtl-clock" hidden><time id="mtl-time"></time> <span data-i18n="contact.local">here right now</span> · </span><span data-i18n="contact.remote">Remote-friendly worldwide</span></span>
           </div>
         </div>
         <div class="contact-item">
@@ -1115,47 +1256,47 @@ footer{
         </div>
       </div>
 
-      <form id="contact-form">
+      <form id="contact-form" method="post" action="https://api.web3forms.com/submit">
         <input type="hidden" name="access_key" value="3da1f7ac-99e9-49bd-8aa1-c3b621510613">
-        <input type="hidden" name="subject" value="New Web Dev Enquiry — Mann Dev">
+        <input type="hidden" name="subject" value="New Web Dev Enquiry — Manndev">
         <input type="checkbox" name="botcheck" style="display:none;">
         <input type="hidden" name="language" id="language-field" value="English">
         <div class="form-row">
           <div class="form-field">
-            <input class="form-input" type="text" id="fname" name="fname" placeholder="x" autocomplete="off" required>
+            <input class="form-input" type="text" id="fname" name="fname" placeholder="x" autocomplete="given-name" required>
             <label class="form-label" for="fname" data-i18n="form.fname">First Name</label>
           </div>
           <div class="form-field">
-            <input class="form-input" type="text" id="lname" name="lname" placeholder="x" autocomplete="off" required>
+            <input class="form-input" type="text" id="lname" name="lname" placeholder="x" autocomplete="family-name" required>
             <label class="form-label" for="lname" data-i18n="form.lname">Last Name</label>
           </div>
         </div>
         <div class="form-field">
-          <input class="form-input" type="email" id="email" name="email" placeholder="x" autocomplete="off" required>
+          <input class="form-input" type="email" id="email" name="email" placeholder="x" autocomplete="email" required>
           <label class="form-label" for="email" data-i18n="form.email">Email Address</label>
         </div>
         <div class="form-field">
           <select class="form-select" id="service" name="service">
-            <option value="" disabled selected data-i18n="form.select">Select a service</option>
-            <option value="Landing Page" data-i18n="svc.landing">Landing Page</option>
-            <option value="Full Website" data-i18n="svc.full">Full Website</option>
-            <option value="Care &amp; Hosting (Monthly)" data-i18n="form.care">Care &amp; Hosting (Monthly)</option>
-            <option value="AI Automation" data-i18n="svc.ai">AI Automation</option>
-            <option value="Not sure yet" data-i18n="form.notSure">Not sure yet</option>
+            <option value="Not sure yet" selected data-i18n="form.notSure">Not sure yet</option>
+            <option value="Design &amp; Development" data-i18n="form.svc.design">Design &amp; Development</option>
+            <option value="Hosting &amp; Security" data-i18n="form.svc.hosting">Hosting &amp; Security</option>
+            <option value="Search &amp; Visibility" data-i18n="form.svc.search">Search &amp; Visibility</option>
+            <option value="Automation" data-i18n="form.svc.auto">Automation</option>
+            <option value="Care plan (monthly)" data-i18n="form.svc.care">Care plan (monthly)</option>
           </select>
+          <label class="form-label form-label-static" for="service" data-i18n="form.service">What do you need?</label>
         </div>
         <div class="form-field">
-          <textarea class="form-textarea" id="message" name="message" placeholder="x" maxlength="300" required></textarea>
+          <textarea class="form-textarea" id="message" name="message" placeholder="x" maxlength="2000" required></textarea>
           <label class="form-label" for="message" data-i18n="form.message">Tell us about your project</label>
-          <span class="char-count" id="char-count">300</span>
+          <span class="char-count" id="char-count" aria-live="polite"></span>
         </div>
         <div class="submit-row">
           <button class="form-submit btn-outline" type="submit">
             <span data-i18n="form.send">Send Enquiry</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            <div class="cta-underline-wrap"><div class="cta-underline"></div></div>
           </button>
-          <span class="submit-note" id="submit-status" data-i18n="form.note">All enquiries answered personally.</span>
+          <span class="submit-note" id="submit-status" role="status" aria-live="polite" data-i18n="form.note">All enquiries answered personally.</span>
         </div>
       </form>
     </div>
@@ -1169,7 +1310,7 @@ footer{
 <footer>
   <div class="divider-inner"></div>
   <div class="footer-inner">
-    <a href="https://manndev.com/" class="footer-logo" aria-label="Mann Dev Home" data-i18n-label="a11y.home">
+    <a href="https://manndev.com/" class="footer-logo" aria-label="Manndev Home" data-i18n-label="a11y.home">
       <img src="/img/logo.png?v=2" alt="" width="298" height="59">
     </a>
     <nav class="footer-nav" aria-label="Footer navigation" data-i18n-label="a11y.footerNav">
@@ -1178,43 +1319,51 @@ footer{
       <a href="#about" data-i18n="nav.about">About</a>
       <a href="/blog/" data-i18n="nav.insights">Insights</a>
       <a href="#contact">Contact</a>
+      <a href="/privacy/" data-i18n="nav.privacy">Privacy</a>
       <a href="https://portal.manndev.com/" class="footer-portal" data-i18n="nav.portal">Portal</a>
     </nav>
   </div>
   <div class="footer-bottom">
-    <p class="footer-copy">&copy; 2026 Mann Dev.</p>
+    <p class="footer-copy">&copy; 2026 Manndev.</p>
     <div id="wcb" class="carbonbadge"></div>
   </div>
+  <!-- lamplight wordmark: an outline the cursor lights in gold, echoing the spotlight intro -->
+  <div class="footer-mark" aria-hidden="true">
+    <svg class="fm-base" viewBox="0 0 1000 205"><text x="0" y="168" textLength="1000" lengthAdjust="spacingAndGlyphs">mann<tspan class="fm-slash">/</tspan>dev</text></svg>
+    <svg class="fm-lit" viewBox="0 0 1000 205"><text x="0" y="168" textLength="1000" lengthAdjust="spacingAndGlyphs">mann<tspan class="fm-slash">/</tspan>dev</text></svg>
+  </div>
 </footer>
-<!-- Carbon badge: third-party, footer-only. Loaded off the critical path —
-     injected when the badge nears the viewport, or at window load, whichever
-     comes first. Never blocks parse, render or any first-party resource. -->
+<!-- Carbon badge: third-party, footer-only. Loaded only when the footer comes near
+     the viewport, so most visits never fetch it. Its text is translated on /fr/,
+     and it hides itself when the API has no result for the page. -->
 <script>
 (function () {
   var el = document.getElementById('wcb');
-  if (!el) return;
-  var done = false;
-  function loadBadge() {
-    if (done) return;
-    done = true;
+  if (!el || !('IntersectionObserver' in window)) return;
+  var fr = /^fr/i.test(document.documentElement.lang);
+  /* the badge writes its own English text, and can rewrite it later from a
+     background refresh, so keep watching rather than stopping at the first value */
+  function tidy() {
+    var g = document.getElementById('wcb_g'), t = document.getElementById('wcb_2');
+    if (!g) return;
+    el.classList.toggle('wcb-empty', /no result/i.test(g.textContent));
+    if (!fr) return;
+    if (/Measuring/.test(g.innerHTML)) g.innerHTML = 'Mesure du CO<sub>2</sub>&hellip;';
+    else if (/g of CO/.test(g.innerHTML)) g.innerHTML = g.innerHTML.replace('g of CO', 'g de CO').replace('/view', '/vue');
+    if (t && /Cleaner than/.test(t.textContent)) {
+      t.textContent = t.textContent.replace(/Cleaner than (\d+)% of pages tested/, 'Plus propre que $1 % des pages testées');
+    }
+  }
+  var io = new IntersectionObserver(function (entries) {
+    if (!entries.some(function (e) { return e.isIntersecting; })) return;
+    io.disconnect();
+    new MutationObserver(tidy).observe(el, { childList: true, subtree: true, characterData: true });
     var s = document.createElement('script');
     s.src = 'https://unpkg.com/website-carbon-badges@1.1.3/b.min.js';
     s.async = true;
     document.body.appendChild(s);
-  }
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      if (entries.some(function (e) { return e.isIntersecting; })) {
-        io.disconnect();
-        loadBadge();
-      }
-    }, { rootMargin: '400px' });
-    io.observe(el);
-  }
-  /* Fallback / backstop: if the footer is never scrolled to, load once the
-     page is fully done so the badge still renders for anyone who looks. */
-  if (document.readyState === 'complete') loadBadge();
-  else window.addEventListener('load', loadBadge, { once: true });
+  }, { rootMargin: '400px' });
+  io.observe(el);
 })();
 </script>
 
@@ -1224,311 +1373,644 @@ footer{
 <script defer src="/js/gsap.min.js"></script>
 <script defer src="/js/ScrollTrigger.min.js"></script>
 <script>
+/* Two layers. Everything a visitor needs (the form, the service tabs, the film, the
+   language toggle, the clock) is wired first and needs no library. The motion layer
+   below only runs when both GSAP files loaded, and whatever happens in it, the page
+   always ends up visible: the pre-hide classes come off in a `finally`. */
 document.addEventListener('DOMContentLoaded', function () {
+const root = document.documentElement;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hasGsap = !!(window.gsap && window.ScrollTrigger);
+const FR = /^fr/i.test(root.lang);
+const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/* ──────────────────────────────────────────
+   LANGUAGE TOGGLE — remember an explicit pick so
+   the redirect in <head> respects it
+────────────────────────────────────────── */
+document.getElementById('lang-toggle').addEventListener('click', e => {
+  const sameTab = e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
+  try {
+    localStorage.setItem('lang', e.currentTarget.dataset.lang);
+    /* a new-tab open (modifier click) must not leave the flag in this tab */
+    if (sameTab) sessionStorage.setItem('skipIntro', '1');
+  } catch (err) {}
+  if (typeof gtag === 'function') gtag('event', 'language_switch', { language: e.currentTarget.dataset.lang });
+});
+
+/* ──────────────────────────────────────────
+   SERVICES — centred name stack. Each name is split
+   into letters that roll up into Sea Fog when it
+   becomes active (a real mouse move, focus, tap or
+   arrow keys); its details cross-fade in below.
+────────────────────────────────────────── */
+const svcTabs = [...document.querySelectorAll('.svc-name')];
+if (svcTabs.length) {
+  svcTabs.forEach(t => {
+    const label = t.querySelector('.svc-name-text');
+    const roll = document.createElement('span');
+    roll.className = 'svc-roll';
+    roll.setAttribute('aria-hidden', 'true');
+    /* letters roll inside their word, and words keep real spaces between them,
+       so a long name (the French ones) can wrap instead of running off a phone */
+    let i = 0;
+    roll.innerHTML = label.textContent.trim().split(/\s+/).map(word =>
+      '<span class="wd">' + [...word].map(ch => {
+        const c = esc(ch);
+        return `<span class="c" style="--i:${i++}" data-c="${c}">${c}</span>`;
+      }).join('') + '</span>'
+    ).join(' ');
+    label.classList.add('sr-only');
+    t.prepend(roll);
+  });
+  const panels = svcTabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+  const activate = i => svcTabs.forEach((t, j) => {
+    const on = i === j;
+    t.classList.toggle('is-active', on);
+    t.setAttribute('aria-selected', on);
+    t.tabIndex = on ? 0 : -1;
+    panels[j].classList.toggle('is-active', on);
+    panels[j].inert = !on;
+  });
+  svcTabs.forEach((t, i) => {
+    t.addEventListener('click', () => activate(i));
+    t.addEventListener('focus', () => activate(i));
+    /* only a mouse that actually moved: scrolling under a parked cursor fires hover
+       events too, and used to switch the panel by accident */
+    t.addEventListener('pointermove', e => {
+      if (e.pointerType === 'mouse' && (e.movementX || e.movementY) && !t.classList.contains('is-active')) activate(i);
+    });
+    t.addEventListener('keydown', e => {
+      const last = svcTabs.length - 1;
+      const next = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: last }[e.key];
+      if (next === undefined) return;
+      e.preventDefault();
+      const n = (next + svcTabs.length) % svcTabs.length;
+      activate(n);
+      svcTabs[n].focus();
+    });
+  });
+  activate(0);
+}
+
+/* ──────────────────────────────────────────
+   PROCESS FILM — closed by default, opened from the
+   link beside the heading. Nothing downloads until
+   it's opened (preload="none", and the poster is only
+   set on the first open); it plays while open and on
+   screen. Under reduced motion it opens without the
+   reveal and with controls, not autoplay.
+────────────────────────────────────────── */
+const filmToggle = document.querySelector('.film-toggle');
+const film = document.getElementById('process-film');
+if (filmToggle && film) {
+  const v = film.querySelector('video');
+  let open = false, onScreen = false;
+  const sync = () => { open && onScreen && !reduced ? v.play().catch(() => {}) : v.pause(); };
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; sync(); }, { threshold: 0.2 }).observe(film);
+  if (reduced) v.controls = true;
+  filmToggle.addEventListener('click', () => {
+    open = !open;
+    filmToggle.setAttribute('aria-expanded', open);
+    if (v.dataset.poster && !v.getAttribute('poster')) v.poster = v.dataset.poster;
+    if (hasGsap) gsap.killTweensOf(film);
+    if (open) {
+      film.hidden = false;
+      onScreen = true;                      /* it opens right under the link that was just clicked */
+      if (hasGsap) ScrollTrigger.refresh(); /* the process stack below just moved down */
+      if (hasGsap && !reduced) gsap.fromTo(film,
+        { autoAlpha: 0, y: -14, clipPath: 'inset(0% 0% 100% 0% round 28px)' },
+        { autoAlpha: 1, y: 0, clipPath: 'inset(0% 0% 0% 0% round 28px)', duration: 0.8, ease: 'expo.out',
+          clearProps: 'clipPath,transform' });
+      sync();
+    } else {
+      const close = () => { film.hidden = true; v.pause(); if (hasGsap) ScrollTrigger.refresh(); };
+      if (hasGsap && !reduced) gsap.to(film, {
+        autoAlpha: 0, clipPath: 'inset(0% 0% 100% 0% round 28px)', duration: 0.45, ease: 'power3.in',
+        onComplete: () => { gsap.set(film, { clearProps: 'all' }); close(); }
+      });
+      else close();
+    }
+  });
+}
+
+/* Montréal local time next to the address: a quiet sign of who answers, and when */
+const mtlTime = document.getElementById('mtl-time');
+if (mtlTime) {
+  const fmt = new Intl.DateTimeFormat(root.lang, { hour: 'numeric', minute: '2-digit', timeZone: 'America/Toronto' });
+  const tick = () => { const now = new Date(); mtlTime.textContent = fmt.format(now); mtlTime.dateTime = now.toISOString(); };
+  tick();
+  setInterval(tick, 30000);
+  mtlTime.parentElement.hidden = false;
+}
+
+/* ──────────────────────────────────────────
+   CONTACT FORM — a brief that grows as you type
+   (counter only near the limit), a draft that
+   survives a refresh in this tab, and a status
+   line that screen readers announce. If this
+   script never runs, the form still POSTs to
+   Web3Forms on its own (method/action).
+────────────────────────────────────────── */
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+  const msgArea = document.getElementById('message');
+  const charCount = document.getElementById('char-count');
+  const status = document.getElementById('submit-status');
+  const btn = contactForm.querySelector('.form-submit');
+  const DRAFT = 'contact-draft';
+  const fields = [...contactForm.querySelectorAll('input[type=text], input[type=email], select, textarea')];
+  const MSG = FR
+    ? { sending: 'Envoi en cours…',
+        sent: '✓ Message reçu. Nous vous répondrons sous 24 heures pour fixer un premier appel.',
+        error: 'Une erreur est survenue pendant l’envoi. Votre texte est toujours là : réessayez, ou écrivez-nous à contact@manndev.com.' }
+    : { sending: 'Sending…',
+        sent: '✓ Message received. We’ll reply within 24 hours to set up a first call.',
+        error: 'Something went wrong sending your message. Your text is still here: try again, or email us at contact@manndev.com.' };
+  const count = () => {
+    const left = msgArea.maxLength - msgArea.value.length;
+    charCount.textContent = left < 200 ? left : '';
+    charCount.classList.toggle('warn', left < 60);
+  };
+  const grow = () => { msgArea.style.height = 'auto'; msgArea.style.height = msgArea.scrollHeight + 'px'; };
+  const save = () => {
+    try {
+      const d = {};
+      fields.forEach(f => { d[f.name] = f.value; });
+      sessionStorage.setItem(DRAFT, JSON.stringify(d));
+    } catch (err) {}
+  };
+  try {
+    const d = JSON.parse(sessionStorage.getItem(DRAFT) || '{}');
+    fields.forEach(f => { if (d[f.name]) f.value = d[f.name]; });
+  } catch (err) {}
+  count(); grow();
+  contactForm.addEventListener('input', () => { count(); grow(); save(); });
+  contactForm.addEventListener('change', save);
+
+  contactForm.addEventListener('submit', e => {
+    e.preventDefault();
+    status.textContent = MSG.sending;
+    btn.disabled = true;
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(Object.fromEntries(new FormData(contactForm)))
+    })
+    .then(r => r.json())
+    .then(j => {
+      if (!j.success) throw new Error('not sent');
+      status.textContent = MSG.sent;
+      if (typeof gtag === 'function') gtag('event', 'generate_lead', { form_id: 'contact-form', page_path: location.pathname });
+      contactForm.reset();
+      try { sessionStorage.removeItem(DRAFT); } catch (err) {}
+      count(); grow();
+    })
+    .catch(() => { status.textContent = MSG.error; })
+    .finally(() => { btn.disabled = false; });
+  });
+}
+
+/* ──────────────────────────────────────────
+   MOTION LAYER
+────────────────────────────────────────── */
+let introRunning = false;
+try {
+  if (hasGsap) initMotion();
+} catch (err) {
+  recover(err);
+} finally {
+  root.classList.remove('js-anim');
+  if (!introRunning) {
+    const intro = document.getElementById('intro');
+    if (intro) intro.remove();
+    root.classList.remove('js-intro');
+  }
+}
+
+/* something in the motion layer threw: finish every tween so nothing is left
+   hidden or half-way, drop the triggers, and show the page as it is at rest */
+function recover(err) {
+  if (window.console) console.error(err);
+  introRunning = false;
+  try {
+    gsap.globalTimeline.getChildren(true, true, false).forEach(t => t.progress(1).kill());
+    ScrollTrigger.getAll().forEach(st => st.kill());
+    gsap.set(['header', 'header nav', '.h-logo', '.hero-h1', '.hero-sub', '#hero .cta-pill', '.hero-footer', '.horizon', '#hero .container'], { clearProps: 'all' });
+  } catch (e) {}
+  const heroText = document.querySelector('#hero .container');
+  if (heroText) heroText.style.webkitMaskImage = heroText.style.maskImage = '';
+}
+
+function initMotion() {
 gsap.registerPlugin(ScrollTrigger);
 
-const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* the 3 s failsafe already showed the hero (GSAP was slow): don't hide it and replay */
+const revealed = root.dataset.revealed === '1';
+
+/* split an element's HTML on <br> into lines that can rise out of a clip */
+const splitLines = el => {
+  el.innerHTML = el.innerHTML.split(/<br\s*\/?>/i)
+    .map(p => `<span class="line-clip" style="display:block;overflow:hidden;"><span class="line" style="display:block;">${p}</span></span>`)
+    .join('');
+  return el.querySelectorAll('.line');
+};
 
 /* ──────────────────────────────────────────
    HERO — staggered entrance on load
 ────────────────────────────────────────── */
-if (!reduced) {
-  const heroTl = gsap.timeline({ delay: 0.1 });
+const intro = document.getElementById('intro');
+const playIntro = !reduced && !revealed && root.classList.contains('js-intro') && document.visibilityState === 'visible';
 
-  /* header fades down */
-  heroTl.fromTo('header',
+if (!reduced && !revealed) {
+  const heroTl = gsap.timeline({ delay: 0.1, paused: playIntro });
+
+  /* header fades down (after the intro, the logo is already in place, so only the nav does) */
+  if (playIntro) gsap.set('header', { autoAlpha: 1 });
+  heroTl.fromTo(playIntro ? 'header nav' : 'header',
     { autoAlpha: 0, y: -18 },
     { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' }
   );
 
-  /* kicker slides right */
-  heroTl.fromTo('.hero-meta',
-    { autoAlpha: 0, x: -22 },
-    { autoAlpha: 1, x: 0, duration: 0.55, ease: 'power3.out' },
-    '-=0.35'
-  );
-
-  /* H1: clip-reveal per line (preserves <br>) */
+  /* H1: clip-reveal per line (preserves <br>); with the spotlight intro, the
+     expanding light reveals the headline instead */
   const h1 = document.querySelector('.hero-h1');
   if (h1) {
-    const parts = h1.innerHTML.split(/<br\s*\/?>/i);
-    h1.innerHTML = parts
-      .map(p => `<span class="hw-clip" style="display:block;overflow:hidden;"><span class="hw-line" style="display:block;">${p}</span></span>`)
-      .join('');
-
-    heroTl.fromTo('.hw-line',
-      { y: '105%' },
-      { y: '0%', duration: 0.8, stagger: 0.12, ease: 'power4.out' },
-      '-=0.3'
-    );
+    const lines = splitLines(h1);
+    if (!playIntro) {
+      heroTl.set(h1, { visibility: 'visible' }, '-=0.3');
+      heroTl.fromTo(lines, { y: '105%' }, { y: '0%', duration: 0.8, stagger: 0.12, ease: 'power4.out' }, '-=0.3');
+    }
   }
 
-  /* Second stage: underline, sub, CTA and footer overlap, starting as the
-     headline lands rather than queuing one after another. */
+  /* Second stage: sub, CTA and footer overlap, starting as the headline lands */
   heroTl.addLabel('settle', '-=0.35');
-  heroTl.set('.hw-clip', { overflow: 'visible' }, 'settle');
+  heroTl.set('#hero .line-clip', { overflow: 'visible' }, 'settle');
+  if (!playIntro) {
+    heroTl.fromTo('.hero-sub', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power3.out' }, 'settle+=0.05');
+    heroTl.fromTo('#hero .cta-pill', { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 'settle+=0.13');
+    heroTl.fromTo('.hero-footer', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35, ease: 'power2.out' }, 'settle+=0.2');
+    /* the horizon opens out from the centre */
+    heroTl.fromTo('.horizon', { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: 'expo.out' }, 'settle');
+  }
 
-  /* hand-drawn underline under "found" */
-  heroTl.fromTo('.hero-scribble path',
-    { strokeDashoffset: 1 },
-    { strokeDashoffset: 0, duration: 0.55, ease: 'power2.inOut' },
-    'settle'
-  );
-
-  /* sub, CTA, footer stagger */
-  heroTl.fromTo('.hero-sub',
-    { autoAlpha: 0, y: 12 },
-    { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power3.out' },
-    'settle+=0.05'
-  );
-  heroTl.fromTo('#hero .link-cta',
-    { autoAlpha: 0, y: 10 },
-    { autoAlpha: 1, y: 0, duration: 0.35, ease: 'power3.out' },
-    'settle+=0.13'
-  );
-  heroTl.fromTo('.hero-footer',
-    { autoAlpha: 0 },
-    { autoAlpha: 1, duration: 0.35, ease: 'power2.out' },
-    'settle+=0.2'
-  );
-
-  /* Failsafe: the intro is driven by requestAnimationFrame, which the browser
-     throttles to a near-stop in a background or prerendered tab. Without this,
-     someone who opens the site in a background tab returns to a blank hero
-     (the "from" state applied, the tween never ticked). If the page isn't
-     actually visible when the intro is due, skip the animation and show the
-     finished hero immediately; below-the-fold scroll reveals still play
-     normally once the tab is focused and scrolled. */
+  /* Failsafe: requestAnimationFrame barely runs in a background or prerendered
+     tab, so a hero that should animate there would sit at its "from" state.
+     If the page isn't visible yet, show the finished hero immediately. */
   if (document.visibilityState !== 'visible') heroTl.progress(1);
+
+  /* ──────────────────────────────────────────
+     SPOTLIGHT INTRO — light sweeps onto the logo,
+     the logo glides into the header, then the light
+     expands from the centre, revealing the headline;
+     the rest of the hero follows. Any click, key,
+     scroll, touch-drag or resize skips it.
+  ────────────────────────────────────────── */
+  if (playIntro) {
+    const logo = intro.querySelector('.intro-logo');
+    const light = intro.querySelector('.intro-light');
+    const headerLogo = document.querySelector('.h-logo');
+    const W = logo.offsetWidth;
+    light.style.setProperty('--r', W * 0.62 + 'px');
+    light.style.setProperty('--d', Math.hypot(innerWidth, innerHeight) + W * 4 + 'px');
+    gsap.set(headerLogo, { autoAlpha: 0 });
+
+    const target = headerLogo.querySelector('img').getBoundingClientRect();
+    const from = logo.getBoundingClientRect();
+    const reach = Math.hypot(innerWidth, innerHeight) / (W * 0.62) * 1.15;   /* scale at which the hole clears every corner */
+    /* the hero text sits under a soft circular mask centred on the screen; it grows
+       with the light, feathered like the light's own edge so there's no hard cut */
+    const heroText = document.querySelector('#hero .container');
+    const hb = heroText.getBoundingClientRect();
+    const cx = innerWidth / 2 - hb.left, cy = innerHeight / 2 - hb.top;
+    const holeR = W * 0.62 * 1.05;
+    const clip = scale => {
+      const m = `radial-gradient(circle at ${cx}px ${cy}px, #000 ${(holeR * scale * 0.7).toFixed(1)}px, transparent ${(holeR * scale * 1.6).toFixed(1)}px)`;
+      heroText.style.webkitMaskImage = heroText.style.maskImage = m;
+    };
+    clip(0);
+
+    const skipEvents = ['pointerdown', 'keydown', 'wheel', 'touchmove', 'scroll', 'resize'];
+    const done = () => {
+      gsap.set(headerLogo, { autoAlpha: 1 });
+      intro.remove();
+      heroText.style.webkitMaskImage = heroText.style.maskImage = '';
+      root.classList.remove('js-intro');
+      skipEvents.forEach(ev => removeEventListener(ev, skip));
+    };
+    const introTl = gsap.timeline({ delay: 0.15, onComplete: done });
+    const skip = () => { introTl.progress(1); heroTl.progress(1); };
+    /* any scroll also skips (wheel, touch, scrollbar, a restored position); a resize or
+       rotation would leave the geometry above stale */
+    skipEvents.forEach(ev => addEventListener(ev, skip, { passive: true }));
+
+    introTl
+      /* 1. the light finds the logo */
+      .fromTo(light, { x: -W * 1.5 }, { x: 0, duration: 0.8, ease: 'power3.out' })
+      .addLabel('fly', '+=0.1')
+      /* 2. the logo, now fully lit, lifts above the dark and glides into the header;
+         if a refresh restored the page scrolled past the header, it just fades */
+      .set(logo, { zIndex: 1 }, 'fly')
+      .to(logo, target.bottom > 0 ? {
+        x: target.left + target.width / 2 - (from.left + from.width / 2),
+        y: target.top + target.height / 2 - (from.top + from.height / 2),
+        scale: target.height / from.height,
+        duration: 0.8, ease: 'expo.inOut'
+      } : { autoAlpha: 0, scale: 0.92, duration: 0.6, ease: 'power2.in' }, 'fly')
+      /* 3. as the logo settles, the light (still dead centre) expands; the hero
+         text is revealed through a soft circle that grows with it */
+      .addLabel('open', 'fly+=0.45')
+      .fromTo(heroText, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8, ease: 'sine.out' }, 'open')
+      .to(light, {
+        scale: reach, duration: 1.3, ease: 'power2.inOut',
+        /* the mask starts from nothing (the light starts at 1), so the text grows
+           out of the centre instead of the middle words appearing at once */
+        onUpdate() { clip((gsap.getProperty(light, 'scale') - 1) / (reach - 1) * reach); }
+      }, 'open')
+      .to(light, { autoAlpha: 0, duration: 0.6, ease: 'sine.inOut' }, 'open+=0.7')
+      /* the nav fades in as the light opens */
+      .call(() => heroTl.play(), null, 'open+=0.25');
+    introRunning = true;
+  }
 }
 
-/* ──────────────────────────────────────────
-   SCROLL REVEAL HELPERS
-────────────────────────────────────────── */
-function scrollReveal(el, vars, triggerStart = 'top 86%') {
-  if (reduced) { gsap.set(el, { autoAlpha: 1, y: 0, x: 0 }); return; }
-  gsap.fromTo(el,
-    { autoAlpha: 0, y: vars.fromY ?? 28, x: vars.fromX ?? 0 },
-    {
-      autoAlpha: 1, y: 0, x: 0,
-      duration: vars.duration ?? 0.65,
-      delay: vars.delay ?? 0,
-      ease: vars.ease ?? 'power3.out',
-      stagger: vars.stagger ?? 0,
-      scrollTrigger: { trigger: vars.trigger ?? el, start: triggerStart, once: true }
-    }
-  );
-}
+/* webfonts arrive after first layout (non-blocking stylesheet) and reflow every
+   heading, so recompute every trigger position once they're in */
+if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
 
 /* ──────────────────────────────────────────
-   SECTION LABELS — slide from left
+   HORIZON — the hero's gold line bends toward a
+   nearby cursor, ripples when crossed, and settles
+   back. Touch screens get a short slow swell when
+   it comes into view. The ticker sleeps whenever
+   the line has stopped moving. Static under
+   reduced motion.
 ────────────────────────────────────────── */
-document.querySelectorAll('.about-h6').forEach(el => {
-  scrollReveal(el, { fromX: -20, fromY: 0, duration: 0.5 });
-});
+const horizon = document.querySelector('.horizon');
+if (horizon && !reduced) {
+  const path = horizon.querySelector('path');
+  const touch = matchMedia('(hover: none)').matches;
+  const N = 96, MID = 60, BAND = 90, SWELL = 8000;   /* points, line y, reach above/below in px, swell length in ms */
+  const pull = { x: 500, y: 0 }, aim = { x: 500, y: 0 };
+  const ripples = [];                                /* { x, amp, born } */
+  let lastDy = null, lastT = 0, running = false, inView = true, wokeAt = 0;
 
-/* ──────────────────────────────────────────
-   SECTION HEADINGS — clip-reveal per line
-   (preserves HTML <br> tags, splits on them)
-────────────────────────────────────────── */
-function animateHeading(selector) {
-  document.querySelectorAll(selector).forEach(h => {
-    if (reduced) return;
-    /* split on <br>, wrap each chunk in an overflow:hidden clip wrapper */
-    const parts = h.innerHTML.split(/<br\s*\/?>/i);
-    h.innerHTML = parts
-      .map(p => `<span class="sh-clip" style="display:block;overflow:hidden;"><span class="sh-line" style="display:block;">${p}</span></span>`)
-      .join('');
-    gsap.fromTo(h.querySelectorAll('.sh-line'),
-      { y: '105%' },
-      {
-        y: '0%',
-        duration: 0.7, stagger: 0.1, ease: 'power4.out',
-        scrollTrigger: { trigger: h, start: 'top 88%', once: true }
+  const draw = t => {
+    if (!isFinite(pull.x) || !isFinite(pull.y)) { pull.x = aim.x = 500; pull.y = aim.y = 0; }
+    pull.x += (aim.x - pull.x) * 0.14;   /* exponential approach: eases out, never overshoots */
+    pull.y += (aim.y - pull.y) * 0.12;
+    const swell = touch ? Math.max(0, 1 - (t - wokeAt) / SWELL) : 0;
+    let d = '', energy = Math.abs(pull.y) / 24 + swell;
+    for (let i = 0; i <= N; i++) {
+      const x = i / N * 1000, dx = x - pull.x;
+      let y = MID + pull.y * Math.exp(-dx * dx / 24000);
+      for (const r of ripples) {
+        const age = (t - r.born) / 1000, dist = Math.abs(x - r.x);
+        const front = dist - age * 320;
+        y += r.amp * Math.exp(-age * 1.8) * Math.exp(-front * front / 9000) * Math.sin(dist / 16 - age * 10);
       }
-    );
-  });
-}
-animateHeading('.about-h2');
-animateHeading('.process-h2');
+      if (swell) y += swell * (1.8 * Math.sin(x / 150 + t / 1600) + 0.9 * Math.sin(x / 70 - t / 1100));
+      d += (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(2);
+    }
+    for (let i = ripples.length - 1; i >= 0; i--) {
+      const age = (t - ripples[i].born) / 1000;
+      if (age > 3) ripples.splice(i, 1); else energy += Math.abs(ripples[i].amp) * Math.exp(-age * 1.8) / 10;
+    }
+    path.setAttribute('d', d);
+    path.style.opacity = Math.min(0.4 + Math.abs(pull.y) / 48 + energy * 0.25, 0.9);
+    return swell;
+  };
+  const sleep = () => { gsap.ticker.remove(frame); running = false; };
+  const frame = () => {
+    const swell = draw(performance.now());
+    /* still: converged on the cursor (or flat), no ripples, no swell left */
+    if (!swell && !ripples.length && Math.abs(aim.y - pull.y) < 0.05 && Math.abs(aim.x - pull.x) < 0.5) {
+      sleep();
+      if (Math.abs(aim.y) < 0.01) { path.setAttribute('d', 'M0 60H1000'); path.style.opacity = ''; }
+    }
+  };
+  const wake = () => { if (!running && inView) { running = true; gsap.ticker.add(frame); } };
 
-/* process film: nothing is downloaded until it scrolls into view (preload="none");
-   play while visible, pause when off-screen, poster only for reduced motion */
-if (!reduced) {
-  const v = document.querySelector('.process-film-video');
-  new IntersectionObserver(([e]) => { e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }, { threshold: 0.2 }).observe(v);
+  /* where the line sits, from its parent (the line itself is scaled during the
+     entrance, so its own box can read as zero width): it spans the viewport */
+  let lineTop = 0, lineWidth = root.clientWidth;
+  const measure = () => {
+    lineTop = horizon.parentElement.getBoundingClientRect().top + scrollY;
+    lineWidth = root.clientWidth || innerWidth;
+  };
+  measure();
+  addEventListener('resize', measure, { passive: true });
+  addEventListener('load', measure);
+  if (document.fonts) document.fonts.ready.then(measure);
+
+  if (touch) {
+    new IntersectionObserver(([e]) => {
+      inView = e.isIntersecting;
+      if (inView) { wokeAt = performance.now(); wake(); } else sleep();
+    }).observe(horizon);
+  } else {
+    window.addEventListener('pointermove', e => {
+      const dy = e.clientY + scrollY - lineTop;
+      if (Math.abs(dy) >= BAND && !aim.y && lastDy === null) return;   /* far from the line and already still */
+      const now = performance.now();
+      aim.x = e.clientX / lineWidth * 1000;
+      if (Math.abs(dy) < BAND) {
+        aim.y = dy * 0.75 * (1 - Math.abs(dy) / BAND);  /* strongest a little off the line, zero at the edge */
+        /* crossing the line drops a ripple, sized by how fast the cursor went through */
+        if (lastDy !== null && Math.sign(dy) !== Math.sign(lastDy) && ripples.length < 4) {
+          const speed = Math.abs(dy - lastDy) / Math.max(now - lastT, 8);
+          ripples.push({ x: aim.x, amp: Math.min(3 + speed * 6, 12) * Math.sign(lastDy - dy), born: now });
+        }
+        wake();
+      } else if (aim.y) {
+        aim.y = 0;
+        wake();
+      }
+      lastDy = Math.abs(dy) < BAND ? dy : null;
+      lastT = now;
+    }, { passive: true });
+  }
 }
-animateHeading('.principles-h2');
-animateHeading('.services-h2');
-animateHeading('.contact-h2');
 
 /* ──────────────────────────────────────────
-   ABOUT GRID — left col fades left→right,
-   skills col fades right→left
+   SCROLL REVEALS — opacity and a small move, never
+   visibility, so content that hasn't been revealed
+   yet can still be reached with Tab (focusing it
+   scrolls it into view, which reveals it)
 ────────────────────────────────────────── */
-scrollReveal('.about-main', { fromX: -24, fromY: 0, duration: 0.7 }, 'top 82%');
-scrollReveal('.about-skills-col', { fromX: 24, fromY: 0, duration: 0.7, delay: 0.12 }, 'top 82%');
-
-/* skills list items stagger */
-if (!reduced) {
-  gsap.fromTo('.skills-list li',
-    { autoAlpha: 0, x: 18 },
+function scrollReveal(targets, o) {
+  if (reduced) return;
+  o = o || {};
+  gsap.fromTo(targets,
+    { opacity: 0, x: o.x || 0, y: o.y === undefined ? 28 : o.y },
     {
-      autoAlpha: 1, x: 0,
-      duration: 0.4, stagger: 0.045, ease: 'power2.out',
-      scrollTrigger: { trigger: '.skills-list', start: 'top 84%', once: true }
+      opacity: 1, x: 0, y: 0,
+      duration: o.duration || 0.65, delay: o.delay || 0,
+      ease: o.ease || 'power3.out', stagger: o.stagger || 0,
+      clearProps: 'transform,translate,rotate,scale',   /* let CSS :hover transforms apply afterwards */
+      scrollTrigger: { trigger: o.trigger || targets, start: o.start || 'top 86%', once: true }
     }
   );
 }
 
-/* ──────────────────────────────────────────
-   PROCESS CARDS — stagger in from bottom
-────────────────────────────────────────── */
+/* section headings — clip-reveal per line */
 if (!reduced) {
-  gsap.fromTo('.process-card',
-    { autoAlpha: 0, y: 40, scale: 0.97 },
-    {
-      autoAlpha: 1, y: 0, scale: 1,
-      duration: 0.6, stagger: 0.1, ease: 'power3.out',
-      clearProps: 'transform,translate,rotate,scale',   // let the CSS :hover transform apply afterwards
-      scrollTrigger: { trigger: '.process-grid', start: 'top 82%', once: true }
-    }
-  );
-
-  /* process numbers: fade up individually with stagger */
-  gsap.fromTo('.pc-num',
-    { autoAlpha: 0, y: 12 },
-    {
-      autoAlpha: 1, y: 0,
-      duration: 0.5, stagger: 0.08, ease: 'power2.out',
-      scrollTrigger: { trigger: '.process-grid', start: 'top 82%', once: true }
-    }
-  );
-}
-
-/* ──────────────────────────────────────────
-   PRINCIPLE CARDS — stagger + subtle scale
-────────────────────────────────────────── */
-if (!reduced) {
-  gsap.fromTo('.principle-card',
-    { autoAlpha: 0, y: 36, scale: 0.96 },
-    {
-      autoAlpha: 1, y: 0, scale: 1,
-      duration: 0.65, stagger: 0.12, ease: 'power3.out',
-      clearProps: 'transform,translate,rotate,scale',   // let the CSS :hover transform apply afterwards
-      scrollTrigger: { trigger: '.principles-grid', start: 'top 80%', once: true }
-    }
-  );
-}
-
-/* ──────────────────────────────────────────
-   CONTACT — details stagger, form fade
-────────────────────────────────────────── */
-scrollReveal('.contact-intro', { duration: 0.5, delay: 0.1 });
-if (!reduced) {
-  gsap.fromTo('.contact-item',
-    { autoAlpha: 0, x: -18 },
-    {
-      autoAlpha: 1, x: 0,
-      duration: 0.45, stagger: 0.09, ease: 'power2.out',
-      scrollTrigger: { trigger: '.contact-details', start: 'top 84%', once: true }
-    }
-  );
-  gsap.fromTo('#contact-form',
-    { autoAlpha: 0, y: 24 },
-    {
-      autoAlpha: 1, y: 0,
-      duration: 0.65, ease: 'power3.out',
-      scrollTrigger: { trigger: '#contact-form', start: 'top 84%', once: true }
-    }
-  );
-}
-
-/* ──────────────────────────────────────────
-   FOOTER
-────────────────────────────────────────── */
-scrollReveal('footer .footer-inner', { duration: 0.55 }, 'top 92%');
-scrollReveal('footer .footer-bottom', { duration: 0.45, delay: 0.1 }, 'top 95%');
-
-/* ──────────────────────────────────────────
-   STATUS DOT — color pulse (yellow glow)
-────────────────────────────────────────── */
-if (!reduced) {
-  gsap.to('.status-dot', {
-    boxShadow: '0 0 0 5px rgba(242,201,76,.18)',
-    repeat: -1,
-    yoyo: true,
-    duration: 1.2,
-    ease: 'sine.inOut'
+  document.querySelectorAll('.about-h2, .services-h2, .process-h2, .principles-h2, .contact-h2, #work:not([hidden]) .work-h2').forEach(h => {
+    gsap.fromTo(splitLines(h), { y: '105%' }, {
+      y: '0%', duration: 0.7, stagger: 0.1, ease: 'power4.out',
+      scrollTrigger: { trigger: h, start: 'top 88%', once: true }
+    });
   });
 }
 
-/* remember an explicit language pick so the redirect in <head> respects it */
-document.getElementById('lang-toggle').addEventListener('click', e => {
-  try { localStorage.setItem('lang', e.currentTarget.dataset.lang); } catch (err) {}
-  if (typeof gtag === 'function') gtag('event', 'language_switch', { language: e.currentTarget.dataset.lang });
-});
+/* about */
+scrollReveal('.about-main', { x: -24, y: 0, duration: 0.7, start: 'top 82%' });
+scrollReveal('.about-skills-col', { x: 24, y: 0, duration: 0.7, delay: 0.12, start: 'top 82%' });
+scrollReveal('.outcomes li', { x: 18, y: 0, duration: 0.4, stagger: 0.045, ease: 'power2.out', trigger: '.outcomes', start: 'top 84%' });
 
-/* Services section: stagger the groups in on scroll enter */
+/* about copy: words start in body grey (readable, AA) and light up to Sea Fog as they're read */
 if (!reduced) {
-  gsap.set('.svc-group', { autoAlpha: 0, y: 20 });
-  ScrollTrigger.create({
-    trigger: '.svc-grid',
-    start: 'top 80%',
-    once: true,
-    onEnter() {
-      gsap.to('.svc-group', { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.55, ease: 'power3.out' });
-    }
+  const about = document.querySelector('.about-text');
+  about.querySelectorAll('p').forEach(p => {
+    p.innerHTML = p.textContent.split(/(\s+)/).map(w => /^\s+$/.test(w) ? w : `<span class="w">${esc(w)}</span>`).join('');
+  });
+  gsap.to(about.querySelectorAll('.w'), {
+    color: getComputedStyle(root).getPropertyValue('--fg').trim(), ease: 'none', stagger: 0.05,
+    scrollTrigger: { trigger: about, start: 'top 78%', end: 'bottom 52%', scrub: 0.6 }
   });
 }
 
+/* services */
+scrollReveal('.svc-name', { y: 24, duration: 0.6, stagger: 0.07, trigger: '.svc-names', start: 'top 85%' });
+scrollReveal('.svc-detail', { y: 0, duration: 0.6, delay: 0.35, ease: 'power2.out', trigger: '.svc-names', start: 'top 85%' });
+
 /* ──────────────────────────────────────────
-   CHAR COUNTER
+   PROCESS STACK — the card being read lights up
+   (gold edge, bright numeral); as the next card
+   slides over it, it eases back (scale) and dims.
+   Scroll-scrubbed; under reduced motion the stack
+   and the lit card still work, with no scaling.
 ────────────────────────────────────────── */
-const msgArea   = document.getElementById('message');
-const charCount = document.getElementById('char-count');
-if (msgArea) {
-  msgArea.addEventListener('input', () => {
-    const left = 300 - msgArea.value.length;
-    charCount.textContent = left;
-    charCount.classList.toggle('warn', left < 60);
+{
+  const cards = [...document.querySelectorAll('.process-card')];
+  cards.forEach((card, i) => {
+    card.style.setProperty('--i', i);   /* each card sticks one step lower than the last */
+    const shade = document.createElement('div');
+    shade.className = 'pc-shade';
+    shade.setAttribute('aria-hidden', 'true');
+    card.appendChild(shade);
+  });
+  const sticky = cards.length > 0 && getComputedStyle(cards[0]).position === 'sticky';
+  /* zero-height markers where each card sits before it sticks: a stuck card's
+     own box moves, so the markers carry the scroll positions */
+  const marks = cards.map((card, i) => {
+    if (!i || !sticky) return card;
+    const mark = document.createElement('i');
+    mark.setAttribute('aria-hidden', 'true');
+    card.before(mark);
+    return mark;
+  });
+  cards.forEach((card, i) => {
+    const next = cards[i + 1];
+    /* lit from when it rises past mid-screen until the next card closes in */
+    ScrollTrigger.create({
+      trigger: marks[i], start: 'top 65%',
+      endTrigger: next ? marks[i + 1] : card.parentElement,
+      end: next ? 'top 70%' : 'bottom 35%',
+      toggleClass: { targets: card, className: 'is-lit' }
+    });
+    if (reduced || !next || !sticky) return;
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: marks[i + 1], scrub: true,
+        start: 'top 70%',   /* the card being read stays crisp until the next one is close */
+        end: () => 'top top+=' + parseFloat(getComputedStyle(next).top),
+        invalidateOnRefresh: true
+      }
+    })
+      .to(card, { scale: 0.94, ease: 'none' }, 0)
+      .to(card.querySelector('.pc-shade'), { opacity: 0.5, ease: 'none' }, 0);
   });
 }
 
+/* principles, contact, footer */
+scrollReveal('.principle-card', { y: 36, stagger: 0.12, trigger: '.principles-grid', start: 'top 80%' });
+scrollReveal('.contact-intro, .contact-aside', { duration: 0.5, delay: 0.1 });
+scrollReveal('.contact-item', { x: -18, y: 0, duration: 0.45, stagger: 0.09, ease: 'power2.out', trigger: '.contact-details', start: 'top 84%' });
+scrollReveal('#contact-form', { y: 24, start: 'top 84%' });
+scrollReveal('footer .footer-inner', { duration: 0.55, start: 'top 92%' });
+scrollReveal('footer .footer-bottom', { duration: 0.45, delay: 0.1, start: 'top 95%' });
+
+/* selected work: the row's screenshot trails the cursor (only once #work is published) */
+const workRows = document.querySelectorAll('#work:not([hidden]) .work-row');
+const preview = document.querySelector('.work-preview');
+if (workRows.length && matchMedia('(hover:hover)').matches) {
+  const img = preview.appendChild(new Image());
+  const moveX = gsap.quickTo(preview, 'x', { duration: reduced ? 0 : 0.5, ease: 'power3.out' });
+  const moveY = gsap.quickTo(preview, 'y', { duration: reduced ? 0 : 0.5, ease: 'power3.out' });
+  workRows.forEach(row => {
+    row.addEventListener('mouseenter', e => {
+      if (gsap.getProperty(preview, 'autoAlpha') === 0) gsap.set(preview, { x: e.clientX + 24, y: e.clientY - preview.offsetHeight / 2, scale: 0.94 });
+      img.src = row.querySelector('.work-thumb').currentSrc || row.querySelector('.work-thumb').src;
+      gsap.to(preview, { autoAlpha: 1, scale: 1, duration: reduced ? 0 : 0.35, ease: 'power3.out' });
+    });
+    row.addEventListener('mouseleave', () => gsap.to(preview, { autoAlpha: 0, scale: 0.94, duration: reduced ? 0 : 0.25 }));
+  });
+  window.addEventListener('mousemove', e => { moveX(e.clientX + 24); moveY(e.clientY - preview.offsetHeight / 2); });
+}
+
 /* ──────────────────────────────────────────
-   FORM SUBMIT
+   LAMPLIGHT WORDMARK — the light sweeps across
+   the footer wordmark once as it comes into view
+   and settles on the gold slash; after that it
+   follows the cursor anywhere in the footer. The
+   mask is updated once per frame, only while the
+   light is moving. Static under reduced motion.
 ────────────────────────────────────────── */
-const contactForm = document.getElementById('contact-form');
-if (contactForm) contactForm.addEventListener('submit', handleSubmit);
-
-const MSG = document.documentElement.lang.startsWith('fr')
-  ? { sending: 'Envoi en cours…', sent: '✓ Message reçu. Nous vous répondrons sous peu.', error: 'Erreur. Veuillez réessayer.' }
-  : { sending: 'Sending…', sent: "✓ Message received. We'll be in touch soon.", error: 'Error. Please try again.' };
-
-function handleSubmit(e) {
-  e.preventDefault();
-  const status = document.getElementById('submit-status');
-  const btn    = e.target.querySelector('.form-submit');
-  status.textContent = MSG.sending;
-  btn.disabled = true;
-  fetch('https://api.web3forms.com/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
-  })
-  .then(r => r.json())
-  .then(j => {
-    status.textContent = j.success
-      ? MSG.sent
-      : MSG.error;
-    if (j.success) {
-      if (typeof gtag === 'function') gtag('event', 'generate_lead', { form_id: 'contact-form', page_path: location.pathname });
-      e.target.reset();
-      if (charCount) charCount.textContent = '300';
-    }
-  })
-  .catch(() => { status.textContent = MSG.error; })
-  .finally(() => { btn.disabled = false; });
+const fmark = document.querySelector('.footer-mark');
+if (fmark && !reduced) {
+  const lit = fmark.querySelector('.fm-lit');
+  const foot = fmark.closest('footer');
+  const pointer = matchMedia('(hover: hover)').matches;
+  const light = { x: -0.15, y: 0.55 };   /* fractions of the wordmark's box */
+  const place = () => {
+    lit.style.setProperty('--mx', (light.x * 100).toFixed(2) + '%');
+    lit.style.setProperty('--my', (light.y * 100).toFixed(2) + '%');
+  };
+  let inside = false, rect = null, following = false;
+  gsap.to(light, {
+    x: 0.53, duration: 1.6, ease: 'power3.out',
+    onStart: () => fmark.classList.add('is-lit'),
+    onUpdate: place,
+    /* on a pointer device the light goes out unless the cursor is already here */
+    onComplete: () => { if (pointer && !inside) fmark.classList.remove('is-lit'); },
+    scrollTrigger: { trigger: fmark, start: 'top 92%', once: true }
+  });
+  if (pointer) {
+    const moveX = gsap.quickTo(light, 'x', { duration: 0.45, ease: 'power3.out' });
+    const moveY = gsap.quickTo(light, 'y', { duration: 0.45, ease: 'power3.out' });
+    const stop = gsap.delayedCall(0.6, () => { gsap.ticker.remove(place); following = false; }).pause();
+    foot.addEventListener('pointerenter', () => {
+      rect = fmark.getBoundingClientRect();
+      inside = true;
+      stop.pause();
+      if (!following) { following = true; gsap.ticker.add(place); }
+    });
+    addEventListener('resize', () => { rect = null; }, { passive: true });
+    addEventListener('scroll', () => { rect = null; }, { passive: true });
+    foot.addEventListener('pointermove', e => {
+      if (!rect) rect = fmark.getBoundingClientRect();
+      fmark.classList.add('is-lit');
+      moveX((e.clientX - rect.left) / rect.width);
+      moveY((e.clientY - rect.top) / rect.height);
+    });
+    foot.addEventListener('pointerleave', () => {
+      inside = false;
+      fmark.classList.remove('is-lit');
+      stop.restart(true);
+    });
+  }
+}
 }
 
 });
