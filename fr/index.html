@@ -473,6 +473,17 @@ body::after{
   transition:opacity .3s var(--ease-out);
 }
 .principle-icon svg{display:block;transition:transform .35s var(--ease-out);}
+/* desktop: one step up so text and icons fill the wide cards; the icon line weight stays as drawn */
+@media(min-width:901px){
+  #principles .principle-h3{font-size:1.5rem;margin-bottom:1rem;}
+  #principles .principle-p{font-size:1rem;}
+  #principles .principle-tag{font-size:.75rem;margin-top:1.5rem;}
+  .principle-icon svg *{vector-effect:non-scaling-stroke;}
+  .principle-tall .principle-icon svg{width:72px;height:72px;}
+  .principle-inner-row .principle-icon{justify-self:center;}
+  .principle-text-first{grid-template-columns:1.5fr 1fr;}   /* the text side gets the wide column */
+  .principle-inner-row .principle-icon svg{width:104px;height:104px;}
+}
 .principle-h3{
   font:600 1.25rem/1.2 var(--display);
   color:var(--fg);
@@ -1194,7 +1205,7 @@ footer{
 
       <!-- Right top: Ethical Design -->
       <div class="principle-card">
-        <div class="principle-inner-row">
+        <div class="principle-inner-row principle-text-first">
           <div>
             <h3 class="principle-h3">Design éthique</h3>
             <p class="principle-p">Pas de fausse urgence, pas de cases de consentement précochées, pas de pixels de surveillance qui signalent vos visiteurs à des réseaux que vous n’avez jamais approuvés. Ici, le design place le bien-être des gens avant les astuces de conversion&nbsp;: des choix clairs, des interfaces honnêtes et des visiteurs qui se sentent respectés.</p>

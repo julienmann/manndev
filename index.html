@@ -480,6 +480,17 @@ body::after{
   transition:opacity .3s var(--ease-out);
 }
 .principle-icon svg{display:block;transition:transform .35s var(--ease-out);}
+/* desktop: one step up so text and icons fill the wide cards; the icon line weight stays as drawn */
+@media(min-width:901px){
+  #principles .principle-h3{font-size:1.5rem;margin-bottom:1rem;}
+  #principles .principle-p{font-size:1rem;}
+  #principles .principle-tag{font-size:.75rem;margin-top:1.5rem;}
+  .principle-icon svg *{vector-effect:non-scaling-stroke;}
+  .principle-tall .principle-icon svg{width:72px;height:72px;}
+  .principle-inner-row .principle-icon{justify-self:center;}
+  .principle-text-first{grid-template-columns:1.5fr 1fr;}   /* the text side gets the wide column */
+  .principle-inner-row .principle-icon svg{width:104px;height:104px;}
+}
 .principle-h3{
   font:600 1.25rem/1.2 var(--display);
   color:var(--fg);
@@ -1157,7 +1168,7 @@ footer{
 
       <!-- Right top: Ethical Design -->
       <div class="principle-card">
-        <div class="principle-inner-row">
+        <div class="principle-inner-row principle-text-first">
           <div>
             <h3 class="principle-h3" data-i18n="pr.ethic.h">Ethical Design</h3>
             <p class="principle-p" data-i18n="pr.ethic.p">No fake urgency, no pre-ticked consent boxes, no surveillance pixels reporting your visitors to networks you never agreed to. Design here prioritises user well-being over conversion tricks: clear choices, honest interfaces, and visitors who feel respected.</p>
