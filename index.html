@@ -788,18 +788,8 @@ footer{
   border-top:1px solid var(--rule);
 }
 .footer-copy{font-size:.9rem;color:var(--mid);}
-/* third-party carbon badge, re-dressed as a site label (ids beat its injected styles) */
-footer #wcb.carbonbadge{display:flex;align-items:center;gap:1rem;font-size:.9rem;color:var(--mid);text-align:left;}
-footer #wcb #wcb_p{display:flex;align-items:center;}
-footer #wcb #wcb_g,footer #wcb #wcb_a{
-  font-family:var(--body);margin:0;border-radius:0;border:1px solid var(--rule-accent);background:transparent;
-  font-size:.7rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:.45rem .8rem;min-width:0;
-}
-footer #wcb #wcb_g{color:var(--fg);border-right:0;}
-footer #wcb #wcb_a{color:var(--accent);transition:background-color .25s var(--ease-out);}
-footer #wcb #wcb_a:hover{background:var(--accent-wash);}
-footer #wcb #wcb_2{font-family:var(--body);font-size:.9rem;color:var(--mid);margin:0;}
-footer #wcb.wcb-empty{display:none;}
+/* third-party carbon badge in its own default (dark) style; not on phones */
+@media(max-width:600px){footer #wcb{display:none;}}
 
 /* lamplight wordmark: a full-width outline; a gold copy on top shows only inside a soft
    circle that follows the cursor (or sweeps across once on touch and rests on the slash) */
@@ -1325,7 +1315,7 @@ footer #wcb.wcb-empty{display:none;}
   </div>
   <div class="footer-bottom">
     <p class="footer-copy">&copy; 2026 Manndev.</p>
-    <div id="wcb" class="carbonbadge"></div>
+    <div id="wcb" class="carbonbadge wcb-d"></div>
   </div>
   <!-- lamplight wordmark: an outline the cursor lights in gold, echoing the spotlight intro -->
   <div class="footer-mark" aria-hidden="true">
@@ -1333,20 +1323,18 @@ footer #wcb.wcb-empty{display:none;}
     <svg class="fm-lit" viewBox="0 0 1000 205"><text x="0" y="168" textLength="1000" lengthAdjust="spacingAndGlyphs">mann<tspan class="fm-slash">/</tspan>dev</text></svg>
   </div>
 </footer>
-<!-- Carbon badge: third-party, footer-only. Loaded only when the footer comes near
-     the viewport, so most visits never fetch it. Its text is translated on /fr/,
-     and it hides itself when the API has no result for the page. -->
+<!-- Carbon badge: third-party, footer-only, the library's default dark look. Loaded only
+     when the footer comes near the viewport, never on phone widths. Its text is translated on /fr/. -->
 <script>
 (function () {
   var el = document.getElementById('wcb');
-  if (!el || !('IntersectionObserver' in window)) return;
+  if (!el || !('IntersectionObserver' in window) || matchMedia('(max-width:600px)').matches) return;
   var fr = /^fr/i.test(document.documentElement.lang);
   /* the badge writes its own English text, and can rewrite it later from a
      background refresh, so keep watching rather than stopping at the first value */
   function tidy() {
     var g = document.getElementById('wcb_g'), t = document.getElementById('wcb_2');
     if (!g) return;
-    el.classList.toggle('wcb-empty', /no result/i.test(g.textContent));
     if (!fr) return;
     if (/Measuring/.test(g.innerHTML)) g.innerHTML = 'Mesure du CO<sub>2</sub>&hellip;';
     else if (/g of CO/.test(g.innerHTML)) g.innerHTML = g.innerHTML.replace('g of CO', 'g de CO').replace('/view', '/vue');
@@ -1608,10 +1596,11 @@ gsap.registerPlugin(ScrollTrigger);
 /* the 3 s failsafe already showed the hero (GSAP was slow): don't hide it and replay */
 const revealed = root.dataset.revealed === '1';
 
-/* split an element's HTML on <br> into lines that can rise out of a clip */
+/* split an element's HTML on <br> into lines that can rise out of a clip
+   (the clip reaches .14em below the line box so descenders like g and y aren't cut) */
 const splitLines = el => {
   el.innerHTML = el.innerHTML.split(/<br\s*\/?>/i)
-    .map(p => `<span class="line-clip" style="display:block;overflow:hidden;"><span class="line" style="display:block;">${p}</span></span>`)
+    .map(p => `<span class="line-clip" style="display:block;overflow:hidden;padding-bottom:.14em;margin-bottom:-.14em;"><span class="line" style="display:block;">${p}</span></span>`)
     .join('');
   return el.querySelectorAll('.line');
 };
@@ -1858,7 +1847,8 @@ if (!reduced) {
   document.querySelectorAll('.about-h2, .services-h2, .process-h2, .principles-h2, .contact-h2, #work:not([hidden]) .work-h2').forEach(h => {
     gsap.fromTo(splitLines(h), { y: '105%' }, {
       y: '0%', duration: 0.7, stagger: 0.1, ease: 'power4.out',
-      scrollTrigger: { trigger: h, start: 'top 88%', once: true }
+      scrollTrigger: { trigger: h, start: 'top 88%', once: true },
+      onComplete: () => gsap.set(h.querySelectorAll('.line-clip'), { overflow: 'visible' })
     });
   });
 }
